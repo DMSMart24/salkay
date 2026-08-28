@@ -1,7 +1,14 @@
 # SALKAY email assets
 
-- `salkay-logo.svg` — official SALKAY mark (the same A used on the website).
-- KAY mascot: reuse `/brand/kay/kay-hero-still.png` (no new mascot).
-- Production emails resolve these via `emailAssetUrl()` to `https://salkay.com/...`.
+Official logo (Salih reference lockup — do not recreate):
 
-A smaller cropped KAY PNG for email clients can be added later at `/public/email/kay-restaurant.png` without changing the mascot.
+- `salkay-logo-official-source.png` — unmodified supplied source (1024×576).
+- `salkay-logo-official.png` — email/signature/footer (same artwork).
+- `salkay-logo-official-header.png` — hero (same artwork, retina-friendly width).
+
+Other email assets:
+
+- `kay-restaurant.png` — official KAY still, resized for email.
+- `restaurant-hero.jpg` — restaurant interior background. No text, no mascot.
+
+Do not use reconstructed A-mark + HTML “SALKAY” as a logo substitute.

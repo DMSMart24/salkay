@@ -1,6 +1,6 @@
 import { site } from "@/lib/site";
 
-export const EMAIL_MAX_WIDTH = 680;
+export const EMAIL_MAX_WIDTH = 700;
 
 export function emailAssetBaseUrl() {
   const configured = process.env.EMAIL_ASSET_BASE_URL?.trim();
@@ -32,7 +32,10 @@ export function salkayPhone() {
 }
 
 export const emailAssets = {
-  logo: "/email/salkay-logo.svg",
-  kay: "/brand/kay/kay-hero-still.png",
-  kayFallback: "/brand/kay/kay-hero-still.webp",
+  logo: "/email/salkay-logo-official.png",
+  logoHeader: "/email/salkay-logo-official-header.png",
+  logoSource: "/email/salkay-logo-official-source.png",
+  kay: "/email/kay-restaurant.png",
+  kaySource: "/brand/kay/kay-hero-still.png",
+  hero: "/email/restaurant-hero.jpg",
 } as const;

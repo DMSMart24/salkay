@@ -101,7 +101,9 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     salkayWebsite: site.url,
     ctaUrl,
     logoUrl: emailAssetUrl(emailAssets.logo),
+    logoHeaderUrl: emailAssetUrl(emailAssets.logoHeader),
     kayUrl: emailAssetUrl(emailAssets.kay),
+    heroUrl: emailAssetUrl(emailAssets.hero),
   };
 
   return {
@@ -135,7 +137,7 @@ export function issueRowsHtml(issues: string[]) {
           <td valign="top" width="22" style="padding:0 8px 12px 0;">
             <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
               <tr>
-                <td width="18" height="18" bgcolor="#49e8ff" align="center" style="background:#49e8ff;border-radius:9px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:18px;color:#0b1220;font-weight:700;">✓</td>
+                <td width="18" height="18" bgcolor="#16c7ff" align="center" style="background:#16c7ff;border-radius:9px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:18px;color:#07111f;font-weight:700;">✓</td>
               </tr>
             </table>
           </td>
@@ -148,20 +150,20 @@ export function issueRowsHtml(issues: string[]) {
 function scoreBarHtml(score: number) {
   const cells = Array.from({ length: 10 }, (_, index) => {
     const on = index < score;
-    return `<td width="22" height="8" bgcolor="${on ? "#49e8ff" : "#243044"}" style="background:${on ? "#49e8ff" : "#243044"};font-size:0;line-height:0;border-radius:4px;">&nbsp;</td>`;
+    return `<td width="20" height="7" bgcolor="${on ? "#16c7ff" : "#1a2b42"}" style="background:${on ? "#16c7ff" : "#1a2b42"};font-size:0;line-height:0;">&nbsp;</td>`;
   }).join(`<td width="5" style="font-size:0;line-height:0;">&nbsp;</td>`);
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;"><tr>${cells}</tr></table>`;
 }
 
 export function scoreBlockHtml(context: CompanyEmailContext) {
   if (!context.hasScore) {
-    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:18px;letter-spacing:0.12em;text-transform:uppercase;color:#c9a46c;">Genel Skor</p>
-      <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:28px;color:#c9a46c;font-weight:700;">Analiz devam ediyor</p>`;
+    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.16em;text-transform:uppercase;color:#d5aa62;">Genel Skor</p>
+      <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;color:#d5aa62;font-weight:700;">Analiz devam ediyor</p>`;
   }
 
   const score = Number(context.scoreLabel);
-  return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa6b8;">Genel Skor</p>
-    <p style="margin:6px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:36px;line-height:40px;color:#49e8ff;font-weight:700;">${escapeHtml(context.scoreLabel)} <span style="font-size:16px;color:#9aa6b8;font-weight:400;">/ 10</span></p>
+  return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.16em;text-transform:uppercase;color:#8ea0b8;">Genel Skor</p>
+    <p style="margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:42px;line-height:44px;color:#16c7ff;font-weight:700;">${escapeHtml(context.scoreLabel)}<span style="font-size:16px;color:#8ea0b8;font-weight:400;"> /10</span></p>
     ${Number.isFinite(score) ? scoreBarHtml(score) : ""}`;
 }
 
