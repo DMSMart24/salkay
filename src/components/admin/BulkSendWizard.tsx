@@ -98,15 +98,26 @@ export function BulkSendWizard({
       {preview.recipients?.length || preview.skipped?.length ? (
         <section className="admin-panel">
           <h3>4. Önizleme</h3>
-          <p>{preview.recipients?.length ?? 0} gönderilecek · {preview.skipped?.length ?? 0} atlandı</p>
+          <p>
+            Şablon: {preview.templateName ?? "—"} · {preview.recipients?.length ?? 0} gönderilecek ·{" "}
+            {preview.skipped?.length ?? 0} atlandı
+          </p>
           <ul className="admin-list">
             {preview.recipients?.slice(0, 20).map((row) => (
               <li key={row.companyId}>
                 <strong>
                   {row.companyName} · {row.email}
                 </strong>
-                <span>{row.subject}</span>
-                <pre>{row.body}</pre>
+                <span>Konu: {row.subject}</span>
+                <span>Skor: {row.score ?? "—"}</span>
+                <span>Geliştirme: {row.issues?.length ? row.issues.join(" · ") : "—"}</span>
+                {row.bodyHtml ? (
+                  <div className="admin-email-frame is-compact">
+                    <iframe title={`${row.companyName} önizleme`} srcDoc={row.bodyHtml} sandbox="" />
+                  </div>
+                ) : (
+                  <pre>{row.body}</pre>
+                )}
               </li>
             ))}
           </ul>

@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { randomUUID } from "node:crypto";
 import { recordActivity } from "@/lib/admin/activity";
 import { getEmailFrom, getEmailProvider } from "@/lib/admin/email/provider";
-import { mergeTemplate } from "@/lib/admin/merge";
+import { renderPersonalizedEmail } from "@/lib/admin/email/render";
+import { looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import { normalizeEmail } from "@/lib/admin/normalize";
 import { getPrisma } from "@/lib/admin/prisma";
 import { requireAdmin } from "@/lib/admin/session";
@@ -72,15 +73,14 @@ export async function composeEmailAction(
     ? company.contacts.find((row) => row.id === parsed.data.contactId)
     : company.contacts.find((row) => row.isPrimary) ?? company.contacts[0];
 
-  const mergeVars = {
-    companyName: company.companyName,
-    firstName: contact?.firstName,
-    website: company.website ?? undefined,
-    city: company.city ?? undefined,
-    industry: company.industry ?? undefined,
-  };
-  const mergedSubject = mergeTemplate(parsed.data.subject, mergeVars);
-  const mergedBody = mergeTemplate(parsed.data.body, mergeVars);
+  const rendered = renderPersonalizedEmail({
+    subject: parsed.data.subject,
+    body: parsed.data.body,
+    company,
+  });
+  const mergedSubject = rendered.subject;
+  const mergedBody = rendered.bodyText;
+  const mergedHtml = looksLikeHtmlEmail(parsed.data.body) ? rendered.bodyHtml : undefined;
 
   if (parsed.data.saveDraft) {
     await prisma.$transaction(async (tx) => {
@@ -95,6 +95,7 @@ export async function composeEmailAction(
           cc: parsed.data.cc,
           subject: mergedSubject,
           bodyText: mergedBody,
+          bodyHtml: mergedHtml,
           status: "DRAFT",
           templateId: parsed.data.templateId,
         },
@@ -116,6 +117,7 @@ export async function composeEmailAction(
     cc: parsed.data.cc,
     subject: mergedSubject,
     bodyText: mergedBody,
+    bodyHtml: mergedHtml,
   });
 
   if (!sent.ok) {
@@ -135,6 +137,7 @@ export async function composeEmailAction(
         cc: parsed.data.cc,
         subject: mergedSubject,
         bodyText: mergedBody,
+        bodyHtml: mergedHtml,
         sentAt: new Date(),
         status: "SENT",
         templateId: parsed.data.templateId,

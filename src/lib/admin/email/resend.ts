@@ -34,6 +34,7 @@ export class ResendEmailProvider implements EmailProvider {
           : undefined,
         subject: input.subject,
         text: input.bodyText,
+        html: input.bodyHtml,
       }),
     });
 

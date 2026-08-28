@@ -14,6 +14,7 @@ import {
 import { suppressionLabels } from "@/lib/admin/labels";
 import { ActionMessage } from "@/components/admin/ActionMessage";
 import { companyStatusLabels, taskTypeLabels, templateCategories } from "@/lib/admin/labels";
+import { MERGE_KEYS } from "@/lib/admin/merge";
 import type { FormState } from "@/lib/admin/validation";
 
 export function LoginFields({
@@ -177,7 +178,7 @@ export function TemplateForm() {
         <textarea name="body" rows={6} required placeholder="Merhaba {{firstName}}, {{companyName}} için..." />
       </label>
       <p className="admin-help">
-        Değişkenler: {"{{companyName}} {{firstName}} {{website}} {{city}} {{industry}}"}
+        Değişkenler: {MERGE_KEYS.map((key) => `{{${key}}}`).join(" ")}
       </p>
       <button className="admin-btn" disabled={pending}>
         Şablon kaydet

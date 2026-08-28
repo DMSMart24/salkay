@@ -3,6 +3,7 @@ export type EmailSendInput = {
   cc?: string;
   subject: string;
   bodyText: string;
+  bodyHtml?: string;
   from?: string;
 };
 

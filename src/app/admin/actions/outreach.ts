@@ -5,7 +5,8 @@ import { randomUUID } from "node:crypto";
 import type { OutreachStatus } from "@prisma/client";
 import { recordActivity } from "@/lib/admin/activity";
 import { getEmailFrom, getEmailProvider } from "@/lib/admin/email/provider";
-import { mergeTemplate } from "@/lib/admin/merge";
+import { renderPersonalizedEmail } from "@/lib/admin/email/render";
+import { normalizeEmail } from "@/lib/admin/normalize";
 import {
   assertBulkRateLimit,
   DEFAULT_BATCH_SIZE,
@@ -30,6 +31,9 @@ export type BulkRecipientPreview = {
   email: string;
   subject: string;
   body: string;
+  bodyHtml?: string;
+  score?: string;
+  issues?: string[];
 };
 
 export type BulkSkippedPreview = {
@@ -44,6 +48,7 @@ export type BulkPreviewState = FormState & {
   groupId?: string;
   recipientMode?: string;
   templateId?: string;
+  templateName?: string;
   websiteScoreMin?: string;
   allowResend?: boolean;
   batchSize?: string;
@@ -266,20 +271,20 @@ export async function previewBulkSendAction(
       skipped.push({ companyId: company.id, companyName: company.companyName, reason: eligibility.reason });
       continue;
     }
-    const contact = company.contacts.find((row) => row.isPrimary) ?? company.contacts[0];
-    const vars = {
-      companyName: company.companyName,
-      firstName: contact?.firstName,
-      website: company.website ?? undefined,
-      city: company.city ?? undefined,
-      industry: company.industry ?? undefined,
-    };
+    const rendered = renderPersonalizedEmail({
+      subject: template.subject,
+      body: template.body,
+      company,
+    });
     recipients.push({
       companyId: company.id,
       companyName: company.companyName,
       email: eligibility.email,
-      subject: mergeTemplate(template.subject, vars),
-      body: mergeTemplate(template.body, vars),
+      subject: rendered.subject,
+      body: rendered.bodyText,
+      bodyHtml: rendered.bodyHtml,
+      score: rendered.context.scoreLabel,
+      issues: rendered.context.issues,
     });
   }
 
@@ -289,6 +294,7 @@ export async function previewBulkSendAction(
     groupId: String(formData.get("groupId") ?? ""),
     recipientMode: String(formData.get("recipientMode") ?? "selected"),
     templateId,
+    templateName: template.name,
     websiteScoreMin: String(formData.get("websiteScoreMin") ?? ""),
     allowResend: formData.get("allowResend") === "on" || formData.get("allowResend") === "true",
     batchSize: String(formData.get("batchSize") ?? "20"),
@@ -344,6 +350,7 @@ export async function queueBulkSendAction(
           toAddress: eligibility.email,
           subject: recipient.subject,
           bodyText: recipient.body,
+          bodyHtml: recipient.bodyHtml,
           status: sendEnabled ? "QUEUED" : "DRAFT",
           templateId,
         },
@@ -358,6 +365,7 @@ export async function queueBulkSendAction(
           to: eligibility.email,
           subject: recipient.subject,
           bodyText: recipient.body,
+          bodyHtml: recipient.bodyHtml,
         });
         if (sent.ok) {
           await tx.emailMessage.update({
@@ -417,4 +425,23 @@ export async function markDoNotContactForm(formData: FormData) {
   data.set("companyId", String(formData.get("companyId") ?? ""));
   data.set("outreachStatus", "DO_NOT_CONTACT");
   await changeOutreachStatusForm(data);
+}
+
+export async function publicUnsubscribeAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  const email = String(formData.get("email") ?? "");
+  const emailNorm = normalizeEmail(email);
+  if (!emailNorm) {
+    return { error: "Geçerli bir e-posta girin." };
+  }
+
+  await suppressEmail(getPrisma(), {
+    email,
+    reason: "UNSUBSCRIBE",
+    source: "unsubscribe",
+    notes: "Public unsubscribe form",
+  });
+  return { success: "Adres listenizden çıkarıldı. Tekrar iletişime geçilmeyecek." };
 }

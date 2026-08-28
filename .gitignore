@@ -31,6 +31,9 @@ ehthumbs.db
 *.pem
 /tmp
 
+# local email QA snapshots
+/scripts/.tmp-email-qa/
+
 # local media QA / inspect caches (keep production loops + posters)
 /public/video/_inspect/
 /public/video/_qa-crops/
