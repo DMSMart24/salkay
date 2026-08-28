@@ -3,6 +3,10 @@ import { notFound } from "next/navigation";
 import { duplicateTemplateForm } from "@/app/admin/actions/templates";
 import { TemplateStudio } from "@/components/admin/TemplateStudio";
 import { formatDateTime } from "@/lib/admin/format";
+import {
+  RESTAURANT_TEMPLATE_NAME,
+  restaurantPremiumSource,
+} from "@/lib/admin/email/templates/restaurant";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
@@ -67,6 +71,8 @@ export default async function TemplateDetailPage({
       <TemplateStudio
         template={{
           ...template,
+          body:
+            template.name === RESTAURANT_TEMPLATE_NAME ? restaurantPremiumSource() : template.body,
           updatedAt: template.updatedAt.toISOString(),
         }}
         companies={[...companies]

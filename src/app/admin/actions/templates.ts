@@ -157,7 +157,8 @@ export async function previewTemplateAction(
   }
 
   const subject = String(formData.get("subject") ?? "").trim() || template.subject;
-  const body = String(formData.get("body") ?? "").trim() || template.body;
+  const editorBody = String(formData.get("body") ?? "").trim() || template.body;
+  const body = template.name === RESTAURANT_TEMPLATE_NAME ? restaurantPremiumSource() : editorBody;
   const rendered = renderPersonalizedEmail({
     subject,
     body,
