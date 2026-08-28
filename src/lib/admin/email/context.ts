@@ -7,6 +7,11 @@ import {
   salkayPhone,
 } from "@/lib/admin/email/assets";
 import { escapeHtml } from "@/lib/admin/email/html";
+import {
+  localizeOutreachIssues,
+  localizeRecommendedServices,
+  type LocalizedText,
+} from "@/lib/admin/email/localize";
 import { fullName } from "@/lib/admin/normalize";
 
 export type CompanyEmailInput = {
@@ -31,6 +36,10 @@ export type CompanyEmailInput = {
 export type CompanyEmailContext = {
   vars: Record<string, string>;
   issues: string[];
+  internalIssues: string[];
+  customerIssues: string[];
+  localizedIssues: LocalizedText[];
+  issueReviewNeeded: string[];
   recommendedServices: string[];
   hasScore: boolean;
   scoreLabel: string;
@@ -56,8 +65,12 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     ? fullName(contact.firstName ?? "", contact.lastName ?? "")
     : "";
   const companyEmail = company.generalEmail || contact?.email || "";
-  const issues = cleanList(company.websiteIssues);
-  const recommendedServices = cleanList(company.recommendedServices);
+  const internalIssues = cleanList(company.websiteIssues);
+  const localizedIssues = localizeOutreachIssues(internalIssues, "tr");
+  const customerIssues = localizedIssues.map((row) => row.customer).slice(0, 4);
+  const issueReviewNeeded = localizedIssues.filter((row) => !row.matched).map((row) => row.original);
+  const recommendedInternal = cleanList(company.recommendedServices);
+  const recommendedServices = localizeRecommendedServices(recommendedInternal, "tr").map((row) => row.customer);
   const hasScore = typeof company.websiteScore === "number" && company.websiteScore >= 1 && company.websiteScore <= 10;
   const scoreLabel = hasScore ? String(company.websiteScore) : "Analiz devam ediyor";
   const phone = salkayPhone();
@@ -76,10 +89,10 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     city: company.city?.trim() || "",
     industry: company.industry?.trim() || "",
     score: hasScore ? String(company.websiteScore) : "",
-    issue_1: issues[0] ?? "",
-    issue_2: issues[1] ?? "",
-    issue_3: issues[2] ?? "",
-    issue_4: issues[3] ?? "",
+    issue_1: customerIssues[0] ?? "",
+    issue_2: customerIssues[1] ?? "",
+    issue_3: customerIssues[2] ?? "",
+    issue_4: customerIssues[3] ?? "",
     recommendedServices: recommendedServices.join(" · "),
     companyPhone: company.phone?.trim() || "",
     unsubscribeUrl,
@@ -93,7 +106,11 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
 
   return {
     vars,
-    issues,
+    issues: customerIssues,
+    internalIssues,
+    customerIssues,
+    localizedIssues,
+    issueReviewNeeded,
     recommendedServices,
     hasScore,
     scoreLabel,
@@ -107,24 +124,45 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
 
 export function issueRowsHtml(issues: string[]) {
   if (issues.length === 0) {
-    return `<tr><td style="padding:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#d7dde8;">Mevcut araştırma notu henüz eklenmedi.</td></tr>`;
+    return `<tr><td style="padding:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#d7dde8;">Gelişim alanı henüz eklenmedi.</td></tr>`;
   }
 
   return issues
     .slice(0, 4)
     .map(
       (issue) =>
-        `<tr><td style="padding:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#f4f7fb;"><span style="color:#c9a46c;">▸</span> ${escapeHtml(issue)}</td></tr>`,
+        `<tr>
+          <td valign="top" width="22" style="padding:0 8px 12px 0;">
+            <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+              <tr>
+                <td width="18" height="18" bgcolor="#49e8ff" align="center" style="background:#49e8ff;border-radius:9px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:18px;color:#0b1220;font-weight:700;">✓</td>
+              </tr>
+            </table>
+          </td>
+          <td valign="top" style="padding:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#f4f7fb;">${escapeHtml(issue)}</td>
+        </tr>`,
     )
     .join("");
 }
 
+function scoreBarHtml(score: number) {
+  const cells = Array.from({ length: 10 }, (_, index) => {
+    const on = index < score;
+    return `<td width="22" height="8" bgcolor="${on ? "#49e8ff" : "#243044"}" style="background:${on ? "#49e8ff" : "#243044"};font-size:0;line-height:0;border-radius:4px;">&nbsp;</td>`;
+  }).join(`<td width="5" style="font-size:0;line-height:0;">&nbsp;</td>`);
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;"><tr>${cells}</tr></table>`;
+}
+
 export function scoreBlockHtml(context: CompanyEmailContext) {
   if (!context.hasScore) {
-    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#c9a46c;">Analiz devam ediyor</p>`;
+    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:18px;letter-spacing:0.12em;text-transform:uppercase;color:#c9a46c;">Genel Skor</p>
+      <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:28px;color:#c9a46c;font-weight:700;">Analiz devam ediyor</p>`;
   }
 
-  return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:28px;line-height:34px;color:#49e8ff;font-weight:700;">${escapeHtml(context.scoreLabel)} <span style="font-size:14px;color:#9aa6b8;font-weight:400;">/ 10</span></p>`;
+  const score = Number(context.scoreLabel);
+  return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.14em;text-transform:uppercase;color:#9aa6b8;">Genel Skor</p>
+    <p style="margin:6px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:36px;line-height:40px;color:#49e8ff;font-weight:700;">${escapeHtml(context.scoreLabel)} <span style="font-size:16px;color:#9aa6b8;font-weight:400;">/ 10</span></p>
+    ${Number.isFinite(score) ? scoreBarHtml(score) : ""}`;
 }
 
 export function phoneBlockHtml(context: CompanyEmailContext) {

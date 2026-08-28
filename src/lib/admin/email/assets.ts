@@ -1,6 +1,6 @@
 import { site } from "@/lib/site";
 
-export const EMAIL_MAX_WIDTH = 640;
+export const EMAIL_MAX_WIDTH = 680;
 
 export function emailAssetBaseUrl() {
   const configured = process.env.EMAIL_ASSET_BASE_URL?.trim();

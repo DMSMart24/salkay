@@ -20,6 +20,9 @@ export type TemplatePreviewState = FormState & {
   bodyText?: string;
   score?: string;
   issues?: string[];
+  internalIssues?: string[];
+  customerIssues?: string[];
+  issueReviewNeeded?: string[];
   recipient?: string;
   companyName?: string;
   unresolved?: boolean;
@@ -167,7 +170,10 @@ export async function previewTemplateAction(
     bodyHtml: rendered.bodyHtml,
     bodyText: rendered.bodyText,
     score: rendered.context.scoreLabel,
-    issues: rendered.context.issues,
+    issues: rendered.context.customerIssues,
+    internalIssues: rendered.context.internalIssues,
+    customerIssues: rendered.context.customerIssues,
+    issueReviewNeeded: rendered.context.issueReviewNeeded,
     recipient: rendered.context.vars.companyEmail,
     companyName: company.companyName,
     unresolved: rendered.unresolved,

@@ -131,11 +131,33 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
         <ActionMessage state={preview} />
         {preview.companyName ? (
           <div className="admin-preview-meta">
-            <p>Alıcı: {preview.recipient || "—"}</p>
-            <p>Firma: {preview.companyName}</p>
-            <p>Konu: {preview.subject}</p>
-            <p>Skor: {preview.score}</p>
-            <p>Geliştirme: {preview.issues?.length ? preview.issues.join(" · ") : "—"}</p>
+            <p><span>ALICI</span> {preview.recipient || "—"}</p>
+            <p><span>FİRMA</span> {preview.companyName}</p>
+            <p><span>KONU</span> {preview.subject}</p>
+            <p><span>SKOR</span> {preview.score}</p>
+            <div className="admin-preview-split">
+              <div>
+                <p><span>DAHİLİ ARAŞTIRMA</span></p>
+                <ul>
+                  {(preview.internalIssues?.length ? preview.internalIssues : ["—"]).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+              <div>
+                <p><span>MÜŞTERİYE GÖSTERİLEN</span></p>
+                <ul>
+                  {(preview.customerIssues?.length ? preview.customerIssues : ["—"]).map((item) => (
+                    <li key={item}>{item}</li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+            {preview.issueReviewNeeded?.length ? (
+              <p className="admin-warning">
+                Çeviri eşleşmesi yok, genel Türkçe kullanıldı: {preview.issueReviewNeeded.join(" · ")}
+              </p>
+            ) : null}
             {preview.unresolved ? <p className="admin-error">Çözülmemiş merge etiketi var.</p> : null}
             {preview.ctaConfigured === false ? (
               <p className="admin-warning">
