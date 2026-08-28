@@ -1,0 +1,404 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum UserRole {
+  ADMIN
+  SALES
+  VIEWER
+}
+
+enum CompanyStatus {
+  NEW
+  RESEARCHED
+  CONTACTED
+  FOLLOW_UP
+  REPLIED
+  MEETING
+  OFFER_SENT
+  WON
+  LOST
+  DO_NOT_CONTACT
+}
+
+enum CompanyPriority {
+  LOW
+  MEDIUM
+  HIGH
+}
+
+enum EmailDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum EmailMessageStatus {
+  DRAFT
+  QUEUED
+  SENDING
+  SENT
+  FAILED
+  BOUNCED
+  DELIVERED
+  RECEIVED
+  REPLIED
+}
+
+enum OutreachStatus {
+  NEW
+  READY
+  SENT
+  REPLIED
+  FAILED
+  DO_NOT_CONTACT
+}
+
+enum WebsiteStatus {
+  GOOD
+  AVERAGE
+  NEEDS_UPGRADE
+  UNKNOWN
+}
+
+enum TaskType {
+  EMAIL
+  CALL
+  MEETING
+  FOLLOW_UP
+  OTHER
+}
+
+enum TaskStatus {
+  OPEN
+  COMPLETED
+  CANCELLED
+}
+
+enum CampaignStatus {
+  DRAFT
+  READY
+  SENDING
+  PAUSED
+  COMPLETED
+}
+
+enum SuppressionReason {
+  DO_NOT_CONTACT
+  UNSUBSCRIBE
+  BOUNCED
+  INVALID
+  MANUAL
+}
+
+enum ActivityType {
+  COMPANY_CREATED
+  COMPANY_UPDATED
+  CONTACT_ADDED
+  CONTACT_UPDATED
+  EMAIL_SENT
+  EMAIL_DRAFTED
+  REPLY_RECEIVED
+  STATUS_CHANGED
+  FOLLOW_UP_SCHEDULED
+  NOTE_CREATED
+  MEETING_ADDED
+  MARKED_DO_NOT_CONTACT
+  TASK_CREATED
+  TASK_COMPLETED
+  TEMPLATE_CREATED
+  CAMPAIGN_CREATED
+  MESSAGE_ASSIGNED
+  GROUP_CREATED
+  COMPANIES_IMPORTED
+  EMAIL_QUEUED
+}
+
+model User {
+  id           String     @id @default(cuid())
+  email        String     @unique
+  name         String
+  role         UserRole   @default(ADMIN)
+  passwordHash String
+  createdAt    DateTime   @default(now())
+  updatedAt    DateTime   @updatedAt
+  sessions     Session[]
+  assignedCompanies Company[] @relation("CompanyAssignee")
+  activities   Activity[]
+  notes        Note[]
+  tasks        Task[]
+  templates    EmailTemplate[]
+  campaigns    Campaign[]
+}
+
+model Session {
+  id        String   @id @default(cuid())
+  userId    String
+  tokenHash String   @unique
+  expiresAt DateTime
+  createdAt DateTime @default(now())
+  ip        String?
+  userAgent String?
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([expiresAt])
+}
+
+model LoginAttempt {
+  id        String   @id @default(cuid())
+  email     String
+  ip        String
+  success   Boolean
+  createdAt DateTime @default(now())
+
+  @@index([email, createdAt])
+  @@index([ip, createdAt])
+}
+
+model LeadGroup {
+  id          String    @id @default(cuid())
+  name        String
+  slug        String    @unique
+  description String?
+  industry    String?
+  city        String?
+  country     String?
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  companies   Company[]
+
+  @@index([industry])
+  @@index([city])
+}
+
+model Company {
+  id              String           @id @default(cuid())
+  companyName     String
+  website         String?
+  domain          String?
+  industry        String?
+  city            String?
+  district        String?
+  country         String?
+  address         String?
+  phone           String?
+  generalEmail    String?
+  source          String?
+  notes           String?
+  status          CompanyStatus    @default(NEW)
+  outreachStatus  OutreachStatus   @default(NEW)
+  websiteScore    Int?
+  websiteStatus   WebsiteStatus    @default(UNKNOWN)
+  websiteIssues   String[]
+  recommendedServices String[]
+  researchSource  String?
+  researchedAt    DateTime?
+  groupId         String?
+  priority        CompanyPriority  @default(MEDIUM)
+  tags            String[]
+  assignedToId    String?
+  archivedAt      DateTime?
+  lastContactedAt DateTime?
+  nextFollowUpAt  DateTime?
+  createdAt       DateTime         @default(now())
+  updatedAt       DateTime         @updatedAt
+  assignedTo      User?            @relation("CompanyAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  group           LeadGroup?       @relation(fields: [groupId], references: [id], onDelete: SetNull)
+  contacts        Contact[]
+  companyNotes    Note[]
+  emails          EmailMessage[]
+  tasks           Task[]
+  activities      Activity[]
+  suppressions    Suppression[]
+  campaignRecipients CampaignRecipient[]
+
+  @@index([status])
+  @@index([priority])
+  @@index([domain])
+  @@index([generalEmail])
+  @@index([archivedAt])
+  @@index([nextFollowUpAt])
+  @@index([companyName])
+  @@index([outreachStatus])
+  @@index([groupId])
+  @@index([websiteStatus])
+  @@index([district])
+}
+
+model Contact {
+  id         String    @id @default(cuid())
+  companyId  String
+  firstName  String
+  lastName   String
+  role       String?
+  email      String?
+  emailNorm  String?
+  phone      String?
+  linkedin   String?
+  isPrimary  Boolean   @default(false)
+  notes      String?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
+  company    Company   @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  emails     EmailMessage[]
+  notesList  Note[]
+  tasks      Task[]
+  suppressions Suppression[]
+
+  @@unique([emailNorm])
+  @@index([companyId])
+  @@index([email])
+}
+
+model Note {
+  id        String   @id @default(cuid())
+  companyId String
+  contactId String?
+  authorId  String
+  body      String
+  createdAt DateTime @default(now())
+  company   Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact   Contact? @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([companyId, createdAt])
+}
+
+model EmailTemplate {
+  id        String   @id @default(cuid())
+  name      String
+  category  String
+  subject   String
+  body      String
+  language  String   @default("tr")
+  active    Boolean  @default(true)
+  authorId  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  author    User     @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  emails    EmailMessage[]
+  campaigns Campaign[]
+
+  @@index([category, active])
+}
+
+model EmailMessage {
+  id                 String              @id @default(cuid())
+  companyId          String?
+  contactId          String?
+  threadId           String
+  providerMessageId  String?             @unique
+  direction          EmailDirection
+  fromAddress        String
+  toAddress          String
+  cc                 String?
+  subject            String
+  bodyText           String
+  bodyHtml           String?
+  sentAt             DateTime?
+  receivedAt         DateTime?
+  status             EmailMessageStatus  @default(DRAFT)
+  unread             Boolean             @default(false)
+  failureReason      String?
+  campaignId         String?
+  templateId         String?
+  createdAt          DateTime            @default(now())
+  updatedAt          DateTime            @updatedAt
+  company            Company?            @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  contact            Contact?            @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  campaign           Campaign?           @relation(fields: [campaignId], references: [id], onDelete: SetNull)
+  template           EmailTemplate?      @relation(fields: [templateId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, createdAt])
+  @@index([threadId])
+  @@index([direction, unread])
+  @@index([status])
+}
+
+model Campaign {
+  id          String         @id @default(cuid())
+  name        String
+  description String?
+  status      CampaignStatus @default(DRAFT)
+  templateId  String?
+  filtersJson String?
+  authorId    String
+  createdAt   DateTime       @default(now())
+  updatedAt   DateTime       @updatedAt
+  template    EmailTemplate? @relation(fields: [templateId], references: [id], onDelete: SetNull)
+  author      User           @relation(fields: [authorId], references: [id], onDelete: Restrict)
+  emails      EmailMessage[]
+  recipients  CampaignRecipient[]
+
+  @@index([status])
+}
+
+model CampaignRecipient {
+  id         String   @id @default(cuid())
+  campaignId String
+  companyId  String
+  createdAt  DateTime @default(now())
+  campaign   Campaign @relation(fields: [campaignId], references: [id], onDelete: Cascade)
+  company    Company  @relation(fields: [companyId], references: [id], onDelete: Cascade)
+
+  @@unique([campaignId, companyId])
+}
+
+model Task {
+  id        String     @id @default(cuid())
+  companyId String
+  contactId String?
+  authorId  String
+  title     String
+  dueAt     DateTime
+  type      TaskType   @default(FOLLOW_UP)
+  status    TaskStatus @default(OPEN)
+  notes     String?
+  createdAt DateTime   @default(now())
+  updatedAt DateTime   @updatedAt
+  company   Company    @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact   Contact?   @relation(fields: [contactId], references: [id], onDelete: SetNull)
+  author    User       @relation(fields: [authorId], references: [id], onDelete: Restrict)
+
+  @@index([status, dueAt])
+  @@index([companyId])
+}
+
+model Activity {
+  id        String       @id @default(cuid())
+  companyId String?
+  userId    String?
+  type      ActivityType
+  message   String
+  metadata  String?
+  createdAt DateTime     @default(now())
+  company   Company?     @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  user      User?        @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@index([companyId, createdAt])
+  @@index([createdAt])
+}
+
+model Suppression {
+  id        String             @id @default(cuid())
+  companyId String?
+  contactId String?
+  email     String
+  emailNorm String
+  domain    String?
+  reason    SuppressionReason
+  source    String?
+  notes     String?
+  createdAt DateTime           @default(now())
+  company   Company?           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  contact   Contact?           @relation(fields: [contactId], references: [id], onDelete: SetNull)
+
+  @@unique([emailNorm])
+  @@index([reason])
+  @@index([domain])
+}
