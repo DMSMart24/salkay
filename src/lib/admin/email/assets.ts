@@ -7,7 +7,9 @@ export function emailAssetBaseUrl() {
   if (configured) {
     return configured.replace(/\/$/, "");
   }
-  return site.url.replace(/\/$/, "");
+  // salkay.com DNS is still on the registrar host, so email images 404 there.
+  // Serve assets from the existing Vercel production hostname until that DNS is switched.
+  return "https://salkay.vercel.app";
 }
 
 export function emailAssetUrl(path: string) {
