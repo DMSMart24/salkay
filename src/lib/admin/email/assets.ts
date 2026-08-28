@@ -34,9 +34,9 @@ export function salkayPhone() {
 }
 
 export const emailAssets = {
-  logo: "/email/salkay-logo-official.png",
-  logoHeader: "/email/salkay-logo-official-header.png",
-  logoSource: "/email/salkay-logo-official-source.png",
+  logo: "/email/salkay-logo-transparent.png",
+  logoHeader: "/email/salkay-logo-transparent-2x.png",
+  logoSource: "/email/salkay-logo-transparent-source.png",
   kay: "/email/kay-restaurant.png",
   kaySource: "/brand/kay/kay-hero-still.png",
   hero: "/email/restaurant-hero.jpg",
