@@ -10,7 +10,8 @@ Restaurant hero (approved banner direction):
 
 - `restaurant-hero-banner.jpg` — full approved landscape restaurant banner reference (1024×512). Desktop email.
 - `restaurant-hero-scene.jpg` — desktop right-side crop: KAY, table, laptop, food, restaurant lights.
-- `restaurant-hero-mobile.jpg` — approved 9:16 mobile email hero (576×1024). Generic marketing only. Do not regenerate.
+- `restaurant-hero-mobile-final.jpg` — final approved mobile email hero. Generic marketing only. Do not regenerate or crop.
+- `restaurant-hero-mobile.jpg` — previous mobile artwork with bottom service strip. Do not use.
 
 Other:
 

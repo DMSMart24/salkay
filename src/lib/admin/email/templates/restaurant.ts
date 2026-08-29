@@ -120,7 +120,7 @@ function mobileHero() {
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#07111f;">
                 <tr>
                   <td align="center" bgcolor="#07111f" style="padding:0;line-height:0;font-size:0;background:#07111f;">
-                    <img class="salkay-hero-mobile-art" src="{{heroMobileUrl}}" width="390" alt="SALKAY. Gastronomi Sektörü İçin Dijital Çözümler. Restoranınızın dijital yüzünü birlikte daha etkileyici hale getirelim." style="display:block;border:0;width:100%;max-width:390px;height:auto;background-color:#07111f;color:#f8f3ea;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;">
+                    <img class="salkay-hero-mobile-art" src="{{heroMobileUrl}}" width="390" alt="SALKAY — Gastronomi Sektörü İçin Dijital Çözümler" style="display:block;border:0;margin:0;padding:0;width:100%;max-width:390px;height:auto;background-color:#07111f;color:#f8f3ea;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;">
                   </td>
                 </tr>
               </table>
