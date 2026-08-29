@@ -7,6 +7,7 @@ import {
   scoreBlockHtml,
 } from "@/lib/admin/email/context";
 import { applyMerge } from "@/lib/admin/email/html";
+import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
 
 export const RESTAURANT_TEMPLATE_NAME = "RESTORAN — Premium Web Sitesi Analizi";
 export const RESTAURANT_TEMPLATE_SUBJECT = "{{companyName}} web sitesi hakkında kısa bir fikir";
@@ -29,16 +30,7 @@ export function isRestaurantPremiumTemplate(input: {
   body?: string | null;
   category?: string | null;
 }) {
-  const name = (input.name ?? "").trim();
-  if (name === RESTAURANT_TEMPLATE_NAME) return true;
-  const normalized = name.replace(/[—–−-]/g, "-").toLocaleLowerCase("tr");
-  if (normalized.includes("restoran") && normalized.includes("premium") && normalized.includes("analiz")) {
-    return true;
-  }
-  if ((input.category ?? "").toLocaleUpperCase("tr") === "RESTORAN" && /salkay-email:restaurant/i.test(input.body ?? "")) {
-    return true;
-  }
-  return /<!--\s*salkay-email:restaurant/i.test(input.body ?? "");
+  return resolvePremiumEmailKind(input) === "restaurant";
 }
 
 const SERVICES = [

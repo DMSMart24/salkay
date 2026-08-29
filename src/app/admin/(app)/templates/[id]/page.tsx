@@ -3,11 +3,9 @@ import { notFound } from "next/navigation";
 import { duplicateTemplateForm } from "@/app/admin/actions/templates";
 import { TemplateStudio } from "@/components/admin/TemplateStudio";
 import { formatDateTime } from "@/lib/admin/format";
-import { isBarPremiumTemplate, barPremiumSource } from "@/lib/admin/email/templates/bar";
-import {
-  isRestaurantPremiumTemplate,
-  restaurantPremiumSource,
-} from "@/lib/admin/email/templates/restaurant";
+import { barPremiumSource } from "@/lib/admin/email/templates/bar";
+import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
+import { restaurantPremiumSource } from "@/lib/admin/email/templates/restaurant";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
@@ -56,7 +54,27 @@ export default async function TemplateDetailPage({
     }),
   ]);
   if (!template) notFound();
-  const barTemplate = isBarPremiumTemplate(template);
+  const kind = resolvePremiumEmailKind({
+    name: template.name,
+    category: template.category,
+  });
+  const barTemplate = kind === "bar";
+  let studioBody = template.body;
+  switch (kind) {
+    case "bar":
+      studioBody = barPremiumSource();
+      break;
+    case "restaurant":
+      studioBody = restaurantPremiumSource();
+      break;
+    case "custom":
+      studioBody = template.body;
+      break;
+    default: {
+      const _never: never = kind;
+      throw new Error(`Unhandled premium email kind: ${_never}`);
+    }
+  }
 
   return (
     <div className="admin-page">
@@ -80,13 +98,10 @@ export default async function TemplateDetailPage({
         </div>
       </header>
       <TemplateStudio
+        key={template.id}
         template={{
           ...template,
-          body: isRestaurantPremiumTemplate(template)
-            ? restaurantPremiumSource()
-            : barTemplate
-              ? barPremiumSource()
-              : template.body,
+          body: studioBody,
           updatedAt: template.updatedAt.toISOString(),
         }}
         companies={[...companies]

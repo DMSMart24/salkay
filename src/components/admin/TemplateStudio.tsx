@@ -58,7 +58,7 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
     startTransition(() => {
       previewAction(data);
     });
-    // Preview on company change only; Önizle uses the current editor values.
+    // Preview on company/template change only; Önizle uses the current editor values.
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [companyId, template.id]);
 

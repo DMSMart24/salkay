@@ -227,11 +227,11 @@ export async function sendTestEmailAction(
     return { error: "Şablon bulunamadı." };
   }
 
-  const restaurant = isRestaurantPremiumTemplate(template);
   const bar = isBarPremiumTemplate(template);
+  const restaurant = !bar && isRestaurantPremiumTemplate(template);
   const rendered = renderPersonalizedEmail({
-    subject: restaurant ? RESTAURANT_TEMPLATE_SUBJECT : bar ? BAR_TEMPLATE_SUBJECT : template.subject,
-    body: restaurant ? restaurantPremiumSource() : bar ? barPremiumSource() : template.body,
+    subject: bar ? BAR_TEMPLATE_SUBJECT : restaurant ? RESTAURANT_TEMPLATE_SUBJECT : template.subject,
+    body: bar ? barPremiumSource() : restaurant ? restaurantPremiumSource() : template.body,
     company,
     templateName: template.name,
     templateCategory: template.category,

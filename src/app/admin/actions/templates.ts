@@ -11,13 +11,12 @@ import {
   BAR_TEMPLATE_NAME,
   BAR_TEMPLATE_SUBJECT,
   barPremiumSource,
-  isBarPremiumTemplate,
 } from "@/lib/admin/email/templates/bar";
 import { ensureBarOutreachRecords } from "@/lib/admin/email/templates/ensure-bar";
+import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
 import {
   RESTAURANT_TEMPLATE_NAME,
   RESTAURANT_TEMPLATE_SUBJECT,
-  isRestaurantPremiumTemplate,
   restaurantPremiumSource,
 } from "@/lib/admin/email/templates/restaurant";
 import { getPrisma } from "@/lib/admin/prisma";
@@ -128,9 +127,23 @@ export async function ensureRestaurantTemplateForm(formData: FormData) {
 }
 
 function premiumTemplateSource(template: { name?: string | null; body?: string | null; category?: string | null }) {
-  if (isRestaurantPremiumTemplate(template)) return restaurantPremiumSource();
-  if (isBarPremiumTemplate(template)) return barPremiumSource();
-  return template.body ?? "";
+  const kind = resolvePremiumEmailKind({
+    name: template.name,
+    category: template.category,
+    body: template.body,
+  });
+  switch (kind) {
+    case "bar":
+      return barPremiumSource();
+    case "restaurant":
+      return restaurantPremiumSource();
+    case "custom":
+      return template.body ?? "";
+    default: {
+      const _never: never = kind;
+      throw new Error(`Unhandled premium email kind: ${_never}`);
+    }
+  }
 }
 
 export async function ensureBarTemplateForm(formData: FormData) {
@@ -216,9 +229,11 @@ export async function previewTemplateAction(
 
   const subject = String(formData.get("subject") ?? "").trim() || template.subject;
   const editorBody = String(formData.get("body") ?? "").trim() || template.body;
-  const body = isRestaurantPremiumTemplate(template) || isBarPremiumTemplate(template)
-    ? premiumTemplateSource(template)
-    : editorBody;
+  const kind = resolvePremiumEmailKind({
+    name: template.name,
+    category: template.category,
+  });
+  const body = kind === "custom" ? editorBody : premiumTemplateSource(template);
   const rendered = renderPersonalizedEmail({
     subject,
     body,

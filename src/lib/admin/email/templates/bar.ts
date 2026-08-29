@@ -6,6 +6,7 @@ import {
   scoreBlockHtml,
 } from "@/lib/admin/email/context";
 import { applyMerge } from "@/lib/admin/email/html";
+import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
 import {
   PREMIUM_EMAIL_CSS,
   benefitCellsHtml,
@@ -75,18 +76,7 @@ export function isBarPremiumTemplate(input: {
   body?: string | null;
   category?: string | null;
 }) {
-  const name = (input.name ?? "").trim();
-  if (name === BAR_TEMPLATE_NAME) return true;
-  const normalized = name.replace(/[—–−-]/g, "-").toLocaleLowerCase("tr");
-  if (normalized.includes("restoran") || normalized.includes("restaurant")) return false;
-  if (/\bbar\b/.test(normalized) && normalized.includes("premium") && normalized.includes("analiz")) {
-    return true;
-  }
-  const category = (input.category ?? "").toLocaleUpperCase("tr");
-  if ((category === "BAR" || category === "BARLAR") && /salkay-email:bar/i.test(input.body ?? "")) {
-    return true;
-  }
-  return /<!--\s*salkay-email:bar/i.test(input.body ?? "");
+  return resolvePremiumEmailKind(input) === "bar";
 }
 
 const SERVICES = [

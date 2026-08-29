@@ -4,11 +4,10 @@ import { applyMerge, hasUnresolvedMerge, htmlToPlainText, looksLikeHtmlEmail } f
 import { mergeTemplate } from "@/lib/admin/merge";
 import {
   barPremiumSource,
-  isBarPremiumTemplate,
   renderBarEmail,
 } from "@/lib/admin/email/templates/bar";
+import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
 import {
-  isRestaurantPremiumTemplate,
   renderRestaurantEmail,
   restaurantPremiumSource,
 } from "@/lib/admin/email/templates/restaurant";
@@ -25,17 +24,28 @@ export function renderPersonalizedEmail(input: {
     body: input.body,
     category: input.templateCategory,
   };
-  const restaurant = isRestaurantPremiumTemplate(templateMeta);
-  const bar = !restaurant && isBarPremiumTemplate(templateMeta);
-  const context = bar ? buildBarEmailContext(input.company) : buildRestaurantEmailContext(input.company);
+  const kind = resolvePremiumEmailKind(templateMeta);
+  const context =
+    kind === "bar" ? buildBarEmailContext(input.company) : buildRestaurantEmailContext(input.company);
   const subject = mergeTemplate(input.subject, context.vars);
-  const bodyHtml = restaurant
-    ? renderRestaurantEmail(restaurantPremiumSource(), context)
-    : bar
-      ? renderBarEmail(barPremiumSource(), context)
-      : looksLikeHtmlEmail(input.body)
+  let bodyHtml: string;
+  switch (kind) {
+    case "bar":
+      bodyHtml = renderBarEmail(barPremiumSource(), context);
+      break;
+    case "restaurant":
+      bodyHtml = renderRestaurantEmail(restaurantPremiumSource(), context);
+      break;
+    case "custom":
+      bodyHtml = looksLikeHtmlEmail(input.body)
         ? applyMerge(input.body, { ...context.vars }, true)
         : mergeTemplate(input.body, context.vars);
+      break;
+    default: {
+      const _never: never = kind;
+      throw new Error(`Unhandled premium email kind: ${_never}`);
+    }
+  }
   const bodyText = looksLikeHtmlEmail(bodyHtml) ? htmlToPlainText(bodyHtml) : bodyHtml;
 
   return {
