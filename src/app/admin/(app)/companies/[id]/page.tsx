@@ -10,6 +10,7 @@ import { NoteForm } from "@/components/admin/SimpleForms";
 import { OutreachBadge, WebsiteBadge } from "@/components/admin/StatusBadge";
 import { formatDate, formatDateTime } from "@/lib/admin/format";
 import { directionLabels, emailStatusLabels } from "@/lib/admin/labels";
+import { isOutreachSendEnabled } from "@/lib/admin/outreach";
 import { getPrisma } from "@/lib/admin/prisma";
 import { getCompanyDetail } from "@/lib/admin/queries";
 
@@ -29,7 +30,7 @@ export default async function CompanyDetailPage({
   const [templates, groups] = await Promise.all([
     getPrisma().emailTemplate.findMany({
       where: { active: true },
-      select: { id: true, name: true, subject: true, body: true },
+      select: { id: true, name: true, category: true, subject: true, body: true },
       orderBy: { name: "asc" },
     }),
     getPrisma().leadGroup.findMany({
@@ -63,8 +64,11 @@ export default async function CompanyDetailPage({
             website={company.website}
             city={company.city}
             industry={company.industry}
+            groupName={company.group?.name}
+            groupIndustry={company.group?.industry}
             contacts={company.contacts}
             templates={templates}
+            outreachSendEnabled={isOutreachSendEnabled()}
           />
           <form action={moveCompaniesToGroupForm} className="admin-inline-form">
             <input type="hidden" name="companyIds" value={company.id} />

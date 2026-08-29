@@ -6,7 +6,13 @@ import { recordActivity } from "@/lib/admin/activity";
 import { getEmailFrom, getEmailProvider } from "@/lib/admin/email/provider";
 import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import { looksLikeHtmlEmail } from "@/lib/admin/email/html";
+import {
+  isRestaurantPremiumTemplate,
+  RESTAURANT_TEMPLATE_SUBJECT,
+  restaurantPremiumSource,
+} from "@/lib/admin/email/templates/restaurant";
 import { normalizeEmail } from "@/lib/admin/normalize";
+import { isOutreachSendEnabled } from "@/lib/admin/outreach";
 import { getPrisma } from "@/lib/admin/prisma";
 import { requireAdmin } from "@/lib/admin/session";
 import { companyIsCampaignEligible, isEmailSuppressed, suppressEmail } from "@/lib/admin/suppression";
@@ -14,6 +20,7 @@ import {
   assignMessageSchema,
   campaignSchema,
   composeSchema,
+  sendTestEmailSchema,
   taskSchema,
   taskStatusSchema,
   templateSchema,
@@ -73,14 +80,21 @@ export async function composeEmailAction(
     ? company.contacts.find((row) => row.id === parsed.data.contactId)
     : company.contacts.find((row) => row.isPrimary) ?? company.contacts[0];
 
+  const template = parsed.data.templateId
+    ? await prisma.emailTemplate.findUnique({ where: { id: parsed.data.templateId } })
+    : null;
   const rendered = renderPersonalizedEmail({
     subject: parsed.data.subject,
     body: parsed.data.body,
     company,
+    templateName: template?.name,
+    templateCategory: template?.category,
   });
   const mergedSubject = rendered.subject;
   const mergedBody = rendered.bodyText;
-  const mergedHtml = looksLikeHtmlEmail(parsed.data.body) ? rendered.bodyHtml : undefined;
+  const mergedHtml = looksLikeHtmlEmail(parsed.data.body) || isRestaurantPremiumTemplate(template ?? {})
+    ? rendered.bodyHtml
+    : undefined;
 
   if (parsed.data.saveDraft) {
     await prisma.$transaction(async (tx) => {
@@ -109,6 +123,12 @@ export async function composeEmailAction(
     });
     touchCompany(company.id);
     return { success: "Taslak kaydedildi. Gönderilmedi." };
+  }
+
+  if (!isOutreachSendEnabled()) {
+    return {
+      error: "Gerçek gönderim kapalı (OUTREACH_SEND_ENABLED). Test e-postası kullanın.",
+    };
   }
 
   const provider = getEmailProvider();
@@ -163,6 +183,70 @@ export async function composeEmailAction(
 
   touchCompany(company.id);
   return { success: "E-posta gönderildi." };
+}
+
+export async function sendTestEmailAction(
+  _prev: FormState,
+  formData: FormData,
+): Promise<FormState> {
+  await requireAdmin();
+  const parsed = sendTestEmailSchema.safeParse({
+    companyId: formData.get("companyId"),
+    templateId: formData.get("templateId"),
+    testEmail: formData.get("testEmail"),
+  });
+  if (!parsed.success) {
+    return { error: parsed.error.issues[0]?.message ?? "Test e-postası geçersiz." };
+  }
+
+  const testEmail = normalizeEmail(parsed.data.testEmail);
+  if (!testEmail) {
+    return { error: "Geçerli bir test e-posta adresi girin." };
+  }
+
+  const prisma = getPrisma();
+  const [company, template] = await Promise.all([
+    prisma.company.findUnique({
+      where: { id: parsed.data.companyId },
+      include: { contacts: true },
+    }),
+    prisma.emailTemplate.findUnique({ where: { id: parsed.data.templateId } }),
+  ]);
+  if (!company) {
+    return { error: "Firma bulunamadı." };
+  }
+  if (!template) {
+    return { error: "Şablon bulunamadı." };
+  }
+
+  const restaurant = isRestaurantPremiumTemplate(template);
+  const rendered = renderPersonalizedEmail({
+    subject: restaurant ? RESTAURANT_TEMPLATE_SUBJECT : template.subject,
+    body: restaurant ? restaurantPremiumSource() : template.body,
+    company,
+    templateName: template.name,
+    templateCategory: template.category,
+  });
+  if (rendered.unresolved) {
+    return { error: "Şablonda çözülmemiş merge alanı var. Test gönderilmedi." };
+  }
+
+  const provider = getEmailProvider();
+  if (!provider.configured) {
+    return { error: "E-posta sağlayıcısı yapılandırılmadı. RESEND_API_KEY ve EMAIL_FROM ekleyin." };
+  }
+
+  const sent = await provider.sendEmail({
+    to: testEmail,
+    subject: rendered.subject,
+    bodyText: rendered.bodyText,
+    bodyHtml: rendered.bodyHtml,
+  });
+  if (!sent.ok) {
+    return { error: sent.error };
+  }
+
+  return { success: `Test e-postası gönderildi: ${testEmail}` };
 }
 
 export async function createTaskAction(

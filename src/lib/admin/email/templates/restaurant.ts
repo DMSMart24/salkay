@@ -12,6 +12,18 @@ export const RESTAURANT_TEMPLATE_NAME = "RESTORAN — Premium Web Sitesi Analizi
 export const RESTAURANT_TEMPLATE_SUBJECT = "{{companyName}} web sitesi hakkında kısa bir fikir";
 export const RESTAURANT_TEMPLATE_SUBJECT_ALT = "{{companyName}} için birkaç dijital geliştirme önerisi";
 
+export function isRestaurantCompany(input: {
+  industry?: string | null;
+  groupName?: string | null;
+  groupIndustry?: string | null;
+}) {
+  const hay = [input.industry, input.groupName, input.groupIndustry]
+    .filter(Boolean)
+    .join(" ")
+    .toLocaleLowerCase("tr");
+  return hay.includes("restoran") || hay.includes("restaurant");
+}
+
 export function isRestaurantPremiumTemplate(input: {
   name?: string | null;
   body?: string | null;

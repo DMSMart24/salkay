@@ -3041,6 +3041,12 @@ button {
   overflow: auto;
 }
 
+.admin-test-block {
+  margin-top: 1.25rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--c-border);
+}
+
 .admin-menu-toggle,
 .admin-backdrop {
   display: none;

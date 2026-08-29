@@ -1,14 +1,21 @@
 "use client";
 
-import { useActionState, useState } from "react";
-import { composeEmailAction } from "@/app/admin/actions/comms";
+import { useActionState, useMemo, useState } from "react";
+import { composeEmailAction, sendTestEmailAction } from "@/app/admin/actions/comms";
 import { ActionMessage } from "@/components/admin/ActionMessage";
+import {
+  isRestaurantCompany,
+  isRestaurantPremiumTemplate,
+  RESTAURANT_TEMPLATE_NAME,
+  RESTAURANT_TEMPLATE_SUBJECT,
+} from "@/lib/admin/email/templates/restaurant";
 import { mergeTemplate } from "@/lib/admin/merge";
 import type { FormState } from "@/lib/admin/validation";
 
 type TemplateOption = {
   id: string;
   name: string;
+  category?: string | null;
   subject: string;
   body: string;
 };
@@ -26,8 +33,11 @@ type ComposeEmailProps = {
   website?: string | null;
   city?: string | null;
   industry?: string | null;
+  groupName?: string | null;
+  groupIndustry?: string | null;
   contacts: ContactOption[];
   templates: TemplateOption[];
+  outreachSendEnabled?: boolean;
 };
 
 export function ComposeEmail({
@@ -36,22 +46,30 @@ export function ComposeEmail({
   website,
   city,
   industry,
+  groupName,
+  groupIndustry,
   contacts,
   templates,
+  outreachSendEnabled = false,
 }: ComposeEmailProps) {
+  const restaurantCompany = isRestaurantCompany({ industry, groupName, groupIndustry });
+  const restaurantTemplate = useMemo(
+    () =>
+      templates.find((row) => row.name === RESTAURANT_TEMPLATE_NAME) ??
+      templates.find((row) => isRestaurantPremiumTemplate(row)),
+    [templates],
+  );
+  const initialTemplateId = restaurantCompany ? restaurantTemplate?.id ?? "" : "";
+
   const [open, setOpen] = useState(false);
-  const [state, action, pending] = useActionState<FormState, FormData>(
-    composeEmailAction,
+  const [state, action, pending] = useActionState<FormState, FormData>(composeEmailAction, {});
+  const [testState, testAction, testPending] = useActionState<FormState, FormData>(
+    sendTestEmailAction,
     {},
   );
-  const [subject, setSubject] = useState("");
-  const [body, setBody] = useState("");
-  const [to, setTo] = useState(contacts.find((row) => row.email)?.email ?? "");
   const primary = contacts[0];
-
-  function applyTemplate(id: string) {
-    const template = templates.find((row) => row.id === id);
-    if (!template) return;
+  const prefill = useMemo(() => {
+    const template = templates.find((row) => row.id === initialTemplateId);
     const vars = {
       companyName,
       firstName: primary?.firstName,
@@ -59,6 +77,44 @@ export function ComposeEmail({
       city: city ?? undefined,
       industry: industry ?? undefined,
     };
+    if (template && isRestaurantPremiumTemplate(template)) {
+      return {
+        subject: mergeTemplate(RESTAURANT_TEMPLATE_SUBJECT, vars),
+        body: "Restoran premium HTML şablonu gönderimde otomatik kullanılır.",
+      };
+    }
+    if (!template) return { subject: "", body: "" };
+    return {
+      subject: mergeTemplate(template.subject, vars),
+      body: mergeTemplate(template.body, vars),
+    };
+  }, [companyName, industry, initialTemplateId, primary?.firstName, templates, website, city]);
+
+  const [templateId, setTemplateId] = useState(initialTemplateId);
+  const [subject, setSubject] = useState(prefill.subject);
+  const [body, setBody] = useState(prefill.body);
+  const [to, setTo] = useState(contacts.find((row) => row.email)?.email ?? "");
+  const [testEmail, setTestEmail] = useState("");
+
+  function applyTemplate(id: string) {
+    const template = templates.find((row) => row.id === id);
+    if (!template) {
+      setSubject("");
+      setBody("");
+      return;
+    }
+    const vars = {
+      companyName,
+      firstName: primary?.firstName,
+      website: website ?? undefined,
+      city: city ?? undefined,
+      industry: industry ?? undefined,
+    };
+    if (isRestaurantPremiumTemplate(template)) {
+      setSubject(mergeTemplate(RESTAURANT_TEMPLATE_SUBJECT, vars));
+      setBody("Restoran premium HTML şablonu gönderimde otomatik kullanılır.");
+      return;
+    }
     setSubject(mergeTemplate(template.subject, vars));
     setBody(mergeTemplate(template.body, vars));
   }
@@ -117,8 +173,11 @@ export function ComposeEmail({
                 Template
                 <select
                   name="templateId"
-                  defaultValue=""
-                  onChange={(event) => applyTemplate(event.target.value)}
+                  value={templateId}
+                  onChange={(event) => {
+                    setTemplateId(event.target.value);
+                    applyTemplate(event.target.value);
+                  }}
                 >
                   <option value="">Şablon yok</option>
                   {templates.map((template) => (
@@ -147,12 +206,47 @@ export function ComposeEmail({
                   onChange={(e) => setBody(e.target.value)}
                 />
               </label>
+              {!outreachSendEnabled ? (
+                <p className="admin-help">
+                  Gerçek gönderim kapalı (OUTREACH_SEND_ENABLED). Firma alıcısına e-posta gitmez.
+                </p>
+              ) : null}
               <div className="admin-actions">
-                <button name="intent" value="send" className="admin-btn" disabled={pending}>
+                <button
+                  name="intent"
+                  value="send"
+                  className="admin-btn"
+                  disabled={pending || !outreachSendEnabled}
+                >
                   Send
                 </button>
                 <button name="intent" value="draft" className="admin-btn ghost" disabled={pending}>
                   Save Draft
+                </button>
+              </div>
+            </form>
+
+            <form action={testAction} className="admin-form admin-test-block">
+              <input type="hidden" name="companyId" value={companyId} />
+              <input type="hidden" name="templateId" value={templateId} />
+              <p className="admin-kicker">TEST E-POSTASI</p>
+              <ActionMessage state={testState} />
+              <label>
+                Test e-posta adresi
+                <input
+                  name="testEmail"
+                  type="email"
+                  value={testEmail}
+                  onChange={(event) => setTestEmail(event.target.value)}
+                  placeholder="ornek@adres.com"
+                />
+              </label>
+              <p className="admin-help">
+                Bu test yalnızca aşağıdaki adrese gönderilir. Firma alıcısına e-posta gönderilmez.
+              </p>
+              <div className="admin-actions">
+                <button className="admin-btn" disabled={testPending || !templateId}>
+                  Test E-postası Gönder
                 </button>
               </div>
             </form>

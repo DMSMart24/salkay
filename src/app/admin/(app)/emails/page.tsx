@@ -35,7 +35,10 @@ export default async function EmailsPage({
     }),
     prisma.company.findMany({
       where: { archivedAt: null },
-      include: { contacts: { take: 3, orderBy: { isPrimary: "desc" } } },
+      include: {
+        contacts: { take: 3, orderBy: { isPrimary: "desc" } },
+        group: { select: { name: true, industry: true } },
+      },
       orderBy: { companyName: "asc" },
       take: 200,
     }),
@@ -98,8 +101,11 @@ export default async function EmailsPage({
               website={composeCompany.website}
               city={composeCompany.city}
               industry={composeCompany.industry}
+              groupName={composeCompany.group?.name}
+              groupIndustry={composeCompany.group?.industry}
               contacts={composeCompany.contacts}
               templates={templates}
+              outreachSendEnabled={isOutreachSendEnabled()}
             />
           ) : (
             <p className="admin-help">Önce bir firma ekleyin.</p>

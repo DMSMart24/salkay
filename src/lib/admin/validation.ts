@@ -113,6 +113,16 @@ export const templateSchema = z.object({
   active: z.boolean().optional(),
 });
 
+export const sendTestEmailSchema = z.object({
+  companyId: z.string().min(1, "Firma gerekli."),
+  templateId: z.string().min(1, "Şablon seçin."),
+  testEmail: z
+    .string()
+    .trim()
+    .email("Geçerli bir test e-posta adresi girin.")
+    .refine((value) => !value.includes(","), { message: "Test gönderimi yalnızca bir adrese yapılır." }),
+});
+
 export const composeSchema = z.object({
   companyId: z.string().min(1),
   contactId: optionalText,
