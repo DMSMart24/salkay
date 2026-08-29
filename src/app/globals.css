@@ -649,6 +649,65 @@ button {
   }
 }
 
+[data-salkay-brand] {
+  scroll-margin-top: 5.5rem;
+  padding-block: 4rem;
+}
+
+.brand-statement {
+  max-width: 34rem;
+}
+
+.brand-statement-line {
+  margin-top: 0.65rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+  color: var(--c-text-dim);
+}
+
+.brand-statement-rule {
+  width: 2.25rem;
+  height: 2px;
+  margin-top: 1.35rem;
+  background: var(--c-cyan);
+  box-shadow: 0 0 10px color-mix(in srgb, var(--c-cyan) 50%, transparent);
+}
+
+.brand-statement-title {
+  display: flex;
+  flex-direction: column;
+  margin-top: 1.1rem;
+  font-size: clamp(2rem, 7.2vw, 2.55rem);
+  font-weight: 700;
+  line-height: 1.06;
+  letter-spacing: -0.04em;
+  color: var(--c-text);
+}
+
+.brand-statement-support {
+  margin-top: 1.15rem;
+  max-width: 20rem;
+  font-size: 0.98rem;
+  line-height: 1.55;
+  color: var(--c-text-dim);
+}
+
+@media (min-width: 768px) {
+  [data-salkay-brand] {
+    padding-block: 5.5rem;
+  }
+
+  .brand-statement-title {
+    font-size: clamp(2.6rem, 4.4vw, 4rem);
+  }
+}
+
+@media (min-width: 920px) {
+  [data-salkay-brand] {
+    padding-block: 6.5rem;
+  }
+}
+
 .hero-fx {
   --hero-navy-0: #05070c;
   --hero-navy-1: #070b12;

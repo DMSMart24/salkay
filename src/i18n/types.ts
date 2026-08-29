@@ -62,15 +62,13 @@ export type Dictionary = {
       wideBody: string;
     };
     kayStory: {
+      ariaLabel: string;
       eyebrow: string;
-      title: string;
-      body: string;
-      nowTag: string;
-      nowBody: string;
-      nextTag: string;
-      nextBody: string;
-      laterTag: string;
-      laterBody: string;
+      line: string;
+      team: string;
+      process: string;
+      goal: string;
+      support: string;
     };
     homeContact: {
       eyebrow: string;
