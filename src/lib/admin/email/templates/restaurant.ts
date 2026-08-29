@@ -213,7 +213,7 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
       font-size: inherit !important;
       line-height: inherit !important;
     }
-    .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-cta-copy, .salkay-cta-kay { display: block !important; width: 100% !important; }
+    .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-sign-logo, .salkay-sign-contact { display: block !important; width: 100% !important; }
     .salkay-benefit { padding: 0 0 14px 0 !important; }
     .salkay-benefit-last { padding-bottom: 0 !important; }
     .salkay-services-wrap { padding: 22px 20px 16px !important; background: #07111F !important; }
@@ -222,7 +222,15 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
     .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-audit { padding-top: 16px !important; }
     .salkay-audit-card { padding: 20px !important; }
+    .salkay-cta-wrap { padding: 12px 18px 10px !important; background: #07111F !important; }
+    .salkay-cta-inner { padding: 22px 20px 20px !important; }
+    .salkay-cta-btn-wrap { width: 86% !important; }
     .salkay-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+    .salkay-sign-wrap { padding: 8px 18px 14px !important; background: #F8F3EA !important; }
+    .salkay-sign-head { padding: 18px 18px 0 !important; }
+    .salkay-sign-logo { padding: 14px 18px 8px !important; }
+    .salkay-sign-contact { padding: 0 18px 18px !important; }
+    .salkay-footer { padding: 16px 18px 20px !important; text-align: center !important; }
   }
 </style>
 </head>
@@ -317,18 +325,17 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
           </tr>
 
           <tr>
-            <td class="salkay-pad" bgcolor="#081526" style="background:#081526;padding:22px 24px;border-top:1px solid #d5aa62;border-bottom:1px solid #d5aa62;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+            <td class="salkay-pad salkay-cta-wrap" bgcolor="#07111F" style="background:#07111F;padding:18px 24px 14px;">
+              <!-- salkay-close:cta -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:separate;background:#07111F;border:1px solid #D5AA62;border-radius:10px;">
                 <tr>
-                  <td class="salkay-cta-kay" valign="middle" width="88" style="padding-right:14px;">
-                    <img src="{{kayUrl}}" width="72" alt="KAY" style="display:block;border:0;width:72px;height:auto;">
-                  </td>
-                  <td class="salkay-cta-copy" valign="middle">
-                    <p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:23px;color:#ffffff;font-weight:700;">Size özel kısa bir analiz ve geliştirme önerisi hazırlayalım.</p>
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                  <td width="4" bgcolor="#16C7FF" style="width:4px;background:#16C7FF;border-radius:10px 0 0 10px;font-size:0;line-height:0;">&nbsp;</td>
+                  <td class="salkay-cta-inner" bgcolor="#07111F" align="center" style="background:#07111F;padding:26px 28px 24px;border-radius:0 10px 10px 0;">
+                    <p style="margin:0 0 16px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;color:#FFFFFF;font-weight:700;">Size özel kısa bir analiz<br>ve geliştirme önerisi hazırlayalım.</p>
+                    <table role="presentation" class="salkay-cta-btn-wrap" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse;">
                       <tr>
-                        <td bgcolor="#d5aa62" style="background:#d5aa62;border-radius:24px;">
-                          <a class="salkay-cta-btn" href="{{ctaUrl}}" style="display:inline-block;padding:12px 22px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#07111f;text-decoration:none;font-weight:700;">Ücretsiz Fikir Al →</a>
+                        <td bgcolor="#D5AA62" align="center" style="background:#D5AA62;border-radius:24px;">
+                          <a class="salkay-cta-btn" href="{{ctaUrl}}" style="display:inline-block;padding:12px 28px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#07111F;text-decoration:none;font-weight:700;">Ücretsiz Fikir Al →</a>
                         </td>
                       </tr>
                     </table>
@@ -339,20 +346,34 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
           </tr>
 
           <tr>
-            <td bgcolor="#ffffff" class="salkay-pad" style="background:#ffffff;padding:24px;">
-              <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+            <td class="salkay-pad salkay-sign-wrap" bgcolor="#F8F3EA" style="background:#F8F3EA;padding:10px 24px 16px;">
+              <!-- salkay-close:signature -->
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="border-collapse:separate;background:#FFFFFF;border:1px solid #D5AA62;border-radius:10px;">
                 <tr>
-                  <td valign="top" width="72" style="padding-right:14px;">
-                    <img src="{{kayUrl}}" width="58" alt="KAY" style="display:block;border:0;width:58px;height:auto;">
+                  <td class="salkay-sign-head" bgcolor="#FFFFFF" style="background:#FFFFFF;padding:20px 22px 0;border-radius:10px 10px 0 0;">
+                    <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;color:#5A6A7C;">İyi çalışmalar,</p>
+                    <p style="margin:0 0 12px;font-family:Georgia,Times,serif;font-size:26px;line-height:32px;color:#07111F;">Salih Kaya</p>
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                      <tr><td width="44" height="2" bgcolor="#D5AA62" style="background:#D5AA62;font-size:0;line-height:0;">&nbsp;</td></tr>
+                    </table>
                   </td>
-                  <td valign="top">
-                    <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#334155;">İyi çalışmalar,</p>
-                    <p style="margin:0 0 10px;font-family:Georgia,Times,serif;font-size:22px;line-height:26px;color:#0d1728;">Salih Kaya</p>
-                    <img src="{{logoUrl}}" width="140" height="79" alt="SALKAY" style="display:block;border:0;width:140px;height:auto;max-width:100%;">
-                    <p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;letter-spacing:0.05em;color:#64748b;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
-                    <p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="mailto:info@salkay.com" style="color:#1478ff;text-decoration:none;">info@salkay.com</a></p>
-                    <p style="margin:2px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="${site.url}" style="color:#1478ff;text-decoration:none;">${site.url.replace("https://", "")}</a></p>
-                    {{phoneBlock}}
+                </tr>
+                <tr>
+                  <td bgcolor="#FFFFFF" style="background:#FFFFFF;padding:14px 22px 20px;border-radius:0 0 10px 10px;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                      <tr>
+                        <td class="salkay-sign-logo" valign="middle" width="38%" style="width:38%;padding:0 16px 0 0;">
+                          <img src="{{logoUrl}}" width="88" height="50" alt="SALKAY" style="display:block;border:0;width:88px;height:auto;max-width:88px;">
+                        </td>
+                        <td class="salkay-sign-contact" valign="middle" width="62%" style="width:62%;padding:0;">
+                          <p style="margin:0 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;letter-spacing:0.14em;color:#07111F;font-weight:700;">SALKAY</p>
+                          <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#5A6A7C;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
+                          <p style="margin:0 0 2px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="mailto:info@salkay.com" style="color:#16C7FF;text-decoration:none;">info@salkay.com</a></p>
+                          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="${site.url}" style="color:#16C7FF;text-decoration:none;">salkay.com</a></p>
+                          {{phoneBlock}}
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                 </tr>
               </table>
@@ -360,17 +381,22 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
           </tr>
 
           <tr>
-            <td class="salkay-pad" bgcolor="#07111f" style="background:#07111f;padding:20px 24px 24px;">
-              <img src="{{logoUrl}}" width="120" height="68" alt="SALKAY" style="display:block;border:0;width:120px;height:auto;max-width:100%;">
-              <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#8ea0b8;">İstanbul, Türkiye</p>
-              <p style="margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;">
-                <a href="mailto:info@salkay.com" style="color:#16c7ff;text-decoration:none;">info@salkay.com</a>
+            <td class="salkay-pad salkay-footer" bgcolor="#07111F" align="center" style="background:#07111F;padding:20px 24px 24px;text-align:center;">
+              <!-- salkay-close:footer -->
+              <p style="margin:0 0 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.28em;color:#D5AA62;font-weight:700;">S A L K A Y</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse;margin:0 auto 12px;">
+                <tr><td width="40" height="2" bgcolor="#16C7FF" style="background:#16C7FF;font-size:0;line-height:0;">&nbsp;</td></tr>
+              </table>
+              <p style="margin:0 0 12px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#8EA0B8;">
+                İstanbul, Türkiye
                 &nbsp;·&nbsp;
-                <a href="${site.url}" style="color:#16c7ff;text-decoration:none;">salkay.com</a>
+                <a href="mailto:info@salkay.com" style="color:#16C7FF;text-decoration:none;">info@salkay.com</a>
+                &nbsp;·&nbsp;
+                <a href="${site.url}" style="color:#B8C3D1;text-decoration:none;">salkay.com</a>
               </p>
-              <p style="margin:12px 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#8ea0b8;">Bu e-posta {{companyName}} ekibine özel hazırlanmıştır.</p>
-              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;">
-                <a href="{{unsubscribeUrl}}" style="color:#9eb0c4;text-decoration:underline;">Abonelikten çık</a>
+              <p style="margin:0 0 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#8EA0B8;">Bu e-posta {{companyName}} ekibine özel hazırlanmıştır.</p>
+              <p style="margin:0;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;">
+                <a href="{{unsubscribeUrl}}" style="color:#D5AA62;text-decoration:underline;">Abonelikten çık</a>
               </p>
             </td>
           </tr>
