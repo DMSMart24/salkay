@@ -41,4 +41,5 @@ export const emailAssets = {
   kaySource: "/brand/kay/kay-hero-still.png",
   hero: "/email/restaurant-hero-scene.jpg",
   banner: "/email/restaurant-hero-banner.jpg",
+  heroMobile: "/email/restaurant-hero-mobile.jpg",
 } as const;

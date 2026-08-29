@@ -96,21 +96,8 @@ function mobileHero() {
             <td class="salkay-hero-mobile-cell" bgcolor="#07111f" style="display:none;max-height:0;background:#07111f;border-top:3px solid #d5aa62;padding:0;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#07111f;">
                 <tr>
-                  <td class="salkay-pad" style="padding:18px 18px 10px;">
-                    <img class="salkay-logo-hero" src="{{logoUrl}}" width="176" height="99" alt="SALKAY" style="display:block;border:0;width:176px;height:auto;max-width:72%;">
-                    <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;letter-spacing:0.12em;text-transform:uppercase;color:#16c7ff;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
-                    ${gastronomyPill()}
-                  </td>
-                </tr>
-                <tr>
-                  <td style="padding:0;line-height:0;font-size:0;">
-                    <img class="salkay-hero-photo" src="{{heroUrl}}" width="390" alt="KAY restoran masasında" style="display:block;border:0;width:100%;height:auto;">
-                  </td>
-                </tr>
-                <tr>
-                  <td class="salkay-pad" style="padding:16px 18px 22px;">
-                    ${heroHeadline(24, 30)}
-                    <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#c5d2e0;">Harika yemek deneyimleri, harika bir web sitesi ile daha çok misafire ulaşır.</p>
+                  <td align="center" bgcolor="#07111f" style="padding:0;line-height:0;font-size:0;background:#07111f;">
+                    <img class="salkay-hero-mobile-art" src="{{heroMobileUrl}}" width="390" alt="SALKAY. Gastronomi Sektörü İçin Dijital Çözümler. Restoranınızın dijital yüzünü birlikte daha etkileyici hale getirelim." style="display:block;border:0;width:100%;max-width:390px;height:auto;background-color:#07111f;color:#f8f3ea;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;">
                   </td>
                 </tr>
               </table>
@@ -139,10 +126,11 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
   .salkay-hero-mobile-cell {
     display: none !important;
     max-height: 0 !important;
+    overflow: hidden !important;
     mso-hide: all;
   }
   @media only screen and (max-width: 700px) {
-    .salkay-container { width: 100% !important; max-width: 100% !important; }
+    .salkay-container { width: 100% !important; max-width: 390px !important; }
     .salkay-pad { padding-left: 18px !important; padding-right: 18px !important; }
     .salkay-hero-desktop { display: none !important; max-height: 0 !important; overflow: hidden !important; }
     .salkay-hero-mobile { display: table-row !important; max-height: none !important; overflow: visible !important; }
@@ -155,16 +143,17 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
     }
     .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-service, .salkay-cta-copy, .salkay-cta-kay { display: block !important; width: 100% !important; }
     .salkay-hero-photo { width: 100% !important; height: auto !important; }
+    .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-audit { padding-top: 16px !important; }
-    .salkay-logo-hero { width: 176px !important; max-width: 72% !important; height: auto !important; }
+    .salkay-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
   }
 </style>
 </head>
-<body style="margin:0;padding:0;background:#07111f;color:#f8f3ea;">
+<body class="salkay-body" style="margin:0;padding:0;background:#07111f;color:#f8f3ea;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-    {{companyName}} için ücretsiz kısa bir website değerlendirmesi.
+    SALKAY. Gastronomi Sektörü İçin Dijital Çözümler. Restoranınızın dijital yüzünü birlikte daha etkileyici hale getirelim. {{companyName}} için ücretsiz kısa bir website değerlendirmesi.
   </div>
-  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#07111f;border-collapse:collapse;">
+  <table class="salkay-wrap" role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#07111f;border-collapse:collapse;">
     <tr>
       <td align="center" style="padding:16px 8px;">
         <table role="presentation" class="salkay-container" width="700" cellpadding="0" cellspacing="0" style="width:700px;max-width:700px;border-collapse:collapse;background:#081526;">
@@ -274,11 +263,11 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
                     <img src="{{kayUrl}}" width="72" alt="KAY" style="display:block;border:0;width:72px;height:auto;">
                   </td>
                   <td class="salkay-cta-copy" valign="middle">
-                    <p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:23px;color:#ffffff;font-weight:700;">İsterseniz {{companyName}} için size özel kısa bir analiz ve geliştirme önerisi hazırlayalım.</p>
-                    <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                    <p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:23px;color:#ffffff;font-weight:700;">Size özel kısa bir analiz ve geliştirme önerisi hazırlayalım.</p>
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                       <tr>
                         <td bgcolor="#d5aa62" style="background:#d5aa62;border-radius:24px;">
-                          <a href="{{ctaUrl}}" style="display:inline-block;padding:12px 22px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#07111f;text-decoration:none;font-weight:700;">Ücretsiz Fikir Al →</a>
+                          <a class="salkay-cta-btn" href="{{ctaUrl}}" style="display:inline-block;padding:12px 22px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#07111f;text-decoration:none;font-weight:700;">Ücretsiz Fikir Al →</a>
                         </td>
                       </tr>
                     </table>

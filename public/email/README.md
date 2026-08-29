@@ -8,8 +8,9 @@ Official transparent logo (do not recreate):
 
 Restaurant hero (approved banner direction):
 
-- `restaurant-hero-banner.jpg` — full approved restaurant banner reference (1024×512). Generic marketing only.
-- `restaurant-hero-scene.jpg` — right-side crop: KAY, table, laptop, food, restaurant lights.
+- `restaurant-hero-banner.jpg` — full approved landscape restaurant banner reference (1024×512). Desktop email.
+- `restaurant-hero-scene.jpg` — desktop right-side crop: KAY, table, laptop, food, restaurant lights.
+- `restaurant-hero-mobile.jpg` — approved 9:16 mobile email hero (576×1024). Generic marketing only. Do not regenerate.
 
 Other:
 

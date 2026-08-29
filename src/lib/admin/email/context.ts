@@ -104,6 +104,7 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     logoHeaderUrl: emailAssetUrl(emailAssets.logoHeader),
     kayUrl: emailAssetUrl(emailAssets.kay),
     heroUrl: emailAssetUrl(emailAssets.hero),
+    heroMobileUrl: emailAssetUrl(emailAssets.heroMobile),
   };
 
   return {
@@ -163,7 +164,7 @@ export function scoreBlockHtml(context: CompanyEmailContext) {
 
   const score = Number(context.scoreLabel);
   return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.16em;text-transform:uppercase;color:#8ea0b8;">Genel Skor</p>
-    <p style="margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:42px;line-height:44px;color:#16c7ff;font-weight:700;">${escapeHtml(context.scoreLabel)}<span style="font-size:16px;color:#8ea0b8;font-weight:400;"> /10</span></p>
+    <p style="margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:42px;line-height:44px;color:#16c7ff;font-weight:700;">${escapeHtml(context.scoreLabel)}<span style="font-size:16px;color:#8ea0b8;font-weight:400;"> / 10</span></p>
     ${Number.isFinite(score) ? scoreBarHtml(score) : ""}`;
 }
 
