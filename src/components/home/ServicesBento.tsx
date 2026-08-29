@@ -258,18 +258,19 @@ export function ServicesBento() {
 
       <Container className="services-shell relative">
         <Reveal>
-          <p className="eyebrow inline-flex items-center gap-2 text-cyan">
+          <p className="eyebrow inline-flex items-center gap-2 text-gold">
             <span
               aria-hidden
               className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
             />
             {bento.eyebrow}
           </p>
-          <h2 className="services-intro-title mt-5 max-w-3xl font-display text-h2 text-fg">
+          <h2 className="services-intro-title mt-5 max-w-3xl font-display text-h2 text-cream">
             <span className="block">{bento.titleBefore.trim()}</span>
-            <span className="text-blue">{bento.titleAccent}</span>
+            <span className="hero-title-accent">{bento.titleAccent}</span>
             {bento.titleAfter}
           </h2>
+          <div className="brand-rule" aria-hidden />
           <p className="services-intro-lead mt-6 max-w-xl text-muted">{bento.lead}</p>
         </Reveal>
 

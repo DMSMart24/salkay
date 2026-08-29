@@ -23,8 +23,8 @@ export default function BlogPage() {
       />
       <PageHero eyebrow="İçgörüler" title={page.title} lead={page.emptyBody} />
       <Container className="pb-24">
-        <div className="rounded-[1.4rem] border border-dashed border-line px-8 py-16">
-          <h2 className="font-display text-h3">{page.emptyTitle}</h2>
+        <div className="rounded-[1.4rem] border border-dashed border-gold/35 bg-navy-mid px-8 py-16">
+          <h2 className="font-display text-h3 text-cream">{page.emptyTitle}</h2>
           <p className="mt-3 max-w-xl text-muted">{page.emptyBody}</p>
         </div>
       </Container>

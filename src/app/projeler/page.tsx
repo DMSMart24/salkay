@@ -24,12 +24,12 @@ export default function ProjectsPage() {
       />
       <PageHero eyebrow="Arşiv" title={page.title} lead={page.lead} />
       <Container className="pb-8">
-        <p className="label text-faint">Vaka mimarisi</p>
+        <p className="label text-gold">Vaka mimarisi</p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {page.architecture.map((item) => (
             <li
               key={item}
-              className="rounded-full border border-line px-3 py-1 text-sm text-muted"
+              className="rounded-full border border-gold/30 px-3 py-1 text-sm text-muted"
             >
               {item}
             </li>

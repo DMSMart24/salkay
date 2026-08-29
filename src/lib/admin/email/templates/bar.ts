@@ -13,6 +13,7 @@ import {
   footerBlockHtml,
   introGiftCardHtml,
   mainCtaBlockHtml,
+  mobileHeroHtml,
   serviceGridHtml,
   signatureBlockHtml,
 } from "@/lib/admin/email/templates/premium-shell";
@@ -138,7 +139,9 @@ ${PREMIUM_EMAIL_CSS}
       <td align="center" style="padding:16px 8px;">
         <table role="presentation" class="salkay-container" width="700" cellpadding="0" cellspacing="0" style="width:700px;max-width:700px;border-collapse:collapse;background:#081526;">
 
-          <tr>
+          ${mobileHeroHtml("SALKAY — Bar ve gece hayatı için dijital çözümler")}
+
+          <tr class="salkay-hero-desktop">
             <td bgcolor="#07111F" style="background:#07111F;padding:0;line-height:0;font-size:0;border-top:3px solid #d5aa62;">
               <img class="salkay-hero-full" src="{{heroUrl}}" width="700" alt="SALKAY — Bar ve gece hayatı için dijital çözümler" style="display:block;border:0;width:100%;max-width:700px;height:auto;background-color:#07111F;">
             </td>
@@ -149,7 +152,7 @@ ${PREMIUM_EMAIL_CSS}
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                 <tr>
                   <td class="salkay-intro" valign="top" width="48%" style="width:48%;padding-right:22px;">
-                    <table role="presentation" class="salkay-intro-card" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #4A3F2E;border-color:rgba(213,170,98,0.35);border-radius:10px;">
+                    <table role="presentation" class="salkay-intro-card" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #D5AA62;border-radius:10px;">
                       <tr>
                         <td bgcolor="#0B1729" style="background:#0B1729;padding:22px 20px 20px;border-radius:10px;">
                           ${personalizedIntro()}

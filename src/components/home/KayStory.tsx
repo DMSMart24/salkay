@@ -13,13 +13,13 @@ export function KayStory() {
     >
       <Container>
         <div className="brand-statement">
-          <p className="eyebrow text-cyan">{kayStory.eyebrow}</p>
+          <p className="eyebrow text-gold">{kayStory.eyebrow}</p>
           <p className="brand-statement-line">{kayStory.line}</p>
           <div className="brand-statement-rule" aria-hidden />
           <h2 className="brand-statement-title font-display">
             <span>{kayStory.team}</span>
             <span>{kayStory.process}</span>
-            <span className="text-cyan">{kayStory.goal}</span>
+            <span className="text-gold">{kayStory.goal}</span>
           </h2>
           <p className="brand-statement-support">{kayStory.support}</p>
         </div>

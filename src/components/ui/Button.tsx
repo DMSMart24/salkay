@@ -15,12 +15,12 @@ type ButtonProps = {
 };
 
 const styles: Record<ButtonVariant, string> = {
-  primary: "bg-blue text-fg hover:bg-salkay-bright",
+  primary: "bg-gold text-navy hover:bg-gold-bright",
   secondary:
-    "border border-line bg-transparent text-fg hover:border-blue hover:bg-blue/10",
-  accent: "bg-blue text-fg hover:bg-salkay-bright",
+    "border border-gold/45 bg-transparent text-cream hover:border-gold hover:bg-gold/10",
+  accent: "bg-gold text-navy hover:bg-gold-bright",
   ghost:
-    "border border-line bg-transparent text-fg hover:border-cyan hover:bg-cyan/8",
+    "border border-gold/40 bg-transparent text-cream hover:border-gold hover:bg-gold/10",
 };
 
 export function Button({
@@ -33,7 +33,7 @@ export function Button({
     <Link
       href={href as Route}
       className={cn(
-        "inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[0.95rem] font-medium tracking-[-0.01em] transition-colors duration-200",
+        "inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[0.95rem] font-semibold tracking-[-0.01em] transition-colors duration-200",
         styles[variant],
         className,
       )}

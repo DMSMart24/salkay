@@ -13,13 +13,16 @@ export function Footer() {
   const year = 2026;
 
   return (
-    <footer className="border-t border-line bg-canvas-soft text-fg">
+    <footer className="border-t border-gold/25 bg-navy-soft text-fg">
       <Container className="py-16 lg:py-20">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-sm">
             <Logo />
             <p className="mt-6 text-[1.02rem] leading-7 text-muted">
               {dictionary.footer.tagline}
+            </p>
+            <p className="mt-5 font-mono text-[0.68rem] tracking-[0.28em] text-gold">
+              S A L K A Y
             </p>
           </div>
 
@@ -28,7 +31,7 @@ export function Footer() {
               <Link
                 key={item.title}
                 href={item.href as Route}
-                className="text-muted transition-colors hover:text-fg"
+                className="text-muted transition-colors hover:text-cyan"
               >
                 {item.title}
               </Link>
@@ -36,16 +39,16 @@ export function Footer() {
           </FooterColumn>
 
           <FooterColumn title={dictionary.footer.company}>
-            <Link href={routes.about} className="text-muted hover:text-fg">
+            <Link href={routes.about} className="text-muted hover:text-cyan">
               Hakkımızda
             </Link>
-            <Link href={routes.projects} className="text-muted hover:text-fg">
+            <Link href={routes.projects} className="text-muted hover:text-cyan">
               Projeler
             </Link>
-            <Link href={sections.kay} className="text-muted hover:text-fg">
+            <Link href={sections.kay} className="text-muted hover:text-cyan">
               KAY
             </Link>
-            <Link href={routes.contact} className="text-muted hover:text-fg">
+            <Link href={routes.contact} className="text-muted hover:text-cyan">
               İletişim
             </Link>
           </FooterColumn>
@@ -57,7 +60,7 @@ export function Footer() {
           </FooterColumn>
         </div>
 
-        <div className="mt-16 h-px bg-line" />
+        <div className="mt-16 h-px bg-gold/25" />
 
         <div className="mt-6 flex flex-col gap-3 text-sm text-faint sm:flex-row sm:items-center sm:justify-between">
           <p>
@@ -79,7 +82,7 @@ function FooterColumn({
 }) {
   return (
     <div>
-      <p className="eyebrow text-faint">{title}</p>
+      <p className="eyebrow text-gold">{title}</p>
       <div className="mt-4 flex flex-col gap-2.5 text-[0.95rem]">{children}</div>
     </div>
   );
