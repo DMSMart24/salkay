@@ -147,9 +147,12 @@ function personalizedIntro() {
                     <p style="margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Özellikle <strong style="font-weight:700;">kullanıcı deneyimi</strong>, <strong style="font-weight:700;">rezervasyon akışı</strong> ve <strong style="font-weight:700;">mobil görünüm</strong> tarafında yapılacak dokunuşlarla daha güçlü bir dijital deneyim oluşturulabilir.</p>
                     <table role="presentation" class="salkay-intro-gift" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:collapse;margin-top:20px;background-color:#07111F !important;border:1px solid #D5AA62 !important;border-radius:8px;">
                       <tr>
-                        <td class="salkay-intro-gift-cell" bgcolor="#07111F" valign="top" style="background-color:#07111F !important;color:#FFFFFF !important;padding:16px 18px;border-left:4px solid #D5AA62;">
-                          <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;color:#D5AA62;font-weight:700;">✦&nbsp;&nbsp;SİZE ÖZEL</p>
-                          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#FFFFFF;">Web siteniz için hazırladığımız geliştirme fikirlerini <span style="color:#D5AA62;font-weight:700;">ücretsiz</span> paylaşmak isteriz. <span style="color:#16C7FF;">→</span></p>
+                        <td class="salkay-intro-gift-cell" bgcolor="#07111F" valign="top" style="background-color:#07111F !important;color:#FFFFFF !important;padding:0;border-left:4px solid #D5AA62;">
+                          <!-- salkay-intro-gift:cta -->
+                          <a class="salkay-intro-gift-link" href="{{ctaUrl}}" style="display:block;padding:16px 18px;text-decoration:none;color:#FFFFFF;border:0;outline:none;">
+                            <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;color:#D5AA62;font-weight:700;text-decoration:none;">✦&nbsp;&nbsp;SİZE ÖZEL</p>
+                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#FFFFFF;text-decoration:none;">Web siteniz için hazırladığımız geliştirme fikirlerini <span style="color:#D5AA62;font-weight:700;">ücretsiz</span> paylaşmak isteriz. <span style="color:#16C7FF;">→</span></p>
+                          </a>
                         </td>
                       </tr>
                     </table>`;
@@ -216,6 +219,7 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
       color: #FFFFFF !important;
       border-color: #D5AA62 !important;
     }
+    .salkay-intro-gift-link { display: block !important; width: 100% !important; text-decoration: none !important; color: #FFFFFF !important; }
     .salkay-hero-desktop { display: none !important; max-height: 0 !important; overflow: hidden !important; }
     .salkay-hero-mobile { display: table-row !important; max-height: none !important; overflow: visible !important; }
     .salkay-hero-mobile-cell {
