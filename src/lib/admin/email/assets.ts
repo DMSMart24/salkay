@@ -33,6 +33,27 @@ export function salkayPhone() {
   return process.env.EMAIL_SALKAY_PHONE?.trim() || "";
 }
 
+export function salkayWhatsAppNumber() {
+  let digits = salkayPhone().replace(/[^\d+]/g, "");
+  if (digits.startsWith("00")) digits = digits.slice(2);
+  if (digits.startsWith("+")) digits = digits.slice(1);
+  digits = digits.replace(/\D/g, "");
+  if (digits.length === 11 && digits.startsWith("0")) digits = `90${digits.slice(1)}`;
+  if (digits.length === 10 && digits.startsWith("5")) digits = `90${digits}`;
+  if (digits.length < 10 || digits.length > 15) return "";
+  return digits;
+}
+
+export function restaurantWhatsAppMessage(companyName: string) {
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Detaylı bilgi almak istiyorum.`;
+}
+
+export function restaurantCtaUrl(companyName: string) {
+  const number = salkayWhatsAppNumber();
+  if (!number) return emailCtaUrl();
+  return `https://wa.me/${number}?text=${encodeURIComponent(restaurantWhatsAppMessage(companyName))}`;
+}
+
 export const emailAssets = {
   logo: "/email/salkay-logo-transparent.png",
   logoHeader: "/email/salkay-logo-transparent-2x.png",

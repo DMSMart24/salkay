@@ -4,7 +4,9 @@ import {
   emailAssets,
   emailCtaUrl,
   isEmailCtaConfigured,
+  restaurantCtaUrl,
   salkayPhone,
+  salkayWhatsAppNumber,
 } from "@/lib/admin/email/assets";
 import { escapeHtml } from "@/lib/admin/email/html";
 import {
@@ -56,7 +58,17 @@ function cleanList(values?: string[] | null) {
 }
 
 export function buildRestaurantEmailContext(company: CompanyEmailInput): CompanyEmailContext {
-  return buildCompanyEmailContext(company);
+  const context = buildCompanyEmailContext(company);
+  const ctaUrl = restaurantCtaUrl(company.companyName);
+  return {
+    ...context,
+    ctaUrl,
+    ctaConfigured: Boolean(salkayWhatsAppNumber()) || context.ctaConfigured,
+    vars: {
+      ...context.vars,
+      ctaUrl,
+    },
+  };
 }
 
 export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEmailContext {

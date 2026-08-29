@@ -3,7 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { recordActivity } from "@/lib/admin/activity";
-import { isEmailCtaConfigured, salkayPhone } from "@/lib/admin/email/assets";
+import { salkayPhone } from "@/lib/admin/email/assets";
 import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import {
   RESTAURANT_TEMPLATE_NAME,
@@ -182,7 +182,7 @@ export async function previewTemplateAction(
     recipient: rendered.context.vars.companyEmail,
     companyName: company.companyName,
     unresolved: rendered.unresolved,
-    ctaConfigured: isEmailCtaConfigured(),
+    ctaConfigured: rendered.context.ctaConfigured,
     phoneVisible: Boolean(salkayPhone()),
   };
 }
