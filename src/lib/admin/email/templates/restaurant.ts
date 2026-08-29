@@ -74,36 +74,43 @@ function serviceGrid() {
   return rows.join("");
 }
 
+function gastronomyPill() {
+  return `
+                                <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:12px;">
+                                  <tr>
+                                    <td bgcolor="#081525" style="background:#081525;border:1px solid #d5aa62;border-radius:16px;padding:6px 12px;">
+                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;color:#f8f3ea;">Gastronomi Sektörü İçin Dijital Çözümler</p>
+                                    </td>
+                                  </tr>
+                                </table>`;
+}
+
+function heroHeadline(size: number, line: number) {
+  return `<h1 style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:${size}px;line-height:${line}px;color:#ffffff;font-weight:700;">Restoranınızın<br>dijital yüzünü<br>birlikte daha<br><span style="color:#16c7ff;font-family:Georgia,Times,serif;font-style:italic;border-bottom:2px solid #16c7ff;">etkileyici</span> hale getirelim.</h1>`;
+}
+
 function mobileHero() {
   return `
           <!--[if !mso]><!-->
           <tr class="salkay-hero-mobile">
-            <td class="salkay-hero-mobile-cell" bgcolor="#0b1729" background="{{heroUrl}}" style="display:none;max-height:0;background:#0b1729 url('{{heroUrl}}') center / cover no-repeat;border-top:3px solid #d5aa62;padding:0;">
-              <div class="salkay-hero-stage" style="position:relative;height:320px;overflow:visible;background:#0b1729 url('{{heroUrl}}') center / cover no-repeat;">
-                <img class="salkay-hero-photo" src="{{heroUrl}}" width="390" height="320" alt="Restoran atmosferi" style="display:block;border:0;width:100%;height:320px;object-fit:cover;object-position:center;">
-                <div class="salkay-hero-overlay" style="position:absolute;left:0;right:0;top:0;height:320px;background:linear-gradient(180deg, rgba(7,17,31,0.88) 0%, rgba(7,17,31,0.50) 36%, rgba(7,17,31,0.08) 68%, rgba(7,17,31,0) 100%);">
-                  <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                    <tr>
-                      <td valign="top" style="padding:14px 16px 0;">
-                        <img class="salkay-logo-hero" src="{{logoUrl}}" width="188" height="106" alt="SALKAY" style="display:block;border:0;width:188px;height:auto;max-width:68%;">
-                        <p style="margin:6px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;letter-spacing:0.14em;text-transform:uppercase;color:#16c7ff;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
-                        <h1 style="margin:8px 0 0;padding-right:96px;font-family:Arial,Helvetica,sans-serif;font-size:21px;line-height:26px;color:#ffffff;font-weight:700;">{{companyName}} için<br>dijitalde <span style="color:#d5aa62;">daha güçlü</span> bir<br>izlenim yaratabilirsiniz.</h1>
-                        <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;">
-                          <tr>
-                            <td bgcolor="#ffffff" style="background:#ffffff;padding:8px 10px;border-radius:10px;">
-                              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;color:#0d1728;font-weight:700;">Daha iyi bir dijital deneyim,<br>daha mutlu misafirler.</p>
-                            </td>
-                          </tr>
-                        </table>
-                      </td>
-                    </tr>
-                  </table>
-                </div>
-              </div>
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+            <td class="salkay-hero-mobile-cell" bgcolor="#07111f" style="display:none;max-height:0;background:#07111f;border-top:3px solid #d5aa62;padding:0;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#07111f;">
                 <tr>
-                  <td class="salkay-mobile-kay" align="right" bgcolor="#ffffff" height="80" style="background:#ffffff;padding:0 8px 6px;height:80px;overflow:visible;vertical-align:bottom;">
-                    <img src="{{kayUrl}}" width="168" alt="KAY, SALKAY maskotu" style="display:block;border:0;width:168px;height:auto;margin:-210px 0 0 auto;position:relative;z-index:5;">
+                  <td class="salkay-pad" style="padding:18px 18px 10px;">
+                    <img class="salkay-logo-hero" src="{{logoUrl}}" width="176" height="99" alt="SALKAY" style="display:block;border:0;width:176px;height:auto;max-width:72%;">
+                    <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;letter-spacing:0.12em;text-transform:uppercase;color:#16c7ff;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
+                    ${gastronomyPill()}
+                  </td>
+                </tr>
+                <tr>
+                  <td style="padding:0;line-height:0;font-size:0;">
+                    <img class="salkay-hero-photo" src="{{heroUrl}}" width="390" alt="KAY restoran masasında" style="display:block;border:0;width:100%;height:auto;">
+                  </td>
+                </tr>
+                <tr>
+                  <td class="salkay-pad" style="padding:16px 18px 22px;">
+                    ${heroHeadline(24, 30)}
+                    <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#c5d2e0;">Harika yemek deneyimleri, harika bir web sitesi ile daha çok misafire ulaşır.</p>
                   </td>
                 </tr>
               </table>
@@ -147,11 +154,9 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
       line-height: inherit !important;
     }
     .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-service, .salkay-cta-copy, .salkay-cta-kay { display: block !important; width: 100% !important; }
-    .salkay-hero-stage { display: block !important; height: 320px !important; overflow: visible !important; }
-    .salkay-hero-photo { width: 100% !important; height: 320px !important; object-fit: cover !important; }
+    .salkay-hero-photo { width: 100% !important; height: auto !important; }
     .salkay-audit { padding-top: 16px !important; }
-    .salkay-logo-hero { width: 188px !important; max-width: 68% !important; height: auto !important; }
-    .salkay-mobile-kay img { width: 168px !important; height: auto !important; margin-top: -210px !important; position: relative !important; z-index: 5 !important; }
+    .salkay-logo-hero { width: 176px !important; max-width: 72% !important; height: auto !important; }
   }
 </style>
 </head>
@@ -167,39 +172,18 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
           ${mobileHero()}
 
           <tr class="salkay-hero-desktop">
-            <td bgcolor="#0b1729" style="background:#0b1729;border-top:3px solid #d5aa62;">
+            <td bgcolor="#07111f" style="background:#07111f;border-top:3px solid #d5aa62;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                 <tr>
-                  <td class="salkay-pad salkay-hero-copy" valign="middle" width="58%" style="padding:28px 24px 26px 28px;">
-                    <img class="salkay-logo-hero" src="{{logoUrl}}" width="200" height="113" alt="SALKAY" style="display:block;border:0;width:200px;height:auto;max-width:100%;">
-                    <p style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.16em;text-transform:uppercase;color:#16c7ff;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
-                    <h1 style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:30px;line-height:36px;color:#ffffff;font-weight:700;">{{companyName}} için<br>dijitalde <span style="color:#d5aa62;">daha güçlü</span> bir<br>izlenim yaratabilirsiniz.</h1>
-                    <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#c5d2e0;">Misafir deneyiminizi web sitenizde en iyi şekilde yansıtın.</p>
+                  <td class="salkay-pad salkay-hero-copy" valign="top" width="50%" bgcolor="#07111f" style="width:50%;padding:22px 16px 24px 24px;background:#07111f;">
+                    <img class="salkay-logo-hero" src="{{logoUrl}}" width="188" height="106" alt="SALKAY" style="display:block;border:0;width:188px;height:auto;max-width:100%;">
+                    <p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.12em;text-transform:uppercase;color:#16c7ff;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
+                    ${gastronomyPill()}
+                    ${heroHeadline(28, 34)}
+                    <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#c5d2e0;">Harika yemek deneyimleri, harika bir web sitesi ile daha çok misafire ulaşır.</p>
                   </td>
-                  <td class="salkay-kay" valign="bottom" width="42%" bgcolor="#0b1729" style="background:#0b1729;padding:12px 12px 0;">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                      <tr>
-                        <td align="left" style="padding:0 4px 8px;">
-                          <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                            <tr>
-                              <td bgcolor="#ffffff" style="background:#ffffff;padding:9px 11px;border-radius:10px;">
-                                <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;color:#0d1728;font-weight:700;">Daha iyi bir dijital deneyim,<br>daha mutlu misafirler.</p>
-                              </td>
-                            </tr>
-                          </table>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="line-height:0;font-size:0;">
-                          <img class="salkay-hero-photo" src="{{heroUrl}}" width="280" alt="Restoran atmosferi" style="display:block;border:0;width:100%;height:auto;">
-                        </td>
-                      </tr>
-                      <tr>
-                        <td align="center" style="padding:0;">
-                          <img src="{{kayUrl}}" width="168" alt="KAY, SALKAY maskotu" style="display:block;border:0;width:168px;max-width:168px;height:auto;margin:-78px auto 0;">
-                        </td>
-                      </tr>
-                    </table>
+                  <td class="salkay-kay" valign="top" width="50%" bgcolor="#081525" style="width:50%;padding:0;background:#081525;">
+                    <img class="salkay-hero-photo" src="{{heroUrl}}" width="350" alt="KAY restoran masasında" style="display:block;border:0;width:100%;height:auto;">
                   </td>
                 </tr>
               </table>
@@ -238,6 +222,7 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
                           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                             {{issuesBlock}}
                           </table>
+                          <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#9eb0c4;">{{recommendedServices}}</p>
                         </td>
                       </tr>
                       <tr>

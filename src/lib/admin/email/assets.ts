@@ -39,5 +39,6 @@ export const emailAssets = {
   logoSource: "/email/salkay-logo-transparent-source.png",
   kay: "/email/kay-restaurant.png",
   kaySource: "/brand/kay/kay-hero-still.png",
-  hero: "/email/restaurant-hero.jpg",
+  hero: "/email/restaurant-hero-scene.jpg",
+  banner: "/email/restaurant-hero-banner.jpg",
 } as const;
