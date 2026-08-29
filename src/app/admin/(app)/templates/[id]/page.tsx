@@ -4,7 +4,7 @@ import { duplicateTemplateForm } from "@/app/admin/actions/templates";
 import { TemplateStudio } from "@/components/admin/TemplateStudio";
 import { formatDateTime } from "@/lib/admin/format";
 import {
-  RESTAURANT_TEMPLATE_NAME,
+  isRestaurantPremiumTemplate,
   restaurantPremiumSource,
 } from "@/lib/admin/email/templates/restaurant";
 import { getPrisma } from "@/lib/admin/prisma";
@@ -72,7 +72,7 @@ export default async function TemplateDetailPage({
         template={{
           ...template,
           body:
-            template.name === RESTAURANT_TEMPLATE_NAME ? restaurantPremiumSource() : template.body,
+            isRestaurantPremiumTemplate(template) ? restaurantPremiumSource() : template.body,
           updatedAt: template.updatedAt.toISOString(),
         }}
         companies={[...companies]

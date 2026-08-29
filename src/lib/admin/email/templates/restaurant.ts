@@ -1,8 +1,9 @@
 import { site } from "@/lib/site";
 import {
   type CompanyEmailContext,
-  issueRowsHtml,
+  developmentAreasHtml,
   phoneBlockHtml,
+  recommendedServicesChipsHtml,
   scoreBlockHtml,
 } from "@/lib/admin/email/context";
 import { applyMerge } from "@/lib/admin/email/html";
@@ -10,6 +11,23 @@ import { applyMerge } from "@/lib/admin/email/html";
 export const RESTAURANT_TEMPLATE_NAME = "RESTORAN — Premium Web Sitesi Analizi";
 export const RESTAURANT_TEMPLATE_SUBJECT = "{{companyName}} web sitesi hakkında kısa bir fikir";
 export const RESTAURANT_TEMPLATE_SUBJECT_ALT = "{{companyName}} için birkaç dijital geliştirme önerisi";
+
+export function isRestaurantPremiumTemplate(input: {
+  name?: string | null;
+  body?: string | null;
+  category?: string | null;
+}) {
+  const name = (input.name ?? "").trim();
+  if (name === RESTAURANT_TEMPLATE_NAME) return true;
+  const normalized = name.replace(/[—–−-]/g, "-").toLocaleLowerCase("tr");
+  if (normalized.includes("restoran") && normalized.includes("premium") && normalized.includes("analiz")) {
+    return true;
+  }
+  if ((input.category ?? "").toLocaleUpperCase("tr") === "RESTORAN" && /salkay-email:restaurant/i.test(input.body ?? "")) {
+    return true;
+  }
+  return /<!--\s*salkay-email:restaurant/i.test(input.body ?? "");
+}
 
 const SERVICES = [
   ["Web Tasarımı", "Modern, şık ve markanıza özel tasarım"],
@@ -189,6 +207,7 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
     .salkay-hero-photo { width: 100% !important; height: auto !important; }
     .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-audit { padding-top: 16px !important; }
+    .salkay-audit-card { padding: 20px !important; }
     .salkay-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
   }
 </style>
@@ -231,31 +250,23 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
                     ${personalizedIntro()}
                   </td>
                   <td class="salkay-audit" valign="top" width="52%">
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#0b1729;border:1px solid #1d334d;">
+                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:collapse;background:#07111F;border:1px solid #1E3A54;">
                       <tr>
-                        <td style="padding:18px 18px 8px;">
-                          <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#d5aa62;">Web Sitesi İncelemesi</p>
-                          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;color:#ffffff;font-weight:700;">{{companyName}}</p>
-                          <p style="margin:5px 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#9eb0c4;"><span style="color:#16c7ff;">●</span> {{district}}{{locationSep}}{{city}}</p>
-                          {{scoreBlock}}
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:14px 18px 8px;">
-                          <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.12em;text-transform:uppercase;color:#16c7ff;">Öne Çıkan Gelişim Alanları</p>
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                            {{issuesBlock}}
+                        <td class="salkay-audit-card" bgcolor="#07111F" style="background:#07111F;padding:20px;">
+                          <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.18em;text-transform:uppercase;color:#D5AA62;">WEB SİTESİ İNCELEMESİ</p>
+                          <p style="margin:0;font-family:Georgia,Times,serif;font-size:24px;line-height:30px;color:#FFFFFF;font-weight:700;">{{companyName}}</p>
+                          <p style="margin:8px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#B8C3D1;"><span style="color:#16C7FF;">●</span>&nbsp;{{district}}{{locationSep}}{{city}}</p>
+                          <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 18px;">
+                            <tr><td width="40" height="1" bgcolor="#D5AA62" style="background:#D5AA62;font-size:0;line-height:0;">&nbsp;</td></tr>
                           </table>
-                          <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#9eb0c4;">{{recommendedServices}}</p>
-                        </td>
-                      </tr>
-                      <tr>
-                        <td style="padding:4px 18px 18px;">
-                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#07111f;border-left:3px solid #d5aa62;">
+                          {{scoreBlock}}
+                          {{issuesBlock}}
+                          {{recommendedServicesBlock}}
+                          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:collapse;margin-top:20px;background:#0B1729;border:1px solid #D5AA62;border-left:3px solid #D5AA62;">
                             <tr>
-                              <td width="22" valign="top" style="padding:12px 0 12px 12px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#d5aa62;">✦</td>
-                              <td style="padding:12px 12px 12px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;color:#e8eef6;">
-                                Doğru strateji ve modern tasarım ile dijitalde fark yaratmanız mümkün.
+                              <td style="padding:16px 16px 16px 14px;">
+                                <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;color:#D5AA62;">✦</p>
+                                <p style="margin:0;font-family:Georgia,Times,serif;font-size:13px;line-height:21px;color:#B8C3D1;">Doğru strateji ve modern tasarım ile<br><span style="color:#D5AA62;">dijitalde fark</span> yaratmanız mümkün.</p>
                               </td>
                             </tr>
                           </table>
@@ -357,14 +368,18 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
 </html>`;
 }
 
-export function renderRestaurantEmail(source: string, context: CompanyEmailContext) {
+export function renderRestaurantEmail(_source: string, context: CompanyEmailContext) {
+  const source = restaurantPremiumSource();
   const locationSep = context.vars.district && context.vars.city ? ", " : "";
 
+  const serviceChips = `<!--safe-->${recommendedServicesChipsHtml(context.recommendedServices)}`;
   const blocks: Record<string, string> = {
     ...context.vars,
     locationSep,
     scoreBlock: `<!--safe-->${scoreBlockHtml(context)}`,
-    issuesBlock: `<!--safe-->${issueRowsHtml(context.customerIssues)}`,
+    issuesBlock: `<!--safe-->${developmentAreasHtml(context.customerIssues)}`,
+    recommendedServices: serviceChips,
+    recommendedServicesBlock: serviceChips,
     recommendedLine: "",
     phoneBlock: `<!--safe-->${phoneBlockHtml(context)}`,
     ctaNote: "",

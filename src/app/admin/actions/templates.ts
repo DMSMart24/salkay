@@ -8,6 +8,7 @@ import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import {
   RESTAURANT_TEMPLATE_NAME,
   RESTAURANT_TEMPLATE_SUBJECT,
+  isRestaurantPremiumTemplate,
   restaurantPremiumSource,
 } from "@/lib/admin/email/templates/restaurant";
 import { getPrisma } from "@/lib/admin/prisma";
@@ -158,11 +159,14 @@ export async function previewTemplateAction(
 
   const subject = String(formData.get("subject") ?? "").trim() || template.subject;
   const editorBody = String(formData.get("body") ?? "").trim() || template.body;
-  const body = template.name === RESTAURANT_TEMPLATE_NAME ? restaurantPremiumSource() : editorBody;
+  const restaurant = isRestaurantPremiumTemplate(template);
+  const body = restaurant ? restaurantPremiumSource() : editorBody;
   const rendered = renderPersonalizedEmail({
     subject,
     body,
     company,
+    templateName: template.name,
+    templateCategory: template.category,
   });
 
   return {
@@ -200,8 +204,10 @@ export async function saveTemplateTestDraftForm(formData: FormData) {
 
   const rendered = renderPersonalizedEmail({
     subject: template.subject,
-    body: template.body,
+    body: isRestaurantPremiumTemplate(template) ? restaurantPremiumSource() : template.body,
     company,
+    templateName: template.name,
+    templateCategory: template.category,
   });
   const contact = company.contacts.find((row) => row.isPrimary) ?? company.contacts[0];
 

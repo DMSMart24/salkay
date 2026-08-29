@@ -125,47 +125,140 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
   };
 }
 
+const SERVICE_CHIP_LABELS: Record<string, string> = {
+  "premium web yeniden tasarım": "Web Tasarımı",
+  "web yeniden tasarım": "Web Tasarımı",
+  "mobil kullanıcı deneyimi": "Mobil UX",
+  "mobil iyileştirme": "Mobil UX",
+  "kullanıcı deneyimi yenileme": "Mobil UX",
+  "kullanıcı deneyimi iyileştirme": "Mobil UX",
+  "rezervasyon sürecinin iyileştirilmesi": "Rezervasyon",
+  "rezervasyon entegrasyonu": "Rezervasyon",
+  "yerel seo": "Local SEO",
+  "seo denetimi": "Local SEO",
+  "restoran hikâyesi ve içerik": "İçerik",
+  "içerik sadeleştirme": "İçerik",
+  "restoran açılış sayfası": "Web Tasarımı",
+  "e-ticaret entegrasyonu": "E-ticaret",
+  "performans denetimi": "Performans",
+  "dönüşüm iyileştirme": "Dönüşüm",
+  "bilgi mimarisi": "UX",
+};
+
+function serviceChipLabel(service: string) {
+  const mapped = SERVICE_CHIP_LABELS[service.trim().toLowerCase()];
+  if (mapped) return mapped;
+  const compact = service.trim().replace(/\s+/g, " ");
+  return compact.length > 18 ? `${compact.slice(0, 16)}…` : compact;
+}
+
 export function issueRowsHtml(issues: string[]) {
-  if (issues.length === 0) {
-    return `<tr><td style="padding:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#d7dde8;">Gelişim alanı henüz eklenmedi.</td></tr>`;
+  const rows = issues.map((item) => String(item).trim()).filter(Boolean).slice(0, 4);
+  if (rows.length === 0) {
+    return "";
   }
 
-  return issues
-    .slice(0, 4)
-    .map(
-      (issue) =>
-        `<tr>
-          <td valign="top" width="22" style="padding:0 8px 12px 0;">
-            <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+  return rows
+    .map((issue, index) => {
+      const last = index === rows.length - 1;
+      const border = last ? "none" : "1px solid #203047";
+      return `<tr>
+          <td style="padding:12px 0;border-bottom:${border};">
+            <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
               <tr>
-                <td width="18" height="18" bgcolor="#16c7ff" align="center" style="background:#16c7ff;border-radius:9px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:18px;color:#07111f;font-weight:700;">✓</td>
+                <td valign="top" width="22" style="width:22px;padding:3px 10px 0 0;">
+                  <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                    <tr>
+                      <td width="16" height="16" bgcolor="#16C7FF" align="center" style="background:#16C7FF;border-radius:8px;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:16px;color:#07111F;font-weight:700;">✓</td>
+                    </tr>
+                  </table>
+                </td>
+                <td valign="top" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:23px;color:#FFFFFF;">${escapeHtml(issue)}</td>
               </tr>
             </table>
           </td>
-          <td valign="top" style="padding:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#f4f7fb;">${escapeHtml(issue)}</td>
-        </tr>`,
-    )
+        </tr>`;
+    })
     .join("");
+}
+
+export function developmentAreasHtml(issues: string[]) {
+  const rows = issueRowsHtml(issues);
+  if (!rows) return "";
+  return `<div style="margin-top:20px;">
+      <p style="margin:0 0 6px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">ÖNE ÇIKAN GELİŞİM ALANLARI</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+        ${rows}
+      </table>
+    </div>`;
 }
 
 function scoreBarHtml(score: number) {
   const cells = Array.from({ length: 10 }, (_, index) => {
     const on = index < score;
-    return `<td width="20" height="7" bgcolor="${on ? "#16c7ff" : "#1a2b42"}" style="background:${on ? "#16c7ff" : "#1a2b42"};font-size:0;line-height:0;">&nbsp;</td>`;
-  }).join(`<td width="5" style="font-size:0;line-height:0;">&nbsp;</td>`);
-  return `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;"><tr>${cells}</tr></table>`;
+    return `<td width="18" height="6" bgcolor="${on ? "#16C7FF" : "#1A2B42"}" style="width:18px;height:6px;background:${on ? "#16C7FF" : "#1A2B42"};border-radius:3px;font-size:0;line-height:0;">&nbsp;</td>`;
+  }).join(`<td width="5" style="width:5px;font-size:0;line-height:0;">&nbsp;</td>`);
+  return `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:12px;"><tr>${cells}</tr></table>`;
 }
 
 export function scoreBlockHtml(context: CompanyEmailContext) {
   if (!context.hasScore) {
-    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.16em;text-transform:uppercase;color:#d5aa62;">Genel Skor</p>
-      <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;color:#d5aa62;font-weight:700;">Analiz devam ediyor</p>`;
+    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">GENEL SKOR</p>
+      <p style="margin:10px 0 0;font-family:Georgia,Times,serif;font-size:18px;line-height:24px;color:#D5AA62;font-weight:700;">Analiz devam ediyor</p>`;
   }
 
   const score = Number(context.scoreLabel);
-  return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.16em;text-transform:uppercase;color:#8ea0b8;">Genel Skor</p>
-    <p style="margin:4px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:42px;line-height:44px;color:#16c7ff;font-weight:700;">${escapeHtml(context.scoreLabel)}<span style="font-size:16px;color:#8ea0b8;font-weight:400;"> / 10</span></p>
+  const scoreText = escapeHtml(context.scoreLabel);
+  return `<p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">GENEL SKOR</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+      <tr>
+        <td valign="middle">
+          <p style="margin:0;font-family:Georgia,Times,serif;line-height:40px;">
+            <span style="font-size:40px;color:#16C7FF;font-weight:700;">${scoreText}</span>
+            <span style="font-size:16px;color:#B8C3D1;font-weight:400;">&nbsp;/&nbsp;10</span>
+          </p>
+        </td>
+        <td valign="middle" align="right" style="padding-left:10px;">
+          <table role="presentation" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;">
+            <tr>
+              <td bgcolor="#0B1729" style="background:#0B1729;border:1px solid #D5AA62;border-radius:4px;padding:5px 8px;font-family:Arial,Helvetica,sans-serif;font-size:9px;line-height:12px;letter-spacing:0.08em;text-transform:uppercase;color:#D5AA62;white-space:nowrap;">İYİLEŞTİRME FIRSATI</td>
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
     ${Number.isFinite(score) ? scoreBarHtml(score) : ""}`;
+}
+
+export function recommendedServicesChipsHtml(services: string[]) {
+  const chips = services.map((item) => String(item).trim()).filter(Boolean).slice(0, 4).map(serviceChipLabel);
+  if (chips.length === 0) return "";
+
+  const chipCell = (label: string) =>
+    `<td width="50%" valign="top" style="width:50%;padding:0 6px 8px 0;">
+          <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+            <tr>
+              <td bgcolor="#0B1729" height="32" valign="middle" style="background:#0B1729;border:1px solid #D5AA62;border-radius:6px;padding:7px 10px;height:32px;">
+                <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;color:#FFFFFF;white-space:nowrap;"><span style="color:#16C7FF;">●</span>&nbsp;${escapeHtml(label)}</p>
+              </td>
+            </tr>
+          </table>
+        </td>`;
+
+  const rows: string[] = [];
+  for (let index = 0; index < chips.length; index += 2) {
+    const first = chips[index];
+    const second = chips[index + 1];
+    if (!first) continue;
+    rows.push(`<tr>${chipCell(first)}${second ? chipCell(second) : "<td width=\"50%\" style=\"width:50%;padding:0;\"></td>"}</tr>`);
+  }
+
+  return `<div style="margin-top:20px;">
+      <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">ÖNERİLEN SALKAY HİZMETLERİ</p>
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+        ${rows.join("")}
+      </table>
+    </div>`;
 }
 
 export function phoneBlockHtml(context: CompanyEmailContext) {

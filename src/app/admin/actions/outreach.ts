@@ -275,6 +275,8 @@ export async function previewBulkSendAction(
       subject: template.subject,
       body: template.body,
       company,
+      templateName: template.name,
+      templateCategory: template.category,
     });
     recipients.push({
       companyId: company.id,

@@ -1,19 +1,32 @@
 import type { CompanyEmailInput } from "@/lib/admin/email/context";
 import { buildRestaurantEmailContext } from "@/lib/admin/email/context";
-import { hasUnresolvedMerge, htmlToPlainText, looksLikeHtmlEmail } from "@/lib/admin/email/html";
+import { applyMerge, hasUnresolvedMerge, htmlToPlainText, looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import { mergeTemplate } from "@/lib/admin/merge";
-import { renderRestaurantEmail } from "@/lib/admin/email/templates/restaurant";
+import {
+  isRestaurantPremiumTemplate,
+  renderRestaurantEmail,
+  restaurantPremiumSource,
+} from "@/lib/admin/email/templates/restaurant";
 
 export function renderPersonalizedEmail(input: {
   subject: string;
   body: string;
   company: CompanyEmailInput;
+  templateName?: string;
+  templateCategory?: string;
 }) {
   const context = buildRestaurantEmailContext(input.company);
   const subject = mergeTemplate(input.subject, context.vars);
-  const bodyHtml = looksLikeHtmlEmail(input.body)
-    ? renderRestaurantEmail(input.body, context)
-    : mergeTemplate(input.body, context.vars);
+  const restaurant = isRestaurantPremiumTemplate({
+    name: input.templateName,
+    body: input.body,
+    category: input.templateCategory,
+  });
+  const bodyHtml = restaurant
+    ? renderRestaurantEmail(restaurantPremiumSource(), context)
+    : looksLikeHtmlEmail(input.body)
+      ? applyMerge(input.body, { ...context.vars }, true)
+      : mergeTemplate(input.body, context.vars);
   const bodyText = looksLikeHtmlEmail(bodyHtml) ? htmlToPlainText(bodyHtml) : bodyHtml;
 
   return {
