@@ -6,6 +6,15 @@ import { recordActivity } from "@/lib/admin/activity";
 import { salkayPhone } from "@/lib/admin/email/assets";
 import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import {
+  BAR_GROUP_NAME,
+  BAR_TEMPLATE_CATEGORY,
+  BAR_TEMPLATE_NAME,
+  BAR_TEMPLATE_SUBJECT,
+  barPremiumSource,
+  isBarPremiumTemplate,
+} from "@/lib/admin/email/templates/bar";
+import { ensureBarOutreachRecords } from "@/lib/admin/email/templates/ensure-bar";
+import {
   RESTAURANT_TEMPLATE_NAME,
   RESTAURANT_TEMPLATE_SUBJECT,
   isRestaurantPremiumTemplate,
@@ -118,6 +127,54 @@ export async function ensureRestaurantTemplateForm(formData: FormData) {
   redirect(`/admin/templates/${created.id}`);
 }
 
+function premiumTemplateSource(template: { name?: string | null; body?: string | null; category?: string | null }) {
+  if (isRestaurantPremiumTemplate(template)) return restaurantPremiumSource();
+  if (isBarPremiumTemplate(template)) return barPremiumSource();
+  return template.body ?? "";
+}
+
+export async function ensureBarTemplateForm(formData: FormData) {
+  void formData;
+  const session = await requireAdmin();
+  const prisma = getPrisma();
+  const result = await ensureBarOutreachRecords(prisma, session.userId);
+  if (result.groupCreated) {
+    await recordActivity(prisma, {
+      type: "GROUP_CREATED",
+      message: `Grup: ${BAR_GROUP_NAME}`,
+      userId: session.userId,
+    });
+    revalidatePath("/admin/groups");
+    revalidatePath("/admin/companies");
+  }
+  if (result.templateCreated) {
+    await recordActivity(prisma, {
+      type: "TEMPLATE_CREATED",
+      message: BAR_TEMPLATE_NAME,
+      userId: session.userId,
+    });
+    touchTemplates(result.templateId);
+  }
+  redirect(`/admin/templates/${result.templateId}`);
+}
+
+export async function resetBarTemplateForm(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("templateId") ?? "");
+  if (!id) return;
+  await getPrisma().emailTemplate.update({
+    where: { id },
+    data: {
+      name: BAR_TEMPLATE_NAME,
+      category: BAR_TEMPLATE_CATEGORY,
+      language: "tr",
+      subject: BAR_TEMPLATE_SUBJECT,
+      body: barPremiumSource(),
+    },
+  });
+  touchTemplates(id);
+}
+
 export async function resetRestaurantTemplateForm(formData: FormData) {
   await requireAdmin();
   const id = String(formData.get("templateId") ?? "");
@@ -159,8 +216,9 @@ export async function previewTemplateAction(
 
   const subject = String(formData.get("subject") ?? "").trim() || template.subject;
   const editorBody = String(formData.get("body") ?? "").trim() || template.body;
-  const restaurant = isRestaurantPremiumTemplate(template);
-  const body = restaurant ? restaurantPremiumSource() : editorBody;
+  const body = isRestaurantPremiumTemplate(template) || isBarPremiumTemplate(template)
+    ? premiumTemplateSource(template)
+    : editorBody;
   const rendered = renderPersonalizedEmail({
     subject,
     body,
@@ -204,7 +262,7 @@ export async function saveTemplateTestDraftForm(formData: FormData) {
 
   const rendered = renderPersonalizedEmail({
     subject: template.subject,
-    body: isRestaurantPremiumTemplate(template) ? restaurantPremiumSource() : template.body,
+    body: premiumTemplateSource(template),
     company,
     templateName: template.name,
     templateCategory: template.category,

@@ -1,7 +1,12 @@
 import type { CompanyEmailInput } from "@/lib/admin/email/context";
-import { buildRestaurantEmailContext } from "@/lib/admin/email/context";
+import { buildBarEmailContext, buildRestaurantEmailContext } from "@/lib/admin/email/context";
 import { applyMerge, hasUnresolvedMerge, htmlToPlainText, looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import { mergeTemplate } from "@/lib/admin/merge";
+import {
+  barPremiumSource,
+  isBarPremiumTemplate,
+  renderBarEmail,
+} from "@/lib/admin/email/templates/bar";
 import {
   isRestaurantPremiumTemplate,
   renderRestaurantEmail,
@@ -15,18 +20,22 @@ export function renderPersonalizedEmail(input: {
   templateName?: string;
   templateCategory?: string;
 }) {
-  const context = buildRestaurantEmailContext(input.company);
-  const subject = mergeTemplate(input.subject, context.vars);
-  const restaurant = isRestaurantPremiumTemplate({
+  const templateMeta = {
     name: input.templateName,
     body: input.body,
     category: input.templateCategory,
-  });
+  };
+  const restaurant = isRestaurantPremiumTemplate(templateMeta);
+  const bar = !restaurant && isBarPremiumTemplate(templateMeta);
+  const context = bar ? buildBarEmailContext(input.company) : buildRestaurantEmailContext(input.company);
+  const subject = mergeTemplate(input.subject, context.vars);
   const bodyHtml = restaurant
     ? renderRestaurantEmail(restaurantPremiumSource(), context)
-    : looksLikeHtmlEmail(input.body)
-      ? applyMerge(input.body, { ...context.vars }, true)
-      : mergeTemplate(input.body, context.vars);
+    : bar
+      ? renderBarEmail(barPremiumSource(), context)
+      : looksLikeHtmlEmail(input.body)
+        ? applyMerge(input.body, { ...context.vars }, true)
+        : mergeTemplate(input.body, context.vars);
   const bodyText = looksLikeHtmlEmail(bodyHtml) ? htmlToPlainText(bodyHtml) : bodyHtml;
 
   return {

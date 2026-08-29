@@ -3,6 +3,7 @@ import { notFound } from "next/navigation";
 import { duplicateTemplateForm } from "@/app/admin/actions/templates";
 import { TemplateStudio } from "@/components/admin/TemplateStudio";
 import { formatDateTime } from "@/lib/admin/format";
+import { isBarPremiumTemplate, barPremiumSource } from "@/lib/admin/email/templates/bar";
 import {
   isRestaurantPremiumTemplate,
   restaurantPremiumSource,
@@ -11,17 +12,27 @@ import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
 
-function previewRank(company: {
-  companyName: string;
-  group: { name: string; industry: string | null } | null;
-}) {
+function previewRank(
+  company: {
+    companyName: string;
+    group: { name: string; industry: string | null } | null;
+  },
+  barTemplate: boolean,
+) {
   const name = company.companyName.toLocaleLowerCase("tr");
+  const group = `${company.group?.name ?? ""} ${company.group?.industry ?? ""}`.toLocaleLowerCase("tr");
+  if (barTemplate) {
+    if (group.includes("barlar") || group.includes("cocktail") || group === "bar" || /\bbar\b/.test(group)) {
+      return 0;
+    }
+    if (name.includes("valuna")) return 1;
+    return 20;
+  }
   if (name.includes("develi")) return 0;
   if (name === "fauna") return 1;
   if (name.includes("köz kanat") || name.includes("koz kanat")) return 2;
   if (name.includes("sapa")) return 3;
   if (name.includes("beluga")) return 4;
-  const group = `${company.group?.name ?? ""} ${company.group?.industry ?? ""}`.toLocaleLowerCase("tr");
   if (group.includes("restoran") || group.includes("restaurant")) return 10;
   return 20;
 }
@@ -46,6 +57,7 @@ export default async function TemplateDetailPage({
     }),
   ]);
   if (!template) notFound();
+  const barTemplate = isBarPremiumTemplate(template);
 
   return (
     <div className="admin-page">
@@ -71,12 +83,15 @@ export default async function TemplateDetailPage({
       <TemplateStudio
         template={{
           ...template,
-          body:
-            isRestaurantPremiumTemplate(template) ? restaurantPremiumSource() : template.body,
+          body: isRestaurantPremiumTemplate(template)
+            ? restaurantPremiumSource()
+            : barTemplate
+              ? barPremiumSource()
+              : template.body,
           updatedAt: template.updatedAt.toISOString(),
         }}
         companies={[...companies]
-          .sort((left, right) => previewRank(left) - previewRank(right))
+          .sort((left, right) => previewRank(left, barTemplate) - previewRank(right, barTemplate))
           .map(({ id, companyName }) => ({ id, companyName }))}
       />
     </div>

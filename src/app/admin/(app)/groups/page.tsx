@@ -16,11 +16,11 @@ export default async function GroupsPage() {
           <p className="admin-kicker">Gruppen</p>
           <h1>Gruplar</h1>
         </div>
-        {groups.length === 0 ? (
-          <form action={seedDefaultGroupsForm}>
-            <button className="admin-btn ghost">Varsayılan grupları ekle</button>
-          </form>
-        ) : null}
+        <form action={seedDefaultGroupsForm}>
+          <button className="admin-btn ghost">
+            {groups.length === 0 ? "Varsayılan grupları ekle" : "Eksik varsayılan grupları ekle"}
+          </button>
+        </form>
       </header>
 
       <section className="admin-panel">

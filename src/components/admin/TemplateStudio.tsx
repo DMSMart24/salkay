@@ -3,11 +3,14 @@
 import { startTransition, useActionState, useEffect, useState } from "react";
 import {
   previewTemplateAction,
+  resetBarTemplateForm,
   resetRestaurantTemplateForm,
   saveTemplateTestDraftForm,
   updateTemplateAction,
   type TemplatePreviewState,
 } from "@/app/admin/actions/templates";
+import { isBarPremiumTemplate } from "@/lib/admin/email/templates/bar";
+import { isRestaurantPremiumTemplate } from "@/lib/admin/email/templates/restaurant";
 import { ActionMessage } from "@/components/admin/ActionMessage";
 import { mergeVariableHelp } from "@/lib/admin/merge";
 import { templateCategories } from "@/lib/admin/labels";
@@ -189,10 +192,18 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
           <input type="hidden" name="companyId" value={companyId} />
           <button className="admin-btn ghost">Test E-postası (yalnızca taslak, gönderilmez)</button>
         </form>
-        <form action={resetRestaurantTemplateForm}>
-          <input type="hidden" name="templateId" value={template.id} />
-          <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
-        </form>
+        {isRestaurantPremiumTemplate(template) ? (
+          <form action={resetRestaurantTemplateForm}>
+            <input type="hidden" name="templateId" value={template.id} />
+            <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
+          </form>
+        ) : null}
+        {isBarPremiumTemplate(template) ? (
+          <form action={resetBarTemplateForm}>
+            <input type="hidden" name="templateId" value={template.id} />
+            <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
+          </form>
+        ) : null}
       </section>
     </div>
   );

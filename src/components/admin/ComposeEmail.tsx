@@ -4,6 +4,12 @@ import { useActionState, useMemo, useState } from "react";
 import { composeEmailAction, sendTestEmailAction } from "@/app/admin/actions/comms";
 import { ActionMessage } from "@/components/admin/ActionMessage";
 import {
+  BAR_TEMPLATE_NAME,
+  BAR_TEMPLATE_SUBJECT,
+  isBarCompany,
+  isBarPremiumTemplate,
+} from "@/lib/admin/email/templates/bar";
+import {
   isRestaurantCompany,
   isRestaurantPremiumTemplate,
   RESTAURANT_TEMPLATE_NAME,
@@ -52,14 +58,25 @@ export function ComposeEmail({
   templates,
   outreachSendEnabled = false,
 }: ComposeEmailProps) {
+  const barCompany = isBarCompany({ industry, groupName, groupIndustry });
   const restaurantCompany = isRestaurantCompany({ industry, groupName, groupIndustry });
+  const barTemplate = useMemo(
+    () =>
+      templates.find((row) => row.name === BAR_TEMPLATE_NAME) ??
+      templates.find((row) => isBarPremiumTemplate(row)),
+    [templates],
+  );
   const restaurantTemplate = useMemo(
     () =>
       templates.find((row) => row.name === RESTAURANT_TEMPLATE_NAME) ??
       templates.find((row) => isRestaurantPremiumTemplate(row)),
     [templates],
   );
-  const initialTemplateId = restaurantCompany ? restaurantTemplate?.id ?? "" : "";
+  const initialTemplateId = barCompany
+    ? barTemplate?.id ?? ""
+    : restaurantCompany
+      ? restaurantTemplate?.id ?? ""
+      : "";
 
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState<FormState, FormData>(composeEmailAction, {});
@@ -77,6 +94,12 @@ export function ComposeEmail({
       city: city ?? undefined,
       industry: industry ?? undefined,
     };
+    if (template && isBarPremiumTemplate(template)) {
+      return {
+        subject: mergeTemplate(BAR_TEMPLATE_SUBJECT, vars),
+        body: "Bar premium HTML şablonu gönderimde otomatik kullanılır.",
+      };
+    }
     if (template && isRestaurantPremiumTemplate(template)) {
       return {
         subject: mergeTemplate(RESTAURANT_TEMPLATE_SUBJECT, vars),
@@ -110,6 +133,11 @@ export function ComposeEmail({
       city: city ?? undefined,
       industry: industry ?? undefined,
     };
+    if (isBarPremiumTemplate(template)) {
+      setSubject(mergeTemplate(BAR_TEMPLATE_SUBJECT, vars));
+      setBody("Bar premium HTML şablonu gönderimde otomatik kullanılır.");
+      return;
+    }
     if (isRestaurantPremiumTemplate(template)) {
       setSubject(mergeTemplate(RESTAURANT_TEMPLATE_SUBJECT, vars));
       setBody("Restoran premium HTML şablonu gönderimde otomatik kullanılır.");

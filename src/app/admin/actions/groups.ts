@@ -104,7 +104,10 @@ export async function seedDefaultGroupsAction(): Promise<FormState> {
   let created = 0;
   for (const item of DEFAULT_GROUPS) {
     const slug = slugify(item.name);
-    const exists = await prisma.leadGroup.findUnique({ where: { slug } });
+    const exists = await prisma.leadGroup.findFirst({
+      where: { OR: [{ slug }, { name: item.name }] },
+      select: { id: true },
+    });
     if (exists) continue;
     await prisma.leadGroup.create({
       data: {

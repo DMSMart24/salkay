@@ -44,14 +44,26 @@ export function salkayWhatsAppNumber() {
   return digits;
 }
 
+export function whatsAppCtaUrl(message: string) {
+  const number = salkayWhatsAppNumber();
+  if (!number) return emailCtaUrl();
+  return `https://wa.me/${number}?text=${encodeURIComponent(message)}`;
+}
+
 export function restaurantWhatsAppMessage(companyName: string) {
   return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Detaylı bilgi almak istiyorum.`;
 }
 
 export function restaurantCtaUrl(companyName: string) {
-  const number = salkayWhatsAppNumber();
-  if (!number) return emailCtaUrl();
-  return `https://wa.me/${number}?text=${encodeURIComponent(restaurantWhatsAppMessage(companyName))}`;
+  return whatsAppCtaUrl(restaurantWhatsAppMessage(companyName));
+}
+
+export function barWhatsAppMessage(companyName: string) {
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Barımızın dijital görünümü ve rezervasyon süreci hakkında detaylı bilgi almak istiyorum.`;
+}
+
+export function barCtaUrl(companyName: string) {
+  return whatsAppCtaUrl(barWhatsAppMessage(companyName));
 }
 
 export const emailAssets = {

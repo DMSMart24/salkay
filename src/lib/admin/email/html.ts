@@ -49,6 +49,9 @@ export function templateCardPreview(name: string, body: string) {
   if (/restoran/i.test(name) || /salkay-email:restaurant/i.test(body)) {
     return "Restoranlar için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
   }
+  if (/\bbar\b/i.test(name) || /salkay-email:bar/i.test(body)) {
+    return "Barlar için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
+  }
 
   const text = htmlToPlainText(body)
     .replace(/\{\{\s*[^}]+\s*\}\}/g, "")

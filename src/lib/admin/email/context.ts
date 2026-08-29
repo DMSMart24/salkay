@@ -2,6 +2,7 @@ import { site } from "@/lib/site";
 import {
   emailAssetUrl,
   emailAssets,
+  barCtaUrl,
   emailCtaUrl,
   isEmailCtaConfigured,
   restaurantCtaUrl,
@@ -57,9 +58,8 @@ function cleanList(values?: string[] | null) {
   return values.map((item) => String(item).trim()).filter(Boolean).slice(0, 8);
 }
 
-export function buildRestaurantEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+function withWhatsAppCta(company: CompanyEmailInput, ctaUrl: string): CompanyEmailContext {
   const context = buildCompanyEmailContext(company);
-  const ctaUrl = restaurantCtaUrl(company.companyName);
   return {
     ...context,
     ctaUrl,
@@ -67,6 +67,23 @@ export function buildRestaurantEmailContext(company: CompanyEmailInput): Company
     vars: {
       ...context.vars,
       ctaUrl,
+    },
+  };
+}
+
+export function buildRestaurantEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+  return withWhatsAppCta(company, restaurantCtaUrl(company.companyName));
+}
+
+export function buildBarEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+  const context = withWhatsAppCta(company, barCtaUrl(company.companyName));
+  const recommendedServices = mapBarRecommendedServices(context.recommendedServices);
+  return {
+    ...context,
+    recommendedServices,
+    vars: {
+      ...context.vars,
+      recommendedServices: recommendedServices.join(" · "),
     },
   };
 }
@@ -87,6 +104,9 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
   const scoreLabel = hasScore ? String(company.websiteScore) : "Analiz devam ediyor";
   const phone = salkayPhone();
   const ctaUrl = emailCtaUrl();
+  const district = company.district?.trim() || "";
+  const city = company.city?.trim() || "";
+  const location = [district, city].filter(Boolean).join(", ");
   const unsubscribeUrl = companyEmail
     ? `${site.url}/unsubscribe?email=${encodeURIComponent(companyEmail)}`
     : `${site.url}/unsubscribe`;
@@ -97,8 +117,9 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     firstName: contact?.firstName?.trim() || "",
     companyEmail,
     website: company.website?.trim() || "",
-    district: company.district?.trim() || "",
-    city: company.city?.trim() || "",
+    district,
+    city,
+    location,
     industry: company.industry?.trim() || "",
     score: hasScore ? String(company.websiteScore) : "",
     issue_1: customerIssues[0] ?? "",
@@ -155,7 +176,53 @@ const SERVICE_CHIP_LABELS: Record<string, string> = {
   "performans denetimi": "Performans",
   "dönüşüm iyileştirme": "Dönüşüm",
   "bilgi mimarisi": "UX",
+  "etkinlik modülü": "Etkinlik Modülü",
+  "sosyal medya entegrasyonu": "Sosyal Medya Entegrasyonu",
+  "sosyal medya": "Sosyal Medya Entegrasyonu",
 };
+
+const BAR_SERVICE_CHIPS = [
+  "Web Tasarımı",
+  "Mobil UX",
+  "Rezervasyon",
+  "Etkinlik Modülü",
+  "Local SEO",
+  "Sosyal Medya Entegrasyonu",
+] as const;
+
+const BAR_SERVICE_ALIASES: Record<string, (typeof BAR_SERVICE_CHIPS)[number]> = {
+  "web tasarımı": "Web Tasarımı",
+  "premium web yeniden tasarım": "Web Tasarımı",
+  "web yeniden tasarım": "Web Tasarımı",
+  "mobil ux": "Mobil UX",
+  "mobil kullanıcı deneyimi": "Mobil UX",
+  "mobil iyileştirme": "Mobil UX",
+  "kullanıcı deneyimi yenileme": "Mobil UX",
+  "kullanıcı deneyimi iyileştirme": "Mobil UX",
+  rezervasyon: "Rezervasyon",
+  "rezervasyon sürecinin iyileştirilmesi": "Rezervasyon",
+  "rezervasyon entegrasyonu": "Rezervasyon",
+  "etkinlik modülü": "Etkinlik Modülü",
+  "local seo": "Local SEO",
+  "yerel seo": "Local SEO",
+  "seo denetimi": "Local SEO",
+  "sosyal medya entegrasyonu": "Sosyal Medya Entegrasyonu",
+  "sosyal medya": "Sosyal Medya Entegrasyonu",
+};
+
+function mapBarRecommendedServices(services: string[]) {
+  const seen = new Set<string>();
+  const chips: string[] = [];
+  for (const service of services) {
+    const key = service.trim().toLowerCase();
+    const label = BAR_SERVICE_ALIASES[key] ?? (BAR_SERVICE_CHIPS as readonly string[]).find((chip) => chip.toLowerCase() === key);
+    if (!label || seen.has(label)) continue;
+    seen.add(label);
+    chips.push(label);
+    if (chips.length === 4) break;
+  }
+  return chips;
+}
 
 function serviceChipLabel(service: string) {
   const mapped = SERVICE_CHIP_LABELS[service.trim().toLowerCase()];

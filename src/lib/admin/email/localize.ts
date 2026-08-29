@@ -49,6 +49,31 @@ const ISSUE_TR: Record<string, string> = {
   "bereits relativ starker digitaler markenauftritt": "Dijital marka duruşu halihazırda güçlü",
   "kein dringender vollständiger redesign-bedarf festgestellt":
     "Acil kapsamlı bir yeniden tasarım ihtiyacı görülmedi",
+  "mobile booking experience can be improved": "Mobil rezervasyon deneyimi geliştirilebilir",
+  "event and dj programs could be more visible": "Etkinlik ve DJ programları daha görünür sunulabilir",
+  "menu and drink options could be easier to access": "Menü / içecek seçeneklerine erişim kolaylaştırılabilir",
+  "brand atmosphere could be stronger on the website":
+    "Marka atmosferi web sitesinde daha güçlü yansıtılabilir",
+  "instagram and social media could be better integrated":
+    "Instagram ve sosyal medya akışı daha iyi entegre edilebilir",
+  "google maps and location visibility can be improved":
+    "Google Maps / lokasyon görünürlüğü güçlendirilebilir",
+  "opening hours could be clearer": "Açılış saatleri daha net sunulabilir",
+  "mobile speed and performance can be improved": "Mobil hız ve performans iyileştirilebilir",
+  "mobile reservierungserlebnis kann verbessert werden": "Mobil rezervasyon deneyimi geliştirilebilir",
+  "events und dj-programme könnten sichtbarer sein":
+    "Etkinlik ve DJ programları daha görünür sunulabilir",
+  "menü und getränkeauswahl könnten leichter erreichbar sein":
+    "Menü / içecek seçeneklerine erişim kolaylaştırılabilir",
+  "markenatmosphäre wird digital nicht stark genug gezeigt":
+    "Marka atmosferi web sitesinde daha güçlü yansıtılabilir",
+  "instagram und social media könnten besser integriert werden":
+    "Instagram ve sosyal medya akışı daha iyi entegre edilebilir",
+  "google maps und standortsichtbarkeit können gestärkt werden":
+    "Google Maps / lokasyon görünürlüğü güçlendirilebilir",
+  "öffnungszeiten könnten klarer dargestellt werden": "Açılış saatleri daha net sunulabilir",
+  "mobile geschwindigkeit und performance können verbessert werden":
+    "Mobil hız ve performans iyileştirilebilir",
 };
 
 const SERVICE_TR: Record<string, string> = {
@@ -69,6 +94,11 @@ const SERVICE_TR: Record<string, string> = {
   "mobile optimierung": "Mobil iyileştirme",
   "conversion optimierung": "Dönüşüm iyileştirme",
   "information architecture": "Bilgi mimarisi",
+  "event module": "Etkinlik Modülü",
+  "veranstaltungsmodul": "Etkinlik Modülü",
+  "social media integration": "Sosyal Medya Entegrasyonu",
+  "social-media-integration": "Sosyal Medya Entegrasyonu",
+  "instagram integration": "Sosyal Medya Entegrasyonu",
 };
 
 const GENERIC_ISSUE_TR = "Bu alanda dijital deneyimin geliştirilmesi önerilir.";

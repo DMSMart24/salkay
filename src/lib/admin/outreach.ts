@@ -8,6 +8,7 @@ export const MAX_BATCH_SIZE = 50;
 
 export const DEFAULT_GROUPS = [
   { name: "Restoranlar", industry: "Restaurant" },
+  { name: "Barlar", industry: "Bar" },
   { name: "İnşaat Firmaları", industry: "Construction" },
   { name: "Mimarlık", industry: "Architecture" },
   { name: "Gayrimenkul", industry: "Real Estate" },

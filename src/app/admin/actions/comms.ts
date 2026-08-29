@@ -7,6 +7,11 @@ import { getEmailFrom, getEmailProvider } from "@/lib/admin/email/provider";
 import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import { looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import {
+  BAR_TEMPLATE_SUBJECT,
+  barPremiumSource,
+  isBarPremiumTemplate,
+} from "@/lib/admin/email/templates/bar";
+import {
   isRestaurantPremiumTemplate,
   RESTAURANT_TEMPLATE_SUBJECT,
   restaurantPremiumSource,
@@ -92,9 +97,12 @@ export async function composeEmailAction(
   });
   const mergedSubject = rendered.subject;
   const mergedBody = rendered.bodyText;
-  const mergedHtml = looksLikeHtmlEmail(parsed.data.body) || isRestaurantPremiumTemplate(template ?? {})
-    ? rendered.bodyHtml
-    : undefined;
+  const mergedHtml =
+    looksLikeHtmlEmail(parsed.data.body) ||
+    isRestaurantPremiumTemplate(template ?? {}) ||
+    isBarPremiumTemplate(template ?? {})
+      ? rendered.bodyHtml
+      : undefined;
 
   if (parsed.data.saveDraft) {
     await prisma.$transaction(async (tx) => {
@@ -220,9 +228,10 @@ export async function sendTestEmailAction(
   }
 
   const restaurant = isRestaurantPremiumTemplate(template);
+  const bar = isBarPremiumTemplate(template);
   const rendered = renderPersonalizedEmail({
-    subject: restaurant ? RESTAURANT_TEMPLATE_SUBJECT : template.subject,
-    body: restaurant ? restaurantPremiumSource() : template.body,
+    subject: restaurant ? RESTAURANT_TEMPLATE_SUBJECT : bar ? BAR_TEMPLATE_SUBJECT : template.subject,
+    body: restaurant ? restaurantPremiumSource() : bar ? barPremiumSource() : template.body,
     company,
     templateName: template.name,
     templateCategory: template.category,

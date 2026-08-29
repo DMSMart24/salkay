@@ -1,6 +1,10 @@
 import Link from "next/link";
 import { toggleTemplateAction } from "@/app/admin/actions/comms";
-import { duplicateTemplateForm, ensureRestaurantTemplateForm } from "@/app/admin/actions/templates";
+import {
+  duplicateTemplateForm,
+  ensureBarTemplateForm,
+  ensureRestaurantTemplateForm,
+} from "@/app/admin/actions/templates";
 import { TemplateForm } from "@/components/admin/SimpleForms";
 import { templateCardPreview } from "@/lib/admin/email/html";
 import { formatDate } from "@/lib/admin/format";
@@ -20,9 +24,14 @@ export default async function TemplatesPage() {
           <p className="admin-kicker">Vorlagen</p>
           <h1>Outreach şablonları</h1>
         </div>
-        <form action={ensureRestaurantTemplateForm}>
-          <button className="admin-btn">Restoran şablonunu aç / kur</button>
-        </form>
+        <div className="admin-actions">
+          <form action={ensureRestaurantTemplateForm}>
+            <button className="admin-btn">Restoran şablonunu aç / kur</button>
+          </form>
+          <form action={ensureBarTemplateForm}>
+            <button className="admin-btn ghost">Bar şablonunu aç / kur</button>
+          </form>
+        </div>
       </header>
       <TemplateForm />
       <div className="admin-template-grid">

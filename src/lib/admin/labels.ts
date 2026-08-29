@@ -135,6 +135,7 @@ export const directionLabels: Record<EmailDirection, string> = {
 
 export const templateCategories = [
   "RESTORAN",
+  "BAR",
   "İNŞAAT",
   "MİMARLIK",
   "GAYRİMENKUL",

@@ -1,5 +1,5 @@
 import type { CompanyPriority, OutreachStatus, Prisma, WebsiteStatus } from "@prisma/client";
-import { companyFilterWhere, type CompanyFilterInput } from "@/lib/admin/outreach";
+import { companyFilterWhere, DEFAULT_GROUPS, type CompanyFilterInput } from "@/lib/admin/outreach";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export type CompanyListQuery = CompanyFilterInput & {
@@ -222,7 +222,10 @@ export async function listFilterOptions() {
   ]);
 
   return {
-    industries: unique(companies.map((row) => row.industry)),
+    industries: unique([
+      ...DEFAULT_GROUPS.map((group) => group.industry),
+      ...companies.map((row) => row.industry),
+    ]),
     cities: unique(companies.map((row) => row.city)),
     districts: unique(companies.map((row) => row.district)),
     countries: unique(companies.map((row) => row.country)),
