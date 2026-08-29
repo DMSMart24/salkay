@@ -30,49 +30,58 @@ export function isRestaurantPremiumTemplate(input: {
 }
 
 const SERVICES = [
-  ["Web Tasarımı", "Modern, şık ve markanıza özel tasarım"],
-  ["Mobil Uyum", "Tüm cihazlarda hızlı ve kusursuz deneyim"],
-  ["Rezervasyon Sistemleri", "Kolay rezervasyon, daha fazla müşteri"],
-  ["SEO & Google Görünürlüğü", "Daha fazla görünürlük, daha fazla misafir"],
-  ["Hız & Performans", "Hızlı ve modern kullanıcı deneyimi"],
-  ["İçerik & Görsel Destek", "Profesyonel içerik ve görsel yönetimi"],
+  ["01", "✦", "Web Tasarımı", "Modern, şık ve markanıza özel tasarım"],
+  ["02", "▢", "Mobil Uyum", "Tüm cihazlarda hızlı ve kusursuz deneyim"],
+  ["03", "▣", "Rezervasyon", "Kolay rezervasyon, daha fazla müşteri"],
+  ["04", "●", "SEO &amp; Google", "Daha fazla görünürlük, daha fazla misafir"],
+  ["05", "▸", "Hız &amp; Performans", "Hızlı ve modern kullanıcı deneyimi"],
+  ["06", "✧", "İçerik &amp; Görsel", "Profesyonel içerik ve görsel yönetimi"],
 ] as const;
 
 const BENEFITS = [
-  ["01", "Daha güçlü", "ilk izlenim"],
-  ["02", "Kolay rezervasyon", "ve daha fazla dönüşüm"],
-  ["03", "Mobilde mükemmel", "deneyim"],
+  ["01", "✦", "Daha güçlü ilk izlenim", "Markanızı ilk bakışta daha profesyonel yansıtın."],
+  ["02", "▣", "Kolay rezervasyon", "Daha az adım, daha fazla rezervasyon."],
+  ["03", "▢", "Mobilde mükemmel deneyim", "Telefon ve tablette hızlı, kusursuz kullanım."],
 ] as const;
 
+function benefitPad(index: number) {
+  if (index === 0) return "0 6px 0 0";
+  if (index === 1) return "0 6px";
+  return "0 0 0 6px";
+}
+
 function benefitCells() {
-  return BENEFITS.map(
-    ([num, line1, line2], index) => `
-      <td class="salkay-benefit" valign="top" width="33%" style="width:33.33%;padding:${index === 1 ? "0 7px" : "0"};">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#f8f3ea;border:1px solid #d5aa62;">
+  return `<!-- salkay-benefits:cards -->${BENEFITS.map(
+    ([num, icon, title, support], index) => `
+      <td class="salkay-benefit${index === 2 ? " salkay-benefit-last" : ""}" valign="top" width="33%" style="width:33.33%;padding:${benefitPad(index)};">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F3EA" style="border-collapse:separate;background:#F8F3EA;border:1px solid #D5AA62;border-left:4px solid #16C7FF;border-radius:8px;">
           <tr>
-            <td style="padding:14px 12px 16px;">
-              <p style="margin:0 0 6px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px;letter-spacing:0.12em;color:#1478ff;font-weight:700;">${num}</p>
-              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:20px;color:#0d1728;font-weight:700;">${line1}<br>${line2}</p>
+            <td bgcolor="#F8F3EA" style="background:#F8F3EA;padding:16px 18px;border-radius:8px;">
+              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                <tr>
+                  <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px;letter-spacing:0.14em;color:#16C7FF;font-weight:700;">${num}</td>
+                  <td valign="middle" align="right" style="font-family:Georgia,Times,serif;font-size:14px;line-height:14px;color:#D5AA62;">${icon}</td>
+                </tr>
+              </table>
+              <p style="margin:10px 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;color:#07111F;font-weight:700;">${title}</p>
+              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;color:#5A6A7C;">${support}</p>
             </td>
           </tr>
         </table>
       </td>`,
-  ).join("");
+  ).join("")}`;
 }
 
-function serviceCell(title: string, body: string, pad: string) {
+function serviceCard(num: string, icon: string, title: string, body: string, pad: string) {
   return `
-    <td class="salkay-service" valign="top" width="33%" style="width:33.33%;padding:${pad};">
-      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+    <td class="salkay-service" valign="top" width="50%" style="width:50%;padding:${pad};">
+      <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #D5AA62;border-radius:8px;">
         <tr>
-          <td width="10" valign="top" style="padding-top:3px;">
-            <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-              <tr><td width="8" height="8" bgcolor="#16c7ff" style="background:#16c7ff;font-size:0;line-height:0;">&nbsp;</td></tr>
-            </table>
-          </td>
-          <td style="padding-left:8px;">
-            <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#ffffff;font-weight:700;">${title}</p>
-            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#9eb0c4;">${body}</p>
+          <td width="4" bgcolor="#D5AA62" style="width:4px;background:#D5AA62;border-radius:8px 0 0 8px;font-size:0;line-height:0;">&nbsp;</td>
+          <td bgcolor="#0B1729" height="118" valign="top" style="background:#0B1729;padding:16px 14px 16px 12px;height:118px;border-radius:0 8px 8px 0;">
+            <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:13px;letter-spacing:0.12em;color:#16C7FF;font-weight:700;">${num}&nbsp;&nbsp;<span style="color:#D5AA62;">${icon}</span></p>
+            <p style="margin:0 0 6px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#FFFFFF;font-weight:700;">${title}</p>
+            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:17px;color:#B8C3D1;">${body}</p>
           </td>
         </tr>
       </table>
@@ -81,12 +90,14 @@ function serviceCell(title: string, body: string, pad: string) {
 
 function serviceGrid() {
   const rows: string[] = [];
-  for (let index = 0; index < SERVICES.length; index += 3) {
-    const a = SERVICES[index];
-    const b = SERVICES[index + 1];
-    const c = SERVICES[index + 2];
+  for (let index = 0; index < SERVICES.length; index += 2) {
+    const left = SERVICES[index];
+    const right = SERVICES[index + 1];
+    if (!left) continue;
     rows.push(
-      `<tr>${serviceCell(a[0], a[1], "0 10px 16px 0")}${b ? serviceCell(b[0], b[1], "0 10px 16px 0") : ""}${c ? serviceCell(c[0], c[1], "0 0 16px 0") : ""}</tr>`,
+      `<tr>${serviceCard(left[0], left[1], left[2], left[3], "0 5px 10px 0")}${
+        right ? serviceCard(right[0], right[1], right[2], right[3], "0 0 10px 5px") : ""
+      }</tr>`,
     );
   }
   return rows.join("");
@@ -202,7 +213,10 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
       font-size: inherit !important;
       line-height: inherit !important;
     }
-    .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-service, .salkay-cta-copy, .salkay-cta-kay { display: block !important; width: 100% !important; }
+    .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-cta-copy, .salkay-cta-kay { display: block !important; width: 100% !important; }
+    .salkay-benefit { padding: 0 0 14px 0 !important; }
+    .salkay-benefit-last { padding-bottom: 0 !important; }
+    .salkay-services-wrap { padding: 22px 20px 16px !important; background: #07111F !important; }
     .salkay-intro { padding-right: 0 !important; padding-left: 0 !important; }
     .salkay-hero-photo { width: 100% !important; height: auto !important; }
     .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
@@ -280,7 +294,7 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
           </tr>
 
           <tr>
-            <td bgcolor="#ffffff" class="salkay-pad" style="background:#ffffff;padding:6px 24px 22px;">
+            <td bgcolor="#ffffff" class="salkay-pad" style="background:#ffffff;padding:8px 24px 22px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                 <tr>
                   ${benefitCells()}
@@ -290,12 +304,13 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
           </tr>
 
           <tr>
-            <td class="salkay-pad" bgcolor="#0b1729" style="background:#0b1729;padding:26px 24px 18px;">
-              <p style="margin:0;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;color:#ffffff;font-weight:700;">SALKAY NELER SUNAR?</p>
-              <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:10px auto 18px;">
-                <tr><td width="56" height="2" bgcolor="#d5aa62" style="background:#d5aa62;font-size:0;line-height:0;">&nbsp;</td></tr>
+            <td class="salkay-pad salkay-services-wrap" bgcolor="#07111F" style="background:#07111F;padding:26px 24px 16px;">
+              <p style="margin:0;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;color:#FFFFFF;font-weight:700;">SALKAY NELER SUNAR?</p>
+              <table role="presentation" align="center" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:10px auto 16px;">
+                <tr><td width="50" height="2" bgcolor="#D5AA62" style="background:#D5AA62;font-size:0;line-height:0;">&nbsp;</td></tr>
               </table>
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+              <table role="presentation" class="salkay-service-grid" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+                <!-- salkay-services:cards -->
                 ${serviceGrid()}
               </table>
             </td>
