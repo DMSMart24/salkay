@@ -42,11 +42,13 @@ export const PREMIUM_EMAIL_CSS = `
     .salkay-cta-inner { padding: 22px 20px 20px !important; }
     .salkay-cta-btn-wrap { width: 86% !important; }
     .salkay-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
-    .salkay-sign-wrap { padding: 8px 18px 14px !important; background: #F8F3EA !important; }
-    .salkay-sign-head { padding: 18px 18px 0 !important; }
-    .salkay-sign-logo { padding: 14px 18px 8px !important; }
-    .salkay-sign-contact { padding: 0 18px 18px !important; }
-    .salkay-footer { padding: 16px 18px 20px !important; text-align: center !important; }
+    .salkay-benefits-wrap { padding: 6px 18px 14px !important; background: #07111F !important; }
+    .salkay-sign-wrap { padding: 8px 18px 12px !important; background: #07111F !important; }
+    .salkay-sign-card { width: 100% !important; }
+    .salkay-sign-head { padding: 0 0 14px 0 !important; }
+    .salkay-sign-logo { padding: 14px 0 10px !important; }
+    .salkay-sign-contact { padding: 0 !important; }
+    .salkay-footer { padding: 12px 18px 16px !important; text-align: center !important; }
   }
 `;
 
@@ -85,28 +87,30 @@ export function mobileHeroHtml(alt: string) {
 export function signatureBlockHtml() {
   return `
           <tr>
-            <td class="salkay-pad salkay-sign-wrap" bgcolor="#F8F3EA" style="background:#F8F3EA;padding:10px 24px 16px;">
+            <td class="salkay-pad salkay-sign-wrap" bgcolor="#07111F" style="background:#07111F;padding:8px 24px 12px;">
               <!-- salkay-close:signature -->
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#FFFFFF" style="border-collapse:separate;background:#FFFFFF;border:1px solid #D5AA62;border-radius:10px;">
+              <table role="presentation" class="salkay-sign-card" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #6E5A36;border-color:rgba(213,170,98,0.45);border-radius:10px;">
                 <tr>
-                  <td class="salkay-sign-head" bgcolor="#FFFFFF" style="background:#FFFFFF;padding:20px 22px 0;border-radius:10px 10px 0 0;">
-                    <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;color:#5A6A7C;">İyi çalışmalar,</p>
-                    <p style="margin:0 0 12px;font-family:Georgia,Times,serif;font-size:26px;line-height:32px;color:#07111F;">Salih Kaya</p>
+                  <td class="salkay-sign-head" bgcolor="#0B1729" style="background:#0B1729;padding:24px 26px 0;border-radius:10px 10px 0 0;">
+                    <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;color:#B8C5D6;">İyi çalışmalar,</p>
+                    <p style="margin:0 0 12px;font-family:Georgia,Times,serif;font-size:26px;line-height:32px;color:#FFFFFF;">Salih Kaya</p>
                     <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                       <tr><td width="44" height="2" bgcolor="#D5AA62" style="background:#D5AA62;font-size:0;line-height:0;">&nbsp;</td></tr>
                     </table>
                   </td>
                 </tr>
                 <tr>
-                  <td bgcolor="#FFFFFF" style="background:#FFFFFF;padding:14px 22px 20px;border-radius:0 0 10px 10px;">
+                  <td bgcolor="#0B1729" style="background:#0B1729;padding:16px 26px 24px;border-radius:0 0 10px 10px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                       <tr>
-                        <td class="salkay-sign-logo" valign="middle" width="38%" style="width:38%;padding:0 16px 0 0;">
+                        <td class="salkay-sign-logo" valign="top" style="padding:0 0 12px;">
                           <img src="{{logoUrl}}" width="88" height="50" alt="SALKAY" style="display:block;border:0;width:88px;height:auto;max-width:88px;">
                         </td>
-                        <td class="salkay-sign-contact" valign="middle" width="62%" style="width:62%;padding:0;">
-                          <p style="margin:0 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;letter-spacing:0.14em;color:#07111F;font-weight:700;">SALKAY</p>
-                          <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#5A6A7C;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
+                      </tr>
+                      <tr>
+                        <td class="salkay-sign-contact" valign="top" style="padding:0;">
+                          <p style="margin:0 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;letter-spacing:0.16em;color:#FFFFFF;font-weight:700;">SALKAY</p>
+                          <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#B8C5D6;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
                           <p style="margin:0 0 2px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="mailto:info@salkay.com" style="color:#16C7FF;text-decoration:none;">info@salkay.com</a></p>
                           <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="${site.url}" style="color:#16C7FF;text-decoration:none;">salkay.com</a></p>
                           {{phoneBlock}}
@@ -123,20 +127,20 @@ export function signatureBlockHtml() {
 export function footerBlockHtml() {
   return `
           <tr>
-            <td class="salkay-pad salkay-footer" bgcolor="#07111F" align="center" style="background:#07111F;padding:20px 24px 24px;text-align:center;">
+            <td class="salkay-pad salkay-footer" bgcolor="#07111F" align="center" style="background:#07111F;padding:14px 20px 16px;text-align:center;">
               <!-- salkay-close:footer -->
-              <p style="margin:0 0 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.28em;color:#D5AA62;font-weight:700;">S A L K A Y</p>
-              <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse;margin:0 auto 12px;">
-                <tr><td width="40" height="2" bgcolor="#16C7FF" style="background:#16C7FF;font-size:0;line-height:0;">&nbsp;</td></tr>
+              <p style="margin:0 0 6px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.28em;color:#D5AA62;font-weight:700;">S A L K A Y</p>
+              <table role="presentation" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse;margin:0 auto 8px;">
+                <tr><td width="32" height="2" bgcolor="#16C7FF" style="background:#16C7FF;font-size:0;line-height:0;">&nbsp;</td></tr>
               </table>
-              <p style="margin:0 0 12px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#8EA0B8;">
+              <p style="margin:0 0 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#8EA0B8;">
                 İstanbul, Türkiye
                 &nbsp;·&nbsp;
                 <a href="mailto:info@salkay.com" style="color:#16C7FF;text-decoration:none;">info@salkay.com</a>
                 &nbsp;·&nbsp;
                 <a href="${site.url}" style="color:#B8C3D1;text-decoration:none;">salkay.com</a>
               </p>
-              <p style="margin:0 0 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#8EA0B8;">Bu e-posta {{companyName}} ekibine özel hazırlanmıştır.</p>
+              <p style="margin:0 0 6px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;color:#8EA0B8;">Bu e-posta {{companyName}} ekibine özel hazırlanmıştır.</p>
               <p style="margin:0;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;">
                 <a href="{{unsubscribeUrl}}" style="color:#D5AA62;text-decoration:underline;">Abonelikten çık</a>
               </p>
@@ -174,9 +178,9 @@ export function mainCtaBlockHtml(copy?: { headline?: string; support?: string })
 type CardCopy = readonly [string, string, string, string];
 
 function benefitPad(index: number) {
-  if (index === 0) return "0 6px 0 0";
-  if (index === 1) return "0 6px";
-  return "0 0 0 6px";
+  if (index === 0) return "0 8px 0 0";
+  if (index === 1) return "0 8px";
+  return "0 0 0 8px";
 }
 
 export function benefitCellsHtml(benefits: readonly CardCopy[]) {
@@ -184,17 +188,17 @@ export function benefitCellsHtml(benefits: readonly CardCopy[]) {
     .map(
       ([num, icon, title, support], index) => `
       <td class="salkay-benefit${index === 2 ? " salkay-benefit-last" : ""}" valign="top" width="33%" style="width:33.33%;padding:${benefitPad(index)};">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#F8F3EA" style="border-collapse:separate;background:#F8F3EA;border:1px solid #D5AA62;border-left:4px solid #16C7FF;border-radius:8px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #8A6E3E;border-color:rgba(213,170,98,0.55);border-left:3px solid #16C7FF;border-radius:10px;">
           <tr>
-            <td bgcolor="#F8F3EA" style="background:#F8F3EA;padding:16px 18px;border-radius:8px;">
+            <td bgcolor="#0B1729" style="background:#0B1729;padding:16px 18px;border-radius:10px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                 <tr>
                   <td valign="middle" style="font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:14px;letter-spacing:0.14em;color:#16C7FF;font-weight:700;">${num}</td>
                   <td valign="middle" align="right" style="font-family:Georgia,Times,serif;font-size:14px;line-height:14px;color:#D5AA62;">${icon}</td>
                 </tr>
               </table>
-              <p style="margin:10px 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;color:#07111F;font-weight:700;">${title}</p>
-              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;color:#5A6A7C;">${support}</p>
+              <p style="margin:10px 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;color:#FFFFFF;font-weight:700;">${title}</p>
+              <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;color:#B8C5D6;">${support}</p>
             </td>
           </tr>
         </table>

@@ -188,7 +188,7 @@ ${PREMIUM_EMAIL_CSS}
           </tr>
 
           <tr>
-            <td bgcolor="#ffffff" class="salkay-pad" style="background:#ffffff;padding:8px 24px 22px;">
+            <td bgcolor="#07111F" class="salkay-pad salkay-benefits-wrap" style="background:#07111F;padding:8px 24px 18px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                 <tr>
                   ${benefitCellsHtml(BENEFITS)}
