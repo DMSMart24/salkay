@@ -400,13 +400,13 @@ button {
 
   .hero-title {
     text-shadow:
-      0 0 42px rgba(7, 17, 31), 0.92),
-      0 2px 18px rgba(7, 17, 31), 0.7);
+      0 0 42px rgba(7, 17, 31, 0.92),
+      0 2px 18px rgba(7, 17, 31, 0.7);
   }
 
   .hero-lead,
   .hero-meta {
-    text-shadow: 0 1px 16px rgba(7, 17, 31), 0.86);
+    text-shadow: 0 1px 16px rgba(7, 17, 31, 0.86);
   }
 
   .scroll-cue {
@@ -421,13 +421,13 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       180deg,
-      rgba(7, 17, 31), 0.98) 0%,
-      rgba(7, 17, 31), 0.96) 20%,
-      rgba(7, 17, 31), 0.88) 38%,
-      rgba(7, 17, 31), 0.68) 52%,
-      rgba(7, 17, 31), 0.35) 64%,
-      rgba(7, 17, 31), 0.1) 75%,
-      rgba(7, 17, 31), 0.08) 100%
+      rgba(7, 17, 31, 0.98) 0%,
+      rgba(7, 17, 31, 0.96) 20%,
+      rgba(7, 17, 31, 0.88) 38%,
+      rgba(7, 17, 31, 0.68) 52%,
+      rgba(7, 17, 31, 0.35) 64%,
+      rgba(7, 17, 31, 0.1) 75%,
+      rgba(7, 17, 31, 0.08) 100%
     );
   }
 
@@ -448,7 +448,7 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(7, 17, 31), 0.42) 0%,
+      rgba(7, 17, 31, 0.42) 0%,
       transparent 26%
     );
   }
@@ -468,13 +468,13 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       180deg,
-      rgba(7, 17, 31), 0.98) 0%,
-      rgba(7, 17, 31), 0.94) 14%,
-      rgba(7, 17, 31), 0.82) 28%,
-      rgba(7, 17, 31), 0.5) 44%,
-      rgba(7, 17, 31), 0.18) 60%,
-      rgba(7, 17, 31), 0.05) 76%,
-      rgba(7, 17, 31), 0.16) 100%
+      rgba(7, 17, 31, 0.98) 0%,
+      rgba(7, 17, 31, 0.94) 14%,
+      rgba(7, 17, 31, 0.82) 28%,
+      rgba(7, 17, 31, 0.5) 44%,
+      rgba(7, 17, 31, 0.18) 60%,
+      rgba(7, 17, 31, 0.05) 76%,
+      rgba(7, 17, 31, 0.16) 100%
     );
   }
 
@@ -489,7 +489,7 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(7, 17, 31), 0.36) 0%,
+      rgba(7, 17, 31, 0.36) 0%,
       transparent 22%
     );
   }
@@ -512,18 +512,18 @@ button {
     background:
       linear-gradient(
         180deg,
-        rgba(7, 17, 31), 0.94) 0%,
-        rgba(7, 17, 31), 0.86) 14%,
-        rgba(7, 17, 31), 0.52) 32%,
-        rgba(7, 17, 31), 0.18) 50%,
-        rgba(7, 17, 31), 0.06) 68%,
-        rgba(7, 17, 31), 0.22) 100%
+        rgba(7, 17, 31, 0.94) 0%,
+        rgba(7, 17, 31, 0.86) 14%,
+        rgba(7, 17, 31, 0.52) 32%,
+        rgba(7, 17, 31, 0.18) 50%,
+        rgba(7, 17, 31, 0.06) 68%,
+        rgba(7, 17, 31, 0.22) 100%
       ),
       linear-gradient(
         90deg,
-        rgba(7, 17, 31), 0.62) 0%,
-        rgba(7, 17, 31), 0.28) 26%,
-        rgba(7, 17, 31), 0.06) 44%,
+        rgba(7, 17, 31, 0.62) 0%,
+        rgba(7, 17, 31, 0.28) 26%,
+        rgba(7, 17, 31, 0.06) 44%,
         transparent 58%
       );
   }
@@ -556,13 +556,13 @@ button {
 
   .hero-title {
     text-shadow:
-      0 0 48px rgba(7, 17, 31), 0.88),
-      0 2px 22px rgba(7, 17, 31), 0.72);
+      0 0 48px rgba(7, 17, 31, 0.88),
+      0 2px 22px rgba(7, 17, 31, 0.72);
   }
 
   .hero-lead,
   .hero-meta {
-    text-shadow: 0 1px 18px rgba(7, 17, 31), 0.82);
+    text-shadow: 0 1px 18px rgba(7, 17, 31, 0.82);
   }
 
   .hero-actions {
@@ -609,10 +609,10 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       90deg,
-      rgba(7, 17, 31), 0.86) 0%,
-      rgba(7, 17, 31), 0.58) 28%,
-      rgba(7, 17, 31), 0.2) 44%,
-      rgba(7, 17, 31), 0.04) 56%,
+      rgba(7, 17, 31, 0.86) 0%,
+      rgba(7, 17, 31, 0.58) 28%,
+      rgba(7, 17, 31, 0.2) 44%,
+      rgba(7, 17, 31, 0.04) 56%,
       transparent 66%
     );
   }
@@ -620,8 +620,8 @@ button {
   .hero-video-top {
     background: linear-gradient(
       180deg,
-      rgba(7, 17, 31), 0.78) 0%,
-      rgba(7, 17, 31), 0.24) 14%,
+      rgba(7, 17, 31, 0.78) 0%,
+      rgba(7, 17, 31, 0.24) 14%,
       transparent 28%
     );
   }
@@ -629,8 +629,8 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(7, 17, 31), 0.42) 0%,
-      rgba(7, 17, 31), 0.1) 18%,
+      rgba(7, 17, 31, 0.42) 0%,
+      rgba(7, 17, 31, 0.1) 18%,
       transparent 34%
     );
   }
@@ -661,10 +661,10 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       90deg,
-      rgba(7, 17, 31), 0.78) 0%,
-      rgba(7, 17, 31), 0.5) 26%,
-      rgba(7, 17, 31), 0.18) 42%,
-      rgba(7, 17, 31), 0.05) 52%,
+      rgba(7, 17, 31, 0.78) 0%,
+      rgba(7, 17, 31, 0.5) 26%,
+      rgba(7, 17, 31, 0.18) 42%,
+      rgba(7, 17, 31, 0.05) 52%,
       transparent 62%
     );
   }
@@ -672,8 +672,8 @@ button {
   .hero-video-top {
     background: linear-gradient(
       180deg,
-      rgba(7, 17, 31), 0.82) 0%,
-      rgba(7, 17, 31), 0.32) 16%,
+      rgba(7, 17, 31, 0.82) 0%,
+      rgba(7, 17, 31, 0.32) 16%,
       transparent 30%
     );
   }
@@ -681,8 +681,8 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(7, 17, 31), 0.5) 0%,
-      rgba(7, 17, 31), 0.14) 20%,
+      rgba(7, 17, 31, 0.5) 0%,
+      rgba(7, 17, 31, 0.14) 20%,
       transparent 36%
     );
   }
