@@ -13,6 +13,12 @@
   --c-blue: #3768ff;
   --c-blue-soft: rgba(55, 104, 255, 0.14);
   --c-cyan: #49e8ff;
+  --c-gold: #d5aa62;
+  --c-gold-bright: #e0b872;
+  --c-cream: #f8f3ea;
+  --c-navy: #07111f;
+  --c-navy-soft: #081526;
+  --c-navy-mid: #0b1729;
 
   --ink: var(--c-text);
   --ink-soft: var(--c-bg-soft);
@@ -26,6 +32,31 @@
   --salkay: var(--c-blue);
   --salkay-bright: #4d7aff;
   --salkay-soft: var(--c-cyan);
+}
+
+[data-salkay-public] {
+  --c-bg: #07111f;
+  --c-bg-soft: #081526;
+  --c-surface: #0b1729;
+  --c-surface-2: #102038;
+  --c-border: #1e3a54;
+  --c-border-soft: #152536;
+  --c-text: #f8f3ea;
+  --c-text-dim: #b8c3d1;
+  --c-text-faint: #8ea0b8;
+  --c-blue: #1478ff;
+  --c-blue-soft: rgba(20, 120, 255, 0.14);
+  --c-cyan: #16c7ff;
+  --salkay: #1478ff;
+  --salkay-bright: #3d8cff;
+  --salkay-soft: #16c7ff;
+  --line-strong: #2a4a68;
+}
+
+html:has([data-salkay-public]),
+body:has([data-salkay-public]) {
+  background: #07111f;
+  color: #f8f3ea;
 }
 
 @theme inline {
@@ -52,6 +83,12 @@
   --color-salkay: var(--salkay);
   --color-salkay-bright: var(--salkay-bright);
   --color-salkay-soft: var(--salkay-soft);
+  --color-gold: var(--c-gold);
+  --color-gold-bright: var(--c-gold-bright);
+  --color-cream: var(--c-cream);
+  --color-navy: var(--c-navy);
+  --color-navy-soft: var(--c-navy-soft);
+  --color-navy-mid: var(--c-navy-mid);
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
@@ -161,7 +198,7 @@ button {
   inset: 0;
   z-index: 0;
   overflow: hidden;
-  background: #030509;
+  background: #07111f;
 }
 
 .hero-video-frame {
@@ -189,9 +226,9 @@ button {
 .hero-video-shade {
   background: linear-gradient(
     180deg,
-    #030509 0%,
-    rgba(3, 5, 9, 0.42) 16%,
-    rgba(3, 5, 9, 0.08) 32%,
+    #07111f 0%,
+    rgba(7, 17, 31, 0.48) 16%,
+    rgba(7, 17, 31, 0.1) 32%,
     transparent 48%
   );
 }
@@ -203,7 +240,7 @@ button {
 .hero-video-bottom {
   background: linear-gradient(
     0deg,
-    rgba(3, 5, 9, 0.28) 0%,
+    rgba(7, 17, 31, 0.42) 0%,
     transparent 28%
   );
 }
@@ -235,7 +272,22 @@ button {
 }
 
 .hero-title-accent {
+  font-family: Georgia, "Times New Roman", serif;
+  font-style: italic;
+  font-weight: 700;
+  color: var(--c-cyan);
+  border-bottom: 2px solid var(--c-cyan);
+}
+
+[data-salkay-hero] .hero-title-accent {
   white-space: nowrap;
+}
+
+.brand-rule {
+  width: 2.5rem;
+  height: 2px;
+  margin-top: 1.15rem;
+  background: var(--c-gold);
 }
 
 @media (max-width: 767px) {
@@ -348,13 +400,13 @@ button {
 
   .hero-title {
     text-shadow:
-      0 0 42px rgba(3, 5, 9, 0.92),
-      0 2px 18px rgba(3, 5, 9, 0.7);
+      0 0 42px rgba(7, 17, 31), 0.92),
+      0 2px 18px rgba(7, 17, 31), 0.7);
   }
 
   .hero-lead,
   .hero-meta {
-    text-shadow: 0 1px 16px rgba(3, 5, 9, 0.86);
+    text-shadow: 0 1px 16px rgba(7, 17, 31), 0.86);
   }
 
   .scroll-cue {
@@ -369,13 +421,13 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       180deg,
-      rgba(3, 5, 9, 0.98) 0%,
-      rgba(3, 5, 9, 0.96) 20%,
-      rgba(3, 5, 9, 0.88) 38%,
-      rgba(3, 5, 9, 0.68) 52%,
-      rgba(3, 5, 9, 0.35) 64%,
-      rgba(3, 5, 9, 0.1) 75%,
-      rgba(3, 5, 9, 0.08) 100%
+      rgba(7, 17, 31), 0.98) 0%,
+      rgba(7, 17, 31), 0.96) 20%,
+      rgba(7, 17, 31), 0.88) 38%,
+      rgba(7, 17, 31), 0.68) 52%,
+      rgba(7, 17, 31), 0.35) 64%,
+      rgba(7, 17, 31), 0.1) 75%,
+      rgba(7, 17, 31), 0.08) 100%
     );
   }
 
@@ -396,7 +448,7 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(3, 5, 9, 0.42) 0%,
+      rgba(7, 17, 31), 0.42) 0%,
       transparent 26%
     );
   }
@@ -416,13 +468,13 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       180deg,
-      rgba(3, 5, 9, 0.98) 0%,
-      rgba(3, 5, 9, 0.94) 14%,
-      rgba(3, 5, 9, 0.82) 28%,
-      rgba(3, 5, 9, 0.5) 44%,
-      rgba(3, 5, 9, 0.18) 60%,
-      rgba(3, 5, 9, 0.05) 76%,
-      rgba(3, 5, 9, 0.16) 100%
+      rgba(7, 17, 31), 0.98) 0%,
+      rgba(7, 17, 31), 0.94) 14%,
+      rgba(7, 17, 31), 0.82) 28%,
+      rgba(7, 17, 31), 0.5) 44%,
+      rgba(7, 17, 31), 0.18) 60%,
+      rgba(7, 17, 31), 0.05) 76%,
+      rgba(7, 17, 31), 0.16) 100%
     );
   }
 
@@ -437,7 +489,7 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(3, 5, 9, 0.36) 0%,
+      rgba(7, 17, 31), 0.36) 0%,
       transparent 22%
     );
   }
@@ -460,18 +512,18 @@ button {
     background:
       linear-gradient(
         180deg,
-        rgba(3, 5, 9, 0.94) 0%,
-        rgba(3, 5, 9, 0.86) 14%,
-        rgba(3, 5, 9, 0.52) 32%,
-        rgba(3, 5, 9, 0.18) 50%,
-        rgba(3, 5, 9, 0.06) 68%,
-        rgba(3, 5, 9, 0.22) 100%
+        rgba(7, 17, 31), 0.94) 0%,
+        rgba(7, 17, 31), 0.86) 14%,
+        rgba(7, 17, 31), 0.52) 32%,
+        rgba(7, 17, 31), 0.18) 50%,
+        rgba(7, 17, 31), 0.06) 68%,
+        rgba(7, 17, 31), 0.22) 100%
       ),
       linear-gradient(
         90deg,
-        rgba(3, 5, 9, 0.62) 0%,
-        rgba(3, 5, 9, 0.28) 26%,
-        rgba(3, 5, 9, 0.06) 44%,
+        rgba(7, 17, 31), 0.62) 0%,
+        rgba(7, 17, 31), 0.28) 26%,
+        rgba(7, 17, 31), 0.06) 44%,
         transparent 58%
       );
   }
@@ -504,13 +556,13 @@ button {
 
   .hero-title {
     text-shadow:
-      0 0 48px rgba(3, 5, 9, 0.88),
-      0 2px 22px rgba(3, 5, 9, 0.72);
+      0 0 48px rgba(7, 17, 31), 0.88),
+      0 2px 22px rgba(7, 17, 31), 0.72);
   }
 
   .hero-lead,
   .hero-meta {
-    text-shadow: 0 1px 18px rgba(3, 5, 9, 0.82);
+    text-shadow: 0 1px 18px rgba(7, 17, 31), 0.82);
   }
 
   .hero-actions {
@@ -557,10 +609,10 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       90deg,
-      rgba(3, 5, 9, 0.86) 0%,
-      rgba(3, 5, 9, 0.58) 28%,
-      rgba(3, 5, 9, 0.2) 44%,
-      rgba(3, 5, 9, 0.04) 56%,
+      rgba(7, 17, 31), 0.86) 0%,
+      rgba(7, 17, 31), 0.58) 28%,
+      rgba(7, 17, 31), 0.2) 44%,
+      rgba(7, 17, 31), 0.04) 56%,
       transparent 66%
     );
   }
@@ -568,8 +620,8 @@ button {
   .hero-video-top {
     background: linear-gradient(
       180deg,
-      rgba(3, 5, 9, 0.78) 0%,
-      rgba(3, 5, 9, 0.24) 14%,
+      rgba(7, 17, 31), 0.78) 0%,
+      rgba(7, 17, 31), 0.24) 14%,
       transparent 28%
     );
   }
@@ -577,8 +629,8 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(3, 5, 9, 0.42) 0%,
-      rgba(3, 5, 9, 0.1) 18%,
+      rgba(7, 17, 31), 0.42) 0%,
+      rgba(7, 17, 31), 0.1) 18%,
       transparent 34%
     );
   }
@@ -609,10 +661,10 @@ button {
   .hero-video-shade {
     background: linear-gradient(
       90deg,
-      rgba(3, 5, 9, 0.78) 0%,
-      rgba(3, 5, 9, 0.5) 26%,
-      rgba(3, 5, 9, 0.18) 42%,
-      rgba(3, 5, 9, 0.05) 52%,
+      rgba(7, 17, 31), 0.78) 0%,
+      rgba(7, 17, 31), 0.5) 26%,
+      rgba(7, 17, 31), 0.18) 42%,
+      rgba(7, 17, 31), 0.05) 52%,
       transparent 62%
     );
   }
@@ -620,8 +672,8 @@ button {
   .hero-video-top {
     background: linear-gradient(
       180deg,
-      rgba(3, 5, 9, 0.82) 0%,
-      rgba(3, 5, 9, 0.32) 16%,
+      rgba(7, 17, 31), 0.82) 0%,
+      rgba(7, 17, 31), 0.32) 16%,
       transparent 30%
     );
   }
@@ -629,8 +681,8 @@ button {
   .hero-video-bottom {
     background: linear-gradient(
       0deg,
-      rgba(3, 5, 9, 0.5) 0%,
-      rgba(3, 5, 9, 0.14) 20%,
+      rgba(7, 17, 31), 0.5) 0%,
+      rgba(7, 17, 31), 0.14) 20%,
       transparent 36%
     );
   }
@@ -669,8 +721,7 @@ button {
   width: 2.25rem;
   height: 2px;
   margin-top: 1.35rem;
-  background: var(--c-cyan);
-  box-shadow: 0 0 10px color-mix(in srgb, var(--c-cyan) 50%, transparent);
+  background: var(--c-gold);
 }
 
 .brand-statement-title {
@@ -1197,7 +1248,7 @@ button {
 
 .card-lift:hover {
   transform: translateY(-3px);
-  border-color: var(--c-blue);
+  border-color: var(--c-gold);
   background: var(--c-surface-2);
 }
 
@@ -1352,7 +1403,7 @@ button {
 }
 
 .hero-cta {
-  box-shadow: 0 0 0 0 rgba(55, 104, 255, 0);
+  box-shadow: 0 0 0 0 rgba(213, 170, 98, 0);
   transition:
     background-color 0.2s ease,
     box-shadow 0.35s ease;
@@ -1360,8 +1411,8 @@ button {
 
 .hero-cta:hover {
   box-shadow:
-    0 0 0 1px rgba(115, 166, 255, 0.28),
-    0 0 28px rgba(55, 104, 255, 0.35);
+    0 0 0 1px rgba(213, 170, 98, 0.42),
+    0 0 28px rgba(213, 170, 98, 0.28);
 }
 
 .kay-figure {
@@ -1530,15 +1581,15 @@ button {
   background:
     radial-gradient(
       46% 42% at 18% 16%,
-      color-mix(in srgb, var(--c-blue) 12%, transparent),
+      color-mix(in srgb, var(--c-cyan) 10%, transparent),
       transparent 68%
     ),
     radial-gradient(
       38% 36% at 88% 12%,
-      color-mix(in srgb, var(--c-blue) 8%, transparent),
+      color-mix(in srgb, var(--c-gold) 8%, transparent),
       transparent 70%
     ),
-    #05070b;
+    #07111f;
   scroll-margin-top: 5.5rem;
 }
 
@@ -1596,7 +1647,7 @@ button {
 .services-atmosphere-svg {
   width: 100%;
   height: 100%;
-  opacity: 0.28;
+  opacity: 0.14;
 }
 
 .services-atmosphere-a {
@@ -1648,41 +1699,44 @@ button {
   position: relative;
   height: 100%;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--c-blue) 42%, #1a2230);
-  border-radius: 1.55rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 38%, #1a2230);
+  border-radius: 1.15rem;
   background:
-    linear-gradient(
-      135deg,
-      color-mix(in srgb, var(--c-blue) 11%, transparent) 0%,
-      transparent 34%
-    ),
     linear-gradient(
       180deg,
       color-mix(in srgb, #ffffff 3.5%, transparent),
       transparent 22%
     ),
-    #0b1018;
-  box-shadow:
-    inset 1px 1px 0 color-mix(in srgb, var(--c-blue) 14%, transparent),
-    0 0 28px -18px rgba(55, 104, 255, 0.28);
+    #0b1729;
+  box-shadow: inset 1px 1px 0 color-mix(in srgb, var(--c-gold) 12%, transparent);
   transition:
     border-color 400ms ease,
     box-shadow 400ms ease;
 }
 
+.services-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--c-gold);
+}
+
 .services-card:focus-within {
-  border-color: color-mix(in srgb, var(--c-blue) 78%, #49e8ff);
+  border-color: color-mix(in srgb, var(--c-gold) 78%, #16c7ff);
   box-shadow:
-    0 0 34px -12px rgba(55, 104, 255, 0.42),
-    inset 1px 1px 0 color-mix(in srgb, var(--c-cyan) 18%, transparent);
+    0 0 34px -12px rgba(213, 170, 98, 0.36),
+    inset 1px 1px 0 color-mix(in srgb, var(--c-gold) 18%, transparent);
 }
 
 @media (hover: hover) and (pointer: fine) {
   .services-card:hover {
-    border-color: color-mix(in srgb, var(--c-blue) 78%, #49e8ff);
+    border-color: color-mix(in srgb, var(--c-gold) 78%, #16c7ff);
     box-shadow:
-      0 0 34px -12px rgba(55, 104, 255, 0.42),
-      inset 1px 1px 0 color-mix(in srgb, var(--c-cyan) 18%, transparent);
+      0 0 34px -12px rgba(213, 170, 98, 0.36),
+      inset 1px 1px 0 color-mix(in srgb, var(--c-gold) 18%, transparent);
   }
 
   .services-card:hover .services-icon {
@@ -1694,7 +1748,7 @@ button {
 .services-core {
   display: grid;
   gap: 1.5rem;
-  padding: 1.55rem 1.4rem 1.45rem;
+  padding: 1.75rem 1.55rem 1.6rem;
 }
 
 .services-core-copy {
@@ -1803,6 +1857,7 @@ button {
 
 .services-core-visual {
   min-height: 9rem;
+  opacity: 0.72;
 }
 
 .services-card:focus-within .services-core-visual,
@@ -1865,7 +1920,7 @@ button {
 }
 
 .services-support {
-  padding: 1.35rem 1.3rem 1.4rem;
+  padding: 1.5rem 1.45rem 1.55rem;
 }
 
 .services-icon {
@@ -2136,7 +2191,7 @@ button {
 /* /hizmetler — isolated from homepage .services-system */
 .svc-page {
   --svc-max: 82.5rem;
-  background: #08090d;
+  background: #07111f;
   color: var(--c-text);
 }
 
@@ -2214,10 +2269,10 @@ button {
   background:
     radial-gradient(
       52% 46% at 82% 28%,
-      color-mix(in srgb, var(--c-blue) 11%, transparent),
+      color-mix(in srgb, var(--c-cyan) 10%, transparent),
       transparent 64%
     ),
-    #08090d;
+    #07111f;
 }
 
 .svc-hero-grid {
@@ -2345,25 +2400,35 @@ button {
 .svc-card {
   position: relative;
   overflow: hidden;
-  border: 1px solid color-mix(in srgb, var(--c-blue) 16%, #242830);
-  border-radius: 1.3rem;
+  border: 1px solid color-mix(in srgb, var(--c-gold) 32%, #242830);
+  border-radius: 1.15rem;
   background:
     linear-gradient(
       180deg,
       color-mix(in srgb, #ffffff 4.5%, transparent),
       transparent 18%
     ),
-    color-mix(in srgb, var(--c-surface) 88%, #0a0c11);
+    #0b1729;
   box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.04);
   transition:
     border-color 380ms ease,
     box-shadow 380ms ease;
 }
 
+.svc-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 3px;
+  background: var(--c-gold);
+}
+
 .svc-card:focus-within {
-  border-color: color-mix(in srgb, var(--c-blue) 58%, #3a4150);
+  border-color: color-mix(in srgb, var(--c-gold) 68%, #3a4150);
   box-shadow:
-    0 0 32px -10px rgba(55, 104, 255, 0.36),
+    0 0 32px -10px rgba(213, 170, 98, 0.32),
     inset 0 1px 0 rgba(255, 255, 255, 0.06);
 }
 
@@ -2533,10 +2598,10 @@ button {
   background:
     radial-gradient(
       48% 70% at 50% 50%,
-      color-mix(in srgb, var(--c-blue) 8%, transparent),
+      color-mix(in srgb, var(--c-gold) 8%, transparent),
       transparent 70%
     ),
-    #07080c;
+    #081526;
 }
 
 .svc-statement-lines {
@@ -2575,10 +2640,10 @@ button {
   background:
     radial-gradient(
       50% 55% at 80% 40%,
-      color-mix(in srgb, var(--c-blue) 10%, transparent),
+      color-mix(in srgb, var(--c-cyan) 10%, transparent),
       transparent 68%
     ),
-    #08090d;
+    #07111f;
 }
 
 .svc-finale-title {
@@ -2750,9 +2815,9 @@ button {
 
 @media (hover: hover) and (pointer: fine) {
   .svc-card:hover {
-    border-color: color-mix(in srgb, var(--c-blue) 58%, #3a4150);
+    border-color: color-mix(in srgb, var(--c-gold) 68%, #3a4150);
     box-shadow:
-      0 0 32px -10px rgba(55, 104, 255, 0.36),
+      0 0 32px -10px rgba(213, 170, 98, 0.32),
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 

@@ -28,11 +28,13 @@ export default function ContactPage() {
           <p className="text-muted">{page.pendingChannels}</p>
           <p className="mt-6 text-sm text-faint">
             salkay.com
-            <span className="mx-2 text-line">/</span>
+            <span className="mx-2 text-gold/40">/</span>
             salkay.com.tr
           </p>
         </aside>
-        <InquiryForm />
+        <div className="rounded-[1.3rem] border border-gold/30 bg-navy p-6 sm:p-8">
+          <InquiryForm />
+        </div>
       </Container>
     </>
   );

@@ -25,7 +25,10 @@ export default function AboutPage() {
       <PageHero eyebrow="Stüdyo" title={page.title} lead={page.lead} />
       <Container className="grid gap-8 pb-24 lg:grid-cols-2">
         {page.body.map((paragraph) => (
-          <p key={paragraph} className="text-[1.05rem] leading-8 text-muted">
+          <p
+            key={paragraph}
+            className="rounded-[1.3rem] border border-gold/20 bg-navy-mid p-6 text-[1.05rem] leading-8 text-muted sm:p-8"
+          >
             {paragraph}
           </p>
         ))}

@@ -13,17 +13,15 @@ export function Hero() {
       <Container className="hero-shell">
         <div className="hero-copy">
           <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
+            <p className="eyebrow inline-flex items-center gap-2 text-gold">
               <span className="h-1.5 w-1.5 bg-cyan shadow-[0_0_12px_var(--c-cyan)]" />
               {hero.eyebrow}
             </p>
           </Reveal>
           <Reveal delay={60}>
-            <h1 className="hero-title font-display font-bold text-fg">
+            <h1 className="hero-title font-display font-bold text-cream">
               <span className="hero-title-segment">{hero.titleBefore}</span>{" "}
-              <span className="hero-title-accent text-blue">
-                {hero.titleAccent}
-              </span>{" "}
+              <span className="hero-title-accent">{hero.titleAccent}</span>{" "}
               <span className="hero-title-segment">{hero.titleAfter}</span>
             </h1>
           </Reveal>
@@ -65,12 +63,12 @@ export function Hero() {
       </Container>
 
       <p className="scroll-cue pointer-events-none text-center">
-        <span className="eyebrow block text-[0.62rem] tracking-[0.22em] text-faint">
+        <span className="eyebrow block text-[0.62rem] tracking-[0.22em] text-gold/70">
           {hero.scrollCue}
         </span>
         <span
           aria-hidden
-          className="scroll-cue-line mx-auto mt-2 block h-7 w-px origin-top bg-fg/20"
+          className="scroll-cue-line mx-auto mt-2 block h-7 w-px origin-top bg-gold/40"
         />
       </p>
     </HeroExperience>

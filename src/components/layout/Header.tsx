@@ -51,9 +51,9 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter,padding] duration-300",
+        "fixed inset-x-0 top-0 z-50 border-t-[3px] border-t-gold transition-[background-color,border-color,backdrop-filter,padding] duration-300",
         scrolled || open
-          ? "border-b border-line bg-canvas/72 backdrop-blur-xl"
+          ? "border-b border-gold/25 bg-navy/80 backdrop-blur-xl"
           : "border-b border-transparent bg-transparent",
       )}
     >
@@ -70,8 +70,8 @@ export function Header() {
               href={item.href}
               aria-current={isActiveNav(pathname, item.href) ? "page" : undefined}
               className={cn(
-                "text-[0.94rem] tracking-[-0.01em] transition-colors hover:text-fg",
-                isActiveNav(pathname, item.href) ? "text-fg" : "text-muted",
+                "text-[0.94rem] tracking-[-0.01em] transition-colors hover:text-cyan",
+                isActiveNav(pathname, item.href) ? "text-cream" : "text-muted",
               )}
             >
               {item.label}
@@ -87,7 +87,7 @@ export function Header() {
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-fg min-[920px]:hidden"
+          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-gold/35 text-cream min-[920px]:hidden"
           aria-expanded={open}
           aria-controls={menuId}
           aria-label={open ? dictionary.nav.closeMenu : dictionary.nav.openMenu}
@@ -116,14 +116,14 @@ export function Header() {
       <div
         id={menuId}
         hidden={!open}
-        className="border-t border-line bg-canvas min-[920px]:hidden"
+        className="border-t border-gold/20 bg-navy min-[920px]:hidden"
       >
         <Container className="flex flex-col gap-1 py-6">
           {dictionary.nav.items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="py-3 font-display text-h3 text-fg"
+              className="py-3 font-display text-h3 text-cream"
               onClick={() => setOpen(false)}
             >
               {item.label}

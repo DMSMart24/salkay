@@ -9,7 +9,7 @@ type InquiryFormProps = {
 };
 
 const fieldClass =
-  "min-h-12 rounded-xl border border-line bg-surface px-4 text-fg placeholder:text-faint";
+  "min-h-12 rounded-xl border border-gold/25 bg-navy-mid px-4 text-cream placeholder:text-faint focus:border-gold focus:outline-none";
 
 export function InquiryForm({ compact = false }: InquiryFormProps) {
   const { form } = getDictionary().contactPage;
@@ -53,8 +53,8 @@ export function InquiryForm({ compact = false }: InquiryFormProps) {
       <button
         type="submit"
         className={cn(
-          "inline-flex min-h-12 items-center justify-center rounded-full bg-blue px-6 text-[0.95rem] font-medium text-fg",
-          "transition-colors hover:bg-salkay-bright",
+          "inline-flex min-h-12 items-center justify-center rounded-full bg-gold px-6 text-[0.95rem] font-semibold text-navy",
+          "transition-colors hover:bg-gold-bright",
         )}
       >
         {form.submit}

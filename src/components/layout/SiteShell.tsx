@@ -17,7 +17,7 @@ export async function SiteShell({ children }: SiteShellProps) {
   const dictionary = getDictionary();
 
   return (
-    <>
+    <div data-salkay-public className="flex min-h-dvh flex-col bg-canvas text-fg">
       <a href="#icerik" className="skip-link">
         {dictionary.nav.skip}
       </a>
@@ -26,6 +26,6 @@ export async function SiteShell({ children }: SiteShellProps) {
         {children}
       </main>
       <Footer />
-    </>
+    </div>
   );
 }

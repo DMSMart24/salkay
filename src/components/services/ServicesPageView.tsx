@@ -28,18 +28,18 @@ export function ServicesPageView() {
         <Container className="svc-shell relative">
           <div className="svc-hero-grid">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2 text-cyan">
+              <p className="eyebrow inline-flex items-center gap-2 text-gold">
                 <span
                   aria-hidden
                   className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
                 />
                 {page.hero.eyebrow}
               </p>
-              <h1 className="svc-hero-title font-display text-fg">
+              <h1 className="svc-hero-title font-display text-cream">
                 <span className="block">{page.hero.titleLine}</span>
                 <span>
                   {page.hero.titleBefore}
-                  <span className="text-blue">{page.hero.titleAccent}</span>
+                  <span className="hero-title-accent">{page.hero.titleAccent}</span>
                 </span>
               </h1>
               <p className="svc-hero-lead text-muted">{page.hero.lead}</p>
@@ -63,14 +63,14 @@ export function ServicesPageView() {
       <section className="svc-approach">
         <Container className="svc-shell">
           <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.approach.eyebrow}
-            </p>
-            <h2 className="svc-section-title font-display text-fg">
+            <p className="eyebrow inline-flex items-center gap-2 text-gold">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
+                />
+                {page.approach.eyebrow}
+              </p>
+              <h2 className="svc-section-title font-display text-cream">
               <span className="block">{page.approach.titleLine}</span>
               <span>{page.approach.titleAfter}</span>
             </h2>
@@ -90,13 +90,13 @@ export function ServicesPageView() {
       <section id="hizmetler" className="svc-group svc-experience">
         <Container className="svc-shell">
           <Reveal>
-            <h2 className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.experience.eyebrow}
-            </h2>
+            <h2 className="eyebrow inline-flex items-center gap-2 text-gold">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
+                />
+                {page.experience.eyebrow}
+              </h2>
           </Reveal>
           <article id="web-tasarim" className="svc-card svc-feature">
             <div className="svc-feature-copy">
@@ -137,16 +137,16 @@ export function ServicesPageView() {
       <section className="svc-group svc-systems">
         <Container className="svc-shell">
           <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.systems.eyebrow}
-            </p>
-            <h2 className="svc-section-title font-display text-fg">
-              {page.systems.title}
-            </h2>
+            <p className="eyebrow inline-flex items-center gap-2 text-gold">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
+                />
+                {page.systems.eyebrow}
+              </p>
+              <h2 className="svc-section-title font-display text-cream">
+                {page.systems.title}
+              </h2>
           </Reveal>
           <div className="svc-systems-grid">
             <div aria-hidden className="svc-systems-links">
@@ -180,16 +180,16 @@ export function ServicesPageView() {
       <section className="svc-statement">
         <Container className="svc-shell">
           <Reveal>
-            <p className="svc-statement-lines font-display text-fg">
+            <p className="svc-statement-lines font-display text-cream">
               {page.statement.lines.map((line) => (
                 <span key={line} className="block">
                   {line}
                 </span>
               ))}
             </p>
-            <p className="svc-statement-close font-display text-fg">
+            <p className="svc-statement-close font-display text-cream">
               {page.statement.closeBefore}
-              <span className="text-blue">{page.statement.closeAccent}</span>
+              <span className="hero-title-accent">{page.statement.closeAccent}</span>
               {page.statement.closeAfter}
             </p>
           </Reveal>
@@ -200,17 +200,17 @@ export function ServicesPageView() {
         <Container className="svc-shell">
           <div className="svc-growth-head">
             <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2 text-cyan">
+              <p className="eyebrow inline-flex items-center gap-2 text-gold">
                 <span
                   aria-hidden
                   className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
                 />
                 {page.growth.eyebrow}
               </p>
-              <h2 className="svc-section-title font-display text-fg">
+              <h2 className="svc-section-title font-display text-cream">
                 <span className="block">{page.growth.titleLine1}</span>
                 <span className="block">{page.growth.titleLine2}</span>
-                <span className="text-blue">{page.growth.titleAccent}</span>
+                <span className="hero-title-accent">{page.growth.titleAccent}</span>
               </h2>
             </Reveal>
             <div className="svc-growth-visual">
@@ -245,14 +245,14 @@ export function ServicesPageView() {
       <section className="svc-group svc-data">
         <Container className="svc-shell">
           <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.data.eyebrow}
-            </p>
-            <h2 className="svc-section-title font-display text-fg">
+            <p className="eyebrow inline-flex items-center gap-2 text-gold">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
+                />
+                {page.data.eyebrow}
+              </p>
+              <h2 className="svc-section-title font-display text-cream">
               <span>{page.data.titleBefore}</span>
               <span className="block">{page.data.titleAfter}</span>
             </h2>
@@ -291,14 +291,14 @@ export function ServicesPageView() {
         <FinaleAtmosphere />
         <Container className="svc-shell relative">
           <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.finale.eyebrow}
-            </p>
-            <h2 className="svc-finale-title font-display text-fg">
+            <p className="eyebrow inline-flex items-center gap-2 text-gold">
+                <span
+                  aria-hidden
+                  className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
+                />
+                {page.finale.eyebrow}
+              </p>
+              <h2 className="svc-finale-title font-display text-cream">
               <span className="block">{page.finale.titleLine}</span>
               <span>{page.finale.titleAfter}</span>
             </h2>
