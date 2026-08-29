@@ -89,6 +89,29 @@ function heroHeadline(size: number, line: number) {
   return `<h1 style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:${size}px;line-height:${line}px;color:#ffffff;font-weight:700;">Restoranınızın<br>dijital yüzünü<br>birlikte daha<br><span style="color:#16c7ff;font-family:Georgia,Times,serif;font-style:italic;border-bottom:2px solid #16c7ff;">etkileyici</span> hale getirelim.</h1>`;
 }
 
+function personalizedIntro() {
+  return `
+                    <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;color:#d5aa62;">
+                      <span style="color:#16c7ff;">●</span>&nbsp; SİZE ÖZEL KISA İNCELEME
+                    </p>
+                    <h2 class="salkay-intro-title" style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:24px;line-height:32px;color:#0d1728;font-weight:700;">Merhaba <span style="color:#d5aa62;">{{companyName}}</span> Ekibi 👋</h2>
+                    <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 16px;">
+                      <tr><td width="48" height="2" bgcolor="#d5aa62" style="background:#d5aa62;font-size:0;line-height:0;">&nbsp;</td></tr>
+                    </table>
+                    <p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:#334155;">Web sitenizi sizin için kısaca inceledik.</p>
+                    <p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:#334155;"><span style="color:#0d1728;font-weight:700;">{{companyName}}</span>’in güçlü marka deneyiminin dijital tarafta da aynı kaliteyi yansıtması için bazı geliştirme fırsatları tespit ettik.</p>
+                    <p style="margin:0 0 18px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:#334155;">Özellikle kullanıcı deneyimi, rezervasyon akışı ve mobil görünüm tarafında yapılacak dokunuşlarla daha güçlü bir dijital deneyim oluşturulabilir.</p>
+                    <table role="presentation" class="salkay-intro-gift" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#fffdf8;border:1px solid #d5aa62;">
+                      <tr>
+                        <td width="3" bgcolor="#d5aa62" style="width:3px;background:#d5aa62;font-size:0;line-height:0;">&nbsp;</td>
+                        <td style="padding:14px 16px 15px;">
+                          <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.14em;color:#d5aa62;font-weight:700;">🎁&nbsp;&nbsp;SİZE ÖZEL</p>
+                          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#0d1728;">Web siteniz için hazırladığımız geliştirme fikirlerini <span style="color:#d5aa62;font-weight:700;border-bottom:1px solid #d5aa62;">ücretsiz</span> paylaşmak isteriz.</p>
+                        </td>
+                      </tr>
+                    </table>`;
+}
+
 function mobileHero() {
   return `
           <!--[if !mso]><!-->
@@ -132,6 +155,9 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
   @media only screen and (max-width: 700px) {
     .salkay-container { width: 100% !important; max-width: 390px !important; }
     .salkay-pad { padding-left: 18px !important; padding-right: 18px !important; }
+    .salkay-intro-wrap { padding: 26px 24px 22px !important; }
+    .salkay-intro-title { font-size: 22px !important; line-height: 30px !important; }
+    .salkay-intro-gift { width: 100% !important; }
     .salkay-hero-desktop { display: none !important; max-height: 0 !important; overflow: hidden !important; }
     .salkay-hero-mobile { display: table-row !important; max-height: none !important; overflow: visible !important; }
     .salkay-hero-mobile-cell {
@@ -142,6 +168,7 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
       line-height: inherit !important;
     }
     .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-service, .salkay-cta-copy, .salkay-cta-kay { display: block !important; width: 100% !important; }
+    .salkay-intro { padding-right: 0 !important; padding-left: 0 !important; }
     .salkay-hero-photo { width: 100% !important; height: auto !important; }
     .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-audit { padding-top: 16px !important; }
@@ -180,20 +207,11 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
           </tr>
 
           <tr>
-            <td bgcolor="#ffffff" class="salkay-pad" style="background:#ffffff;padding:26px 24px 18px;">
+            <td bgcolor="#f7f1e6" class="salkay-pad salkay-intro-wrap" style="background:#f7f1e6;padding:32px 28px 24px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                 <tr>
-                  <td class="salkay-intro" valign="top" width="48%" style="padding-right:14px;">
-                    <h2 style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:23px;line-height:30px;color:#0d1728;">Merhaba <span style="color:#d5aa62;">{{companyName}}</span> Ekibi,</h2>
-                    <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#334155;">Web sitenizi inceledik ve markanızın dijital dünyada çok daha güçlü bir izlenim bırakabileceğini gördük.</p>
-                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#334155;">Modern, hızlı ve kullanıcı dostu bir web sitesi ile hem marka değerinizi yükseltebilir hem de rezervasyon sürecinizi daha etkili hale getirebilirsiniz.</p>
-                    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#f8f3ea;border:1px solid #d5aa62;">
-                      <tr>
-                        <td style="padding:12px 14px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#0d1728;">
-                          ★ Size özel birkaç geliştirme fikrimizi ücretsiz olarak paylaşmak isteriz.
-                        </td>
-                      </tr>
-                    </table>
+                  <td class="salkay-intro" valign="top" width="48%" style="width:48%;padding-right:22px;">
+                    ${personalizedIntro()}
                   </td>
                   <td class="salkay-audit" valign="top" width="52%">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#0b1729;border:1px solid #1d334d;">
