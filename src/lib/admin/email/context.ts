@@ -78,12 +78,16 @@ export function buildRestaurantEmailContext(company: CompanyEmailInput): Company
 export function buildBarEmailContext(company: CompanyEmailInput): CompanyEmailContext {
   const context = withWhatsAppCta(company, barCtaUrl(company.companyName));
   const recommendedServices = mapBarRecommendedServices(context.recommendedServices);
+  const heroUrl = emailAssetUrl(emailAssets.barHero);
+  const heroMobileUrl = emailAssetUrl(emailAssets.barHeroMobile);
   return {
     ...context,
     recommendedServices,
     vars: {
       ...context.vars,
       recommendedServices: recommendedServices.join(" · "),
+      heroUrl,
+      heroMobileUrl,
     },
   };
 }

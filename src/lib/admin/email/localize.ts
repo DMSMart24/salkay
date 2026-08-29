@@ -111,12 +111,8 @@ function looksTurkish(value: string) {
   return /[ğüşıöçİĞÜŞÖÇ]/.test(value) || /\b(için|daha|web|mobil|rezervasyon|tasarım|marka)\b/i.test(value);
 }
 
-function looksGermanOrEnglish(value: string) {
-  return /[äöüß]/.test(value) || /\b(und|der|die|das|für|mit|kann|werden|website|redesign|experience)\b/i.test(value);
-}
-
 function detectSourceLanguage(value: string): OutreachLanguage | "unknown" {
-  if (looksTurkish(value) && !looksGermanOrEnglish(value)) return "tr";
+  if (looksTurkish(value)) return "tr";
   if (/[äöüß]/.test(value) || /\b(und|der|die|das|für|kann|werden)\b/i.test(value)) return "de";
   if (/\b(the|and|website|redesign|experience|mobile)\b/i.test(value)) return "en";
   return "unknown";

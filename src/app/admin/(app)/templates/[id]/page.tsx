@@ -22,10 +22,9 @@ function previewRank(
   const name = company.companyName.toLocaleLowerCase("tr");
   const group = `${company.group?.name ?? ""} ${company.group?.industry ?? ""}`.toLocaleLowerCase("tr");
   if (barTemplate) {
-    if (group.includes("barlar") || group.includes("cocktail") || group === "bar" || /\bbar\b/.test(group)) {
-      return 0;
-    }
-    if (name.includes("valuna")) return 1;
+    if (name.includes("galeron")) return 0;
+    if (group.includes("barlar") || group.includes("cocktail") || /\bbar\b/.test(group)) return 1;
+    if (name.includes("valuna")) return 10;
     return 20;
   }
   if (name.includes("develi")) return 0;

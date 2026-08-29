@@ -95,13 +95,13 @@ const SERVICES = [
   ["03", "▣", "Rezervasyon", "Masa rezervasyonunu daha basit hale getiren akışlar."],
   ["04", "●", "Etkinlik Modülü", "DJ, canlı müzik ve özel geceleri görünür hale getirin."],
   ["05", "▸", "SEO &amp; Google", "Google ve harita sonuçlarında daha güçlü görünürlük."],
-  ["06", "✧", "Sosyal Medya", "Instagram ve sosyal medya içeriklerini daha iyi bağlayın."],
+  ["06", "✧", "Sosyal Medya", "Sosyal medya içeriklerini dijital deneyime bağlayın."],
 ] as const;
 
 const BENEFITS = [
   ["01", "✦", "Daha güçlü ilk izlenim", "Barınızın atmosferini dijitalde ilk bakışta daha güçlü yansıtın."],
   ["02", "▣", "Daha kolay rezervasyon", "Misafirlerin masa rezervasyonuna daha hızlı ulaşmasını sağlayın."],
-  ["03", "▢", "Etkinlikleri daha görünür yapın", "DJ geceleri, canlı müzik ve özel etkinlikleri öne çıkarın."],
+  ["03", "▢", "Etkinlikleri öne çıkarın", "DJ geceleri, canlı müzik ve özel etkinlikleri daha görünür hale getirin."],
 ] as const;
 
 function nightlifePill() {
@@ -109,7 +109,7 @@ function nightlifePill() {
                                 <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:12px;">
                                   <tr>
                                     <td bgcolor="#081525" style="background:#081525;border:1px solid #d5aa62;border-radius:16px;padding:6px 12px;">
-                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;color:#f8f3ea;">Bar &amp; Gece Hayatı İçin Dijital Çözümler</p>
+                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;letter-spacing:0.04em;text-transform:uppercase;color:#f8f3ea;">BAR &amp; GECE HAYATI İÇİN DİJİTAL ÇÖZÜMLER</p>
                                     </td>
                                   </tr>
                                 </table>`;
@@ -120,7 +120,7 @@ function premiumBadge() {
                                 <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;">
                                   <tr>
                                     <td style="border:1px solid #d5aa62;border-radius:4px;padding:4px 8px;">
-                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:13px;letter-spacing:0.08em;text-transform:uppercase;color:#d5aa62;">Premium Dijital Partner</p>
+                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:13px;letter-spacing:0.08em;text-transform:uppercase;color:#d5aa62;">PREMIUM DİJİTAL PARTNER</p>
                                     </td>
                                   </tr>
                                 </table>`;
@@ -142,9 +142,8 @@ function personalizedIntro() {
                     <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 18px;">
                       <tr><td width="50" height="2" bgcolor="#d5aa62" style="background:#d5aa62;font-size:0;line-height:0;">&nbsp;</td></tr>
                     </table>
-                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Web sitenizi sizin için kısaca inceledik.</p>
-                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">{{companyName}}’in dijital tarafta daha güçlü bir deneyim sunabileceği bazı geliştirme fırsatları gördük.</p>
-                    <p style="margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Özellikle <strong style="font-weight:700;">mobil deneyim</strong>, <strong style="font-weight:700;">masa rezervasyonu</strong>, <strong style="font-weight:700;">etkinlik görünürlüğü</strong> ve <strong style="font-weight:700;">marka atmosferinin dijital yansıması</strong> tarafında yapılacak dokunuşlarla daha güçlü bir deneyim oluşturulabilir.</p>
+                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Dijital görünümünüzü sizin için kısaca inceledik.</p>
+                    <p style="margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Mekanınızın atmosferini dijitalde daha güçlü yansıtmak; <strong style="font-weight:700;">mobil deneyimi</strong>, <strong style="font-weight:700;">masa rezervasyonunu</strong> ve <strong style="font-weight:700;">etkinlik görünürlüğünü</strong> geliştirmek için bazı fırsatlar gördük.</p>
                     ${introGiftCardHtml()}`;
 }
 
@@ -169,14 +168,14 @@ ${PREMIUM_EMAIL_CSS}
 </head>
 <body class="salkay-body" style="margin:0;padding:0;background:#07111f;color:#f8f3ea;">
   <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent;">
-    SALKAY. Bar &amp; Gece Hayatı İçin Dijital Çözümler. Barınızın dijital atmosferini birlikte daha etkileyici hale getirelim. {{companyName}} için ücretsiz kısa bir website değerlendirmesi.
+    SALKAY. BAR &amp; GECE HAYATI İÇİN DİJİTAL ÇÖZÜMLER. Barınızın dijital atmosferini birlikte daha etkileyici hale getirelim. {{companyName}} için ücretsiz kısa bir website değerlendirmesi.
   </div>
   <table class="salkay-wrap" role="presentation" width="100%" cellpadding="0" cellspacing="0" style="background:#07111f;border-collapse:collapse;">
     <tr>
       <td align="center" style="padding:16px 8px;">
         <table role="presentation" class="salkay-container" width="700" cellpadding="0" cellspacing="0" style="width:700px;max-width:700px;border-collapse:collapse;background:#081526;">
 
-          ${mobileHeroHtml("SALKAY — Bar & Gece Hayatı İçin Dijital Çözümler")}
+          ${mobileHeroHtml("SALKAY — Bar ve gece hayatı için dijital çözümler")}
 
           <tr class="salkay-hero-desktop">
             <td bgcolor="#07111f" style="background:#07111f;border-top:3px solid #d5aa62;">
@@ -188,10 +187,10 @@ ${PREMIUM_EMAIL_CSS}
                     ${premiumBadge()}
                     ${nightlifePill()}
                     ${heroHeadline(28, 34)}
-                    <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#c5d2e0;">Güçlü bir atmosfer, doğru dijital sunumla daha fazla misafire ulaşır.</p>
+                    <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#c5d2e0;">Güçlü bir atmosfer, doğru dijital deneyimle daha fazla misafire ulaşır.</p>
                   </td>
                   <td class="salkay-kay" valign="top" width="50%" bgcolor="#081525" style="width:50%;padding:0;background:#081525;">
-                    <img class="salkay-hero-photo" src="{{heroUrl}}" width="350" alt="SALKAY dijital partner" style="display:block;border:0;width:100%;height:auto;">
+                    <img class="salkay-hero-photo" src="{{heroUrl}}" width="350" alt="SALKAY — Bar ve gece hayatı için dijital çözümler" style="display:block;border:0;width:100%;height:auto;background-color:#081525;">
                   </td>
                 </tr>
               </table>
@@ -258,7 +257,10 @@ ${PREMIUM_EMAIL_CSS}
             </td>
           </tr>
 
-          ${mainCtaBlockHtml()}
+          ${mainCtaBlockHtml({
+            headline: "Barınız dijitalde de fark yaratsın.",
+            support: "Size özel kısa bir analiz ve geliştirme önerisi hazırlayalım.",
+          })}
           ${signatureBlockHtml()}
           ${footerBlockHtml()}
 

@@ -30,7 +30,7 @@ export const PREMIUM_EMAIL_CSS = `
       border-color: #D5AA62 !important;
     }
     .salkay-intro-gift-link { display: block !important; width: 100% !important; text-decoration: none !important; color: #FFFFFF !important; }
-    .salkay-hero-desktop { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+    .salkay-hero-desktop { display: table-row !important; max-height: none !important; overflow: visible !important; }
     .salkay-hero-mobile { display: table-row !important; max-height: none !important; overflow: visible !important; }
     .salkay-hero-mobile-cell {
       display: table-cell !important;
@@ -39,7 +39,9 @@ export const PREMIUM_EMAIL_CSS = `
       font-size: inherit !important;
       line-height: inherit !important;
     }
-    .salkay-hero-copy, .salkay-kay, .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-sign-logo, .salkay-sign-contact { display: block !important; width: 100% !important; }
+    .salkay-hero-copy { display: block !important; width: 100% !important; }
+    .salkay-kay { display: none !important; width: 100% !important; }
+    .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-sign-logo, .salkay-sign-contact { display: block !important; width: 100% !important; }
     .salkay-benefit { padding: 0 0 14px 0 !important; }
     .salkay-benefit-last { padding-bottom: 0 !important; }
     .salkay-services-wrap { padding: 22px 20px 16px !important; background: #07111F !important; }
@@ -154,7 +156,9 @@ export function footerBlockHtml() {
           </tr>`;
 }
 
-export function mainCtaBlockHtml() {
+export function mainCtaBlockHtml(copy?: { headline?: string; support?: string }) {
+  const headline = copy?.headline ?? "Size özel kısa bir analiz";
+  const support = copy?.support ?? "ve geliştirme önerisi hazırlayalım.";
   return `
           <tr>
             <td class="salkay-pad salkay-cta-wrap" bgcolor="#07111F" style="background:#07111F;padding:18px 24px 14px;">
@@ -163,7 +167,8 @@ export function mainCtaBlockHtml() {
                 <tr>
                   <td width="4" bgcolor="#16C7FF" style="width:4px;background:#16C7FF;border-radius:10px 0 0 10px;font-size:0;line-height:0;">&nbsp;</td>
                   <td class="salkay-cta-inner" bgcolor="#07111F" align="center" style="background:#07111F;padding:26px 28px 24px;border-radius:0 10px 10px 0;">
-                    <p style="margin:0 0 16px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:18px;line-height:26px;color:#FFFFFF;font-weight:700;">Size özel kısa bir analiz<br>ve geliştirme önerisi hazırlayalım.</p>
+                    <p style="margin:0 0 8px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:20px;line-height:26px;color:#FFFFFF;font-weight:700;">${headline}</p>
+                    <p style="margin:0 0 16px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:22px;color:#B8C3D1;">${support}</p>
                     <table role="presentation" class="salkay-cta-btn-wrap" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse;">
                       <tr>
                         <td bgcolor="#D5AA62" align="center" style="background:#D5AA62;border-radius:24px;">

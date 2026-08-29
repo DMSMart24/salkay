@@ -75,4 +75,6 @@ export const emailAssets = {
   hero: "/email/restaurant-hero-scene.jpg",
   banner: "/email/restaurant-hero-banner.jpg",
   heroMobile: "/email/restaurant-hero-mobile-final.jpg",
+  barHero: "/email/bar-kay-hero.jpg",
+  barHeroMobile: "/email/bar-kay-hero.jpg",
 } as const;
