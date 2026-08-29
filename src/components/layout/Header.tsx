@@ -51,12 +51,13 @@ export function Header() {
   return (
     <header
       className={cn(
-        "fixed inset-x-0 top-0 z-50 border-t-[3px] border-t-gold transition-[background-color,border-color,backdrop-filter,padding] duration-300",
+        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter,padding] duration-300",
         scrolled || open
           ? "border-b border-gold/25 bg-navy/80 backdrop-blur-xl"
           : "border-b border-transparent bg-transparent",
       )}
     >
+      <span aria-hidden className="block h-[3px] bg-gold" />
       <Container className="flex h-[4.25rem] items-center justify-between gap-6 min-[920px]:h-[5.15rem]">
         <Logo />
 
@@ -70,7 +71,7 @@ export function Header() {
               href={item.href}
               aria-current={isActiveNav(pathname, item.href) ? "page" : undefined}
               className={cn(
-                "text-[0.94rem] tracking-[-0.01em] transition-colors hover:text-cyan",
+                "text-[0.94rem] font-medium tracking-[-0.01em] transition-colors hover:text-cyan",
                 isActiveNav(pathname, item.href) ? "text-cream" : "text-muted",
               )}
             >
