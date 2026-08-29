@@ -13,7 +13,6 @@ import {
   footerBlockHtml,
   introGiftCardHtml,
   mainCtaBlockHtml,
-  mobileHeroHtml,
   serviceGridHtml,
   signatureBlockHtml,
 } from "@/lib/admin/email/templates/premium-shell";
@@ -94,46 +93,20 @@ const BENEFITS = [
   ["03", "▢", "Etkinlikleri öne çıkarın", "DJ geceleri, canlı müzik ve özel etkinlikleri daha görünür hale getirin."],
 ] as const;
 
-function nightlifePill() {
-  return `
-                                <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:12px;">
-                                  <tr>
-                                    <td bgcolor="#081525" style="background:#081525;border:1px solid #d5aa62;border-radius:16px;padding:6px 12px;">
-                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;letter-spacing:0.04em;text-transform:uppercase;color:#f8f3ea;">BAR &amp; GECE HAYATI İÇİN DİJİTAL ÇÖZÜMLER</p>
-                                    </td>
-                                  </tr>
-                                </table>`;
-}
-
-function premiumBadge() {
-  return `
-                                <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;">
-                                  <tr>
-                                    <td style="border:1px solid #d5aa62;border-radius:4px;padding:4px 8px;">
-                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:13px;letter-spacing:0.08em;text-transform:uppercase;color:#d5aa62;">PREMIUM DİJİTAL PARTNER</p>
-                                    </td>
-                                  </tr>
-                                </table>`;
-}
-
-function heroHeadline(size: number, line: number) {
-  return `<h1 style="margin:16px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:${size}px;line-height:${line}px;color:#ffffff;font-weight:700;">Barınızın<br>dijital atmosferini<br>birlikte daha<br><span style="color:#16c7ff;font-family:Georgia,Times,serif;font-style:italic;border-bottom:2px solid #16c7ff;">etkileyici</span> hale getirelim.</h1>`;
-}
-
 function personalizedIntro() {
   return `
-                    <p style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.18em;color:#d5aa62;white-space:nowrap;">
+                    <p style="margin:0 0 16px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#d5aa62;white-space:nowrap;">
                       <span style="color:#16c7ff;">●</span>&nbsp;&nbsp;SİZE ÖZEL · KISA WEB İNCELEMESİ
                     </p>
-                    <h2 class="salkay-intro-title" style="margin:0 0 14px;font-family:Georgia,Times,serif;font-size:24px;line-height:32px;color:#07111f;font-weight:700;">
-                      <span class="salkay-hello" style="display:block;">Merhaba</span>
-                      <span class="salkay-hello-name" style="display:block;"><span style="color:#d5aa62;">{{companyName}}</span>&nbsp;Ekibi&nbsp;👋</span>
+                    <h2 class="salkay-intro-title" style="margin:0 0 14px;font-family:Georgia,Times,serif;font-size:24px;line-height:32px;color:#ffffff;font-weight:700;">
+                      <span class="salkay-hello" style="display:block;color:#ffffff;">Merhaba</span>
+                      <span class="salkay-hello-name" style="display:block;"><span style="color:#16c7ff;">{{companyName}}</span>&nbsp;<span style="color:#ffffff;">Ekibi</span>&nbsp;👋</span>
                     </h2>
                     <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 18px;">
                       <tr><td width="50" height="2" bgcolor="#d5aa62" style="background:#d5aa62;font-size:0;line-height:0;">&nbsp;</td></tr>
                     </table>
-                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Dijital görünümünüzü sizin için kısaca inceledik.</p>
-                    <p style="margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Mekanınızın atmosferini dijitalde daha güçlü yansıtmak; <strong style="font-weight:700;">mobil deneyimi</strong>, <strong style="font-weight:700;">masa rezervasyonunu</strong> ve <strong style="font-weight:700;">etkinlik görünürlüğünü</strong> geliştirmek için bazı fırsatlar gördük.</p>
+                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#e8edf5;">Dijital görünümünüzü sizin için kısaca inceledik.</p>
+                    <p style="margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#e8edf5;">Mekanınızın atmosferini dijitalde daha güçlü yansıtmak; <strong style="font-weight:700;color:#f4f7fb;">mobil deneyimi</strong>, <strong style="font-weight:700;color:#f4f7fb;">masa rezervasyonunu</strong> ve <strong style="font-weight:700;color:#f4f7fb;">etkinlik görünürlüğünü</strong> geliştirmek için bazı fırsatlar gördük.</p>
                     ${introGiftCardHtml()}`;
 }
 
@@ -165,34 +138,24 @@ ${PREMIUM_EMAIL_CSS}
       <td align="center" style="padding:16px 8px;">
         <table role="presentation" class="salkay-container" width="700" cellpadding="0" cellspacing="0" style="width:700px;max-width:700px;border-collapse:collapse;background:#081526;">
 
-          ${mobileHeroHtml("SALKAY — Bar ve gece hayatı için dijital çözümler")}
-
-          <tr class="salkay-hero-desktop">
-            <td bgcolor="#07111f" style="background:#07111f;border-top:3px solid #d5aa62;">
-              <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
-                <tr>
-                  <td class="salkay-pad salkay-hero-copy" valign="top" width="50%" bgcolor="#07111f" style="width:50%;padding:22px 16px 24px 24px;background:#07111f;">
-                    <img class="salkay-logo-hero" src="{{logoUrl}}" width="188" height="106" alt="SALKAY" style="display:block;border:0;width:188px;height:auto;max-width:100%;">
-                    <p style="margin:10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.12em;text-transform:uppercase;color:#16c7ff;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
-                    ${premiumBadge()}
-                    ${nightlifePill()}
-                    ${heroHeadline(28, 34)}
-                    <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#c5d2e0;">Güçlü bir atmosfer, doğru dijital deneyimle daha fazla misafire ulaşır.</p>
-                  </td>
-                  <td class="salkay-kay" valign="top" width="50%" bgcolor="#081525" style="width:50%;padding:0;background:#081525;">
-                    <img class="salkay-hero-photo" src="{{heroUrl}}" width="350" alt="SALKAY — Bar ve gece hayatı için dijital çözümler" style="display:block;border:0;width:100%;height:auto;background-color:#081525;">
-                  </td>
-                </tr>
-              </table>
+          <tr>
+            <td bgcolor="#07111F" style="background:#07111F;padding:0;line-height:0;font-size:0;border-top:3px solid #d5aa62;">
+              <img class="salkay-hero-full" src="{{heroUrl}}" width="700" alt="SALKAY — Bar ve gece hayatı için dijital çözümler" style="display:block;border:0;width:100%;max-width:700px;height:auto;background-color:#07111F;">
             </td>
           </tr>
 
           <tr>
-            <td bgcolor="#f8f3ea" class="salkay-pad salkay-intro-wrap" style="background:#f8f3ea;padding:32px 28px 26px;">
+            <td bgcolor="#07111F" class="salkay-pad salkay-intro-wrap" style="background:#07111F;padding:16px 20px 20px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                 <tr>
                   <td class="salkay-intro" valign="top" width="48%" style="width:48%;padding-right:22px;">
-                    ${personalizedIntro()}
+                    <table role="presentation" class="salkay-intro-card" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #4A3F2E;border-color:rgba(213,170,98,0.35);border-radius:10px;">
+                      <tr>
+                        <td bgcolor="#0B1729" style="background:#0B1729;padding:22px 20px 20px;border-radius:10px;">
+                          ${personalizedIntro()}
+                        </td>
+                      </tr>
+                    </table>
                   </td>
                   <td class="salkay-audit" valign="top" width="52%">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:collapse;background:#07111F;border:1px solid #1E3A54;">

@@ -1,12 +1,11 @@
 import { site } from "@/lib/site";
 
 export const PREMIUM_EMAIL_CSS = `
-  .salkay-hero-mobile,
-  .salkay-hero-mobile-cell {
-    display: none !important;
-    max-height: 0 !important;
-    overflow: hidden !important;
-    mso-hide: all;
+  .salkay-hero-full {
+    display: block !important;
+    width: 100% !important;
+    max-width: 700px !important;
+    height: auto !important;
   }
   .salkay-hello,
   .salkay-hello-name { display: block !important; }
@@ -18,36 +17,25 @@ export const PREMIUM_EMAIL_CSS = `
   @media only screen and (max-width: 700px) {
     .salkay-container { width: 100% !important; max-width: 390px !important; }
     .salkay-pad { padding-left: 18px !important; padding-right: 18px !important; }
-    .salkay-intro-wrap { padding: 34px 24px 30px !important; }
+    .salkay-intro-wrap { padding: 14px 18px 18px !important; background: #07111F !important; }
     .salkay-hello,
     .salkay-hello-name { display: block !important; }
     .salkay-intro-title { font-size: 24px !important; line-height: 32px !important; }
+    .salkay-intro-card { width: 100% !important; }
     .salkay-intro-gift,
     .salkay-intro-gift-cell {
       width: 100% !important;
       background-color: #07111F !important;
-      color: #FFFFFF !important;
-      border-color: #D5AA62 !important;
+      color: #F4F7FB !important;
+      border-color: #16384A !important;
     }
     .salkay-intro-gift-link { display: block !important; width: 100% !important; text-decoration: none !important; color: #FFFFFF !important; }
-    .salkay-hero-desktop { display: table-row !important; max-height: none !important; overflow: visible !important; }
-    .salkay-hero-mobile { display: table-row !important; max-height: none !important; overflow: visible !important; }
-    .salkay-hero-mobile-cell {
-      display: table-cell !important;
-      max-height: none !important;
-      overflow: visible !important;
-      font-size: inherit !important;
-      line-height: inherit !important;
-    }
-    .salkay-hero-copy { display: block !important; width: 100% !important; }
-    .salkay-kay { display: none !important; width: 100% !important; }
+    .salkay-hero-full { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-sign-logo, .salkay-sign-contact { display: block !important; width: 100% !important; }
     .salkay-benefit { padding: 0 0 14px 0 !important; }
     .salkay-benefit-last { padding-bottom: 0 !important; }
     .salkay-services-wrap { padding: 22px 20px 16px !important; background: #07111F !important; }
     .salkay-intro { padding-right: 0 !important; padding-left: 0 !important; }
-    .salkay-hero-photo { width: 100% !important; height: auto !important; }
-    .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-audit { padding-top: 16px !important; }
     .salkay-audit-card { padding: 20px !important; }
     .salkay-cta-wrap { padding: 12px 18px 10px !important; background: #07111F !important; }
@@ -64,13 +52,13 @@ export const PREMIUM_EMAIL_CSS = `
 
 export function introGiftCardHtml() {
   return `
-                    <table role="presentation" class="salkay-intro-gift" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:collapse;margin-top:20px;background-color:#07111F !important;border:1px solid #D5AA62 !important;border-radius:8px;">
+                    <table role="presentation" class="salkay-intro-gift" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:separate;margin-top:20px;background-color:#07111F !important;border:1px solid #16384A;border-color:rgba(22,199,255,0.22);border-radius:8px;">
                       <tr>
-                        <td class="salkay-intro-gift-cell" bgcolor="#07111F" valign="top" style="background-color:#07111F !important;color:#FFFFFF !important;padding:0;border-left:4px solid #D5AA62;">
+                        <td class="salkay-intro-gift-cell" bgcolor="#07111F" valign="top" style="background-color:#07111F !important;color:#F4F7FB !important;padding:0;border-left:3px solid #16C7FF;border-radius:8px;">
                           <!-- salkay-intro-gift:cta -->
-                          <a class="salkay-intro-gift-link" href="{{ctaUrl}}" style="display:block;padding:16px 18px;text-decoration:none;color:#FFFFFF;border:0;outline:none;">
+                          <a class="salkay-intro-gift-link" href="{{ctaUrl}}" style="display:block;padding:16px 18px;text-decoration:none;color:#F4F7FB;border:0;outline:none;">
                             <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;color:#D5AA62;font-weight:700;text-decoration:none;">✦&nbsp;&nbsp;SİZE ÖZEL</p>
-                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#FFFFFF;text-decoration:none;">Web siteniz için hazırladığımız geliştirme fikirlerini <span style="color:#D5AA62;font-weight:700;">ücretsiz</span> paylaşmak isteriz. <span style="color:#16C7FF;">→</span></p>
+                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#F4F7FB;text-decoration:none;">Web siteniz için hazırladığımız geliştirme fikirlerini <span style="color:#D5AA62;font-weight:700;">ücretsiz</span> paylaşmak isteriz. <span style="color:#16C7FF;">→</span></p>
                           </a>
                         </td>
                       </tr>
