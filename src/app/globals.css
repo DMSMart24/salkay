@@ -13,6 +13,8 @@
   --c-blue: #3768ff;
   --c-blue-soft: rgba(55, 104, 255, 0.14);
   --c-cyan: #49e8ff;
+  --c-gold: #d5aa62;
+  --c-cream: #f8f3ea;
 
   --surf-light: #f3f6fa;
   --surf-light-ink: #0a1020;
@@ -54,6 +56,8 @@
   --color-blue: var(--c-blue);
   --color-blue-soft: var(--c-blue-soft);
   --color-cyan: var(--c-cyan);
+  --color-gold: var(--c-gold);
+  --color-cream: var(--c-cream);
   --color-ink: var(--ink);
   --color-ink-soft: var(--ink-soft);
   --color-ink-raised: var(--ink-raised);
@@ -138,6 +142,7 @@ button {
   color: #0a1020;
   background: rgba(243, 246, 250, 0.94);
   border-bottom: 1px solid rgba(10, 16, 32, 0.08);
+  box-shadow: inset 0 3px 0 var(--c-gold);
   transition:
     background-color 300ms ease,
     border-color 300ms ease,
@@ -148,7 +153,9 @@ button {
 .site-header.is-solid {
   background: rgba(243, 246, 250, 0.97);
   backdrop-filter: blur(16px);
-  box-shadow: 0 1px 0 rgba(10, 16, 32, 0.06);
+  box-shadow:
+    inset 0 3px 0 var(--c-gold),
+    0 1px 0 rgba(10, 16, 32, 0.06);
 }
 
 .site-header-link {
@@ -208,6 +215,26 @@ header.site-header a.site-header-cta:hover {
 
 .site-header-menu-cta {
   padding-top: 1.25rem;
+}
+
+.site-logo-lockup {
+  display: block;
+}
+
+.page-hero-rule {
+  display: block;
+  width: 2.75rem;
+  height: 2px;
+  margin-top: 1.15rem;
+  background: var(--c-gold);
+}
+
+.project-card {
+  border-left: 3px solid var(--c-gold);
+}
+
+.empty-rail {
+  border-left: 3px solid var(--c-gold);
 }
 
 
@@ -908,7 +935,7 @@ header.site-header a.site-header-cta:hover {
 
 .site-footer .bg-line,
 .site-footer .h-px {
-  background: var(--surf-dark-line);
+  background: color-mix(in srgb, var(--c-gold) 52%, transparent);
 }
 
 @media (min-width: 1024px) {

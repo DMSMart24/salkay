@@ -7,6 +7,13 @@ export const PREMIUM_EMAIL_CSS = `
     max-width: 700px !important;
     height: auto !important;
   }
+  .salkay-hero-mobile,
+  .salkay-hero-mobile-cell {
+    display: none !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    mso-hide: all;
+  }
   .salkay-hello,
   .salkay-hello-name { display: block !important; }
   @media only screen and (min-width: 701px) {
@@ -26,11 +33,21 @@ export const PREMIUM_EMAIL_CSS = `
     .salkay-intro-gift-cell {
       width: 100% !important;
       background-color: #07111F !important;
-      color: #F4F7FB !important;
-      border-color: #16384A !important;
+      color: #F8F3EA !important;
+      border-color: #D5AA62 !important;
     }
     .salkay-intro-gift-link { display: block !important; width: 100% !important; text-decoration: none !important; color: #FFFFFF !important; }
+    .salkay-hero-desktop { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+    .salkay-hero-mobile { display: table-row !important; max-height: none !important; overflow: visible !important; }
+    .salkay-hero-mobile-cell {
+      display: table-cell !important;
+      max-height: none !important;
+      overflow: visible !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+    }
     .salkay-hero-full { width: 100% !important; max-width: 390px !important; height: auto !important; }
+    .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-sign-logo, .salkay-sign-contact { display: block !important; width: 100% !important; }
     .salkay-benefit { padding: 0 0 14px 0 !important; }
     .salkay-benefit-last { padding-bottom: 0 !important; }
@@ -54,13 +71,13 @@ export const PREMIUM_EMAIL_CSS = `
 
 export function introGiftCardHtml() {
   return `
-                    <table role="presentation" class="salkay-intro-gift" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:separate;margin-top:20px;background-color:#07111F !important;border:1px solid #16384A;border-color:rgba(22,199,255,0.22);border-radius:8px;">
+                    <table role="presentation" class="salkay-intro-gift" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:separate;margin-top:20px;background-color:#07111F !important;border:1px solid #D5AA62;border-radius:8px;">
                       <tr>
-                        <td class="salkay-intro-gift-cell" bgcolor="#07111F" valign="top" style="background-color:#07111F !important;color:#F4F7FB !important;padding:0;border-left:3px solid #16C7FF;border-radius:8px;">
+                        <td class="salkay-intro-gift-cell" bgcolor="#07111F" valign="top" style="background-color:#07111F !important;color:#F8F3EA !important;padding:0;border-left:4px solid #D5AA62;border-radius:8px;">
                           <!-- salkay-intro-gift:cta -->
-                          <a class="salkay-intro-gift-link" href="{{ctaUrl}}" style="display:block;padding:16px 18px;text-decoration:none;color:#F4F7FB;border:0;outline:none;">
+                          <a class="salkay-intro-gift-link" href="{{ctaUrl}}" style="display:block;padding:16px 18px;text-decoration:none;color:#F8F3EA;border:0;outline:none;">
                             <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;color:#D5AA62;font-weight:700;text-decoration:none;">✦&nbsp;&nbsp;SİZE ÖZEL</p>
-                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#F4F7FB;text-decoration:none;">Web siteniz için hazırladığımız geliştirme fikirlerini <span style="color:#D5AA62;font-weight:700;">ücretsiz</span> paylaşmak isteriz. <span style="color:#16C7FF;">→</span></p>
+                            <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#F8F3EA;text-decoration:none;">Web siteniz için hazırladığımız geliştirme fikirlerini <span style="color:#D5AA62;font-weight:700;">ücretsiz</span> paylaşmak isteriz. <span style="color:#16C7FF;">→</span></p>
                           </a>
                         </td>
                       </tr>
@@ -89,11 +106,11 @@ export function signatureBlockHtml() {
           <tr>
             <td class="salkay-pad salkay-sign-wrap" bgcolor="#07111F" style="background:#07111F;padding:8px 24px 12px;">
               <!-- salkay-close:signature -->
-              <table role="presentation" class="salkay-sign-card" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #6E5A36;border-color:rgba(213,170,98,0.45);border-radius:10px;">
+              <table role="presentation" class="salkay-sign-card" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #D5AA62;border-radius:10px;">
                 <tr>
                   <td class="salkay-sign-head" bgcolor="#0B1729" style="background:#0B1729;padding:24px 26px 0;border-radius:10px 10px 0 0;">
                     <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:20px;color:#B8C5D6;">İyi çalışmalar,</p>
-                    <p style="margin:0 0 12px;font-family:Georgia,Times,serif;font-size:26px;line-height:32px;color:#FFFFFF;">Salih Kaya</p>
+                    <p style="margin:0 0 12px;font-family:Georgia,Times,serif;font-size:26px;line-height:32px;color:#F8F3EA;">Salih Kaya</p>
                     <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                       <tr><td width="44" height="2" bgcolor="#D5AA62" style="background:#D5AA62;font-size:0;line-height:0;">&nbsp;</td></tr>
                     </table>
@@ -103,13 +120,11 @@ export function signatureBlockHtml() {
                   <td bgcolor="#0B1729" style="background:#0B1729;padding:16px 26px 24px;border-radius:0 0 10px 10px;">
                     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
                       <tr>
-                        <td class="salkay-sign-logo" valign="top" style="padding:0 0 12px;">
+                        <td class="salkay-sign-logo" valign="middle" width="38%" style="width:38%;padding:0 16px 0 0;">
                           <img src="{{logoUrl}}" width="88" height="50" alt="SALKAY" style="display:block;border:0;width:88px;height:auto;max-width:88px;">
                         </td>
-                      </tr>
-                      <tr>
-                        <td class="salkay-sign-contact" valign="top" style="padding:0;">
-                          <p style="margin:0 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;letter-spacing:0.16em;color:#FFFFFF;font-weight:700;">SALKAY</p>
+                        <td class="salkay-sign-contact" valign="middle" width="62%" style="width:62%;padding:0;">
+                          <p style="margin:0 0 5px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:16px;letter-spacing:0.16em;color:#F8F3EA;font-weight:700;">SALKAY</p>
                           <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:17px;color:#B8C5D6;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
                           <p style="margin:0 0 2px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="mailto:info@salkay.com" style="color:#16C7FF;text-decoration:none;">info@salkay.com</a></p>
                           <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;"><a href="${site.url}" style="color:#16C7FF;text-decoration:none;">salkay.com</a></p>
@@ -188,7 +203,7 @@ export function benefitCellsHtml(benefits: readonly CardCopy[]) {
     .map(
       ([num, icon, title, support], index) => `
       <td class="salkay-benefit${index === 2 ? " salkay-benefit-last" : ""}" valign="top" width="33%" style="width:33.33%;padding:${benefitPad(index)};">
-        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #8A6E3E;border-color:rgba(213,170,98,0.55);border-left:3px solid #16C7FF;border-radius:10px;">
+        <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#0B1729" style="border-collapse:separate;background:#0B1729;border:1px solid #D5AA62;border-left:4px solid #16C7FF;border-radius:10px;">
           <tr>
             <td bgcolor="#0B1729" style="background:#0B1729;padding:16px 18px;border-radius:10px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">

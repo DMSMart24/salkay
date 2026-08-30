@@ -38,15 +38,15 @@ export function Projects({ showIntro = true }: ProjectsProps) {
           {projects.items.map((item, index) => (
             <article
               key={item.title}
-              className="flex min-h-[26rem] flex-col justify-between rounded-[1.3rem] border border-line bg-surface p-6"
+              className="project-card flex min-h-[26rem] flex-col justify-between rounded-[1.3rem] border border-line bg-surface p-6"
             >
               <div>
                 <div className="flex h-40 items-end rounded-xl bg-canvas-soft p-5 text-fg">
-                  <p className="font-display text-4xl tracking-[-0.05em] text-blue">
+                  <p className="font-display text-4xl tracking-[-0.05em] text-gold">
                     0{index + 1}
                   </p>
                 </div>
-                <p className="mt-6 label text-faint">{item.status}</p>
+                <p className="mt-6 label text-gold">{item.status}</p>
                 <p className="mt-3 text-sm text-cyan">{item.sector}</p>
                 <h3 className="mt-2 font-display text-h3">{item.title}</h3>
                 <p className="mt-3 text-[0.98rem] text-muted">{item.summary}</p>
