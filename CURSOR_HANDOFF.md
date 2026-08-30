@@ -15,7 +15,7 @@ Checkpoint for continuing SALKAY in a **second Cursor account**. This file conta
 | `origin/main` HEAD (Salih, morning) | `b619561c02a3a8d7006a7b39c148106ebbc9f22a` · `feat: refresh public site visual system` · 2026-08-30 08:51 UTC |
 | Previous stale PR | **#1** `cursor/public-site-email-premium-1bbd` · **DIRTY / CONFLICTING / unmergeable** · do **not** merge |
 | This continuation branch | `cursor/email-port-site-polish-798f` |
-| This continuation PR | open from that branch against **current `main`** |
+| This continuation PR | **#2** https://github.com/DMSMart24/salkay/pull/2 (against current `main`) |
 | Public visual system source of truth | **Salih’s morning refresh on `main`** (`b619561` + `6749726`). Do not revert it to PR #1’s navy rewrite. |
 | Restaurant email | Unchanged. Isolated. Still uses `restaurantPremiumSource()`. |
 | Bar email | Ported from PR #1 onto current main: desktop/mobile 9:16 hide-show, gold gift rail, side-by-side signature, solid gold borders |
@@ -41,8 +41,8 @@ PR #1’s public-site navy/gold rewrite **conflicts** with Salih’s morning sys
 
 ### PENDING (next overnight / morning)
 
-- Salih reviews the **new** PR (not #1). Leave a PR ready — **do not merge to main**.
-- PR #1 stays open as superseded unless Salih closes it.
+- Salih reviews **PR #2** (not #1). Leave it ready — **do not merge to main**.
+- PR #1 stays open as superseded (comment already points at #2) unless Salih closes it.
 - Dedicated 9:16 bar mobile hero is still the same asset as desktop (`/email/bar-kay-hero.jpg`). Restaurant already has a true 9:16 (`restaurant-hero-mobile-final.jpg`). Do not invent a new bar mobile artwork unless Salih supplies one.
 - Enable `OUTREACH_SEND_ENABLED` only if Salih explicitly asks to send.
 - Point salkay.com DNS at Vercel before switching image host.
