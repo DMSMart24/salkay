@@ -5,6 +5,7 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { routes } from "@/lib/routes";
 
 type VisualKind = "web" | "software" | "seo" | "ads" | "analytics" | "ai";
+type ProofKind = "bolt" | "users" | "scale" | "clock";
 
 type ServiceItem = {
   index: string;
@@ -14,76 +15,58 @@ type ServiceItem = {
   visual: VisualKind;
 };
 
-function ServiceFigure({ kind }: { kind: VisualKind }) {
-  const common = {
-    viewBox: "0 0 132 80",
-    className: "home-services-svg",
-    fill: "none",
-    "aria-hidden": true,
-  } as const;
-
+function ServiceIcon({ kind }: { kind: VisualKind }) {
   switch (kind) {
     case "web":
       return (
-        <svg {...common}>
-          <rect x="10" y="12" width="112" height="56" rx="8" />
-          <rect x="10" y="12" width="112" height="14" rx="8" />
-          <circle cx="20" cy="19" r="2" />
-          <circle cx="28" cy="19" r="2" />
-          <circle cx="36" cy="19" r="2" />
-          <rect x="20" y="34" width="40" height="24" rx="4" />
-          <rect x="66" y="34" width="44" height="8" rx="2" />
-          <rect x="66" y="46" width="32" height="6" rx="2" />
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <rect x="3.2" y="5" width="17.6" height="14" rx="2" />
+          <path d="M3.2 8.6 H20.8" />
+          <path d="M6.2 6.8 H8.1" />
         </svg>
       );
     case "software":
       return (
-        <svg {...common}>
-          <rect x="14" y="18" width="36" height="28" rx="5" />
-          <rect x="48" y="28" width="36" height="28" rx="5" />
-          <rect x="30" y="40" width="36" height="24" rx="5" />
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <path d="M6 8.2 L12 5.4 L18 8.2 L12 11 Z" />
+          <path d="M6 12 L12 14.8 L18 12" />
+          <path d="M6 15.8 L12 18.6 L18 15.8" />
         </svg>
       );
     case "seo":
       return (
-        <svg {...common}>
-          <circle cx="52" cy="38" r="18" />
-          <circle cx="52" cy="38" r="6" />
-          <path d="M66 52 L86 68" />
-          <path d="M28 62 L44 48 L58 54 L78 34" />
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <circle cx="11" cy="11" r="6.2" />
+          <path d="M15.6 15.6 L20 20" />
         </svg>
       );
     case "ads":
       return (
-        <svg {...common}>
-          <circle cx="66" cy="40" r="22" />
-          <circle cx="66" cy="40" r="13" />
-          <circle cx="66" cy="40" r="4" />
-          <path d="M66 18 L70 12" />
-          <path d="M88 40 L94 34" />
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <path d="M5.2 9.2 H8.4 L14.8 5.4 V18.6 L8.4 14.8 H5.2 Z" />
+          <path d="M17.4 9.2 C18.6 10.2 18.6 13.8 17.4 14.8" />
+          <path d="M19.2 7.4 C21.4 9.2 21.4 14.8 19.2 16.6" />
         </svg>
       );
     case "analytics":
       return (
-        <svg {...common}>
-          <path d="M18 62 H114" />
-          <path d="M24 54 L46 40 L64 48 L86 26 L110 32" />
-          <circle cx="46" cy="40" r="2.2" />
-          <circle cx="86" cy="26" r="2.2" />
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <path d="M4 18.4 H20" />
+          <path d="M7 14.6 V18.4" />
+          <path d="M12 10.4 V18.4" />
+          <path d="M17 6.8 V18.4" />
+          <path d="M7 12.2 L12 8.6 L17 5.6" />
         </svg>
       );
     case "ai":
       return (
-        <svg {...common}>
-          <circle cx="66" cy="40" r="5" />
-          <circle cx="34" cy="24" r="3" />
-          <circle cx="100" cy="26" r="3" />
-          <circle cx="98" cy="58" r="3" />
-          <circle cx="36" cy="58" r="3" />
-          <path d="M62 37 L37 26" />
-          <path d="M71 37 L97 28" />
-          <path d="M70 44 L95 56" />
-          <path d="M62 44 L39 56" />
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <rect x="6.2" y="7.2" width="11.6" height="10.2" rx="3.2" />
+          <path d="M12 4.6 V7.2" />
+          <circle cx="12" cy="4.4" r="0.9" />
+          <circle cx="9.4" cy="11.6" r="0.85" />
+          <circle cx="14.6" cy="11.6" r="0.85" />
+          <path d="M10.2 14.6 H13.8" />
         </svg>
       );
     default: {
@@ -92,6 +75,48 @@ function ServiceFigure({ kind }: { kind: VisualKind }) {
     }
   }
 }
+
+function ProofIcon({ kind }: { kind: ProofKind }) {
+  switch (kind) {
+    case "bolt":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <path d="M13.2 4.4 L6.8 13.2 H12 L10.8 19.6 L17.4 10.6 H12.2 Z" />
+        </svg>
+      );
+    case "users":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <circle cx="9.2" cy="9" r="2.6" />
+          <path d="M4.8 17.6 C5.2 14.8 7 13.4 9.2 13.4 S13.2 14.8 13.6 17.6" />
+          <circle cx="16.2" cy="9.4" r="2.2" />
+          <path d="M15.2 13.6 C17.2 13.6 18.8 14.8 19.2 17.2" />
+        </svg>
+      );
+    case "scale":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <path d="M4.4 17.8 H19.6" />
+          <path d="M7 17.8 V12.6" />
+          <path d="M12 17.8 V9.2" />
+          <path d="M17 17.8 V6.4" />
+        </svg>
+      );
+    case "clock":
+      return (
+        <svg viewBox="0 0 24 24" aria-hidden>
+          <circle cx="12" cy="12" r="7.2" />
+          <path d="M12 8.4 V12.2 L15 14" />
+        </svg>
+      );
+    default: {
+      const _never: never = kind;
+      return _never;
+    }
+  }
+}
+
+const proofIcons: ProofKind[] = ["bolt", "users", "scale", "clock"];
 
 export function ServicesBento() {
   const { bento } = getDictionary().home;
@@ -142,46 +167,64 @@ export function ServicesBento() {
 
   return (
     <section id="hizmetler" className="home-services">
+      <span className="home-services-haze" aria-hidden />
+      <span className="home-services-dots" aria-hidden />
+      <svg className="home-services-flow" viewBox="0 0 920 180" fill="none" aria-hidden>
+        <path d="M-20 128 C 90 48, 210 168, 340 98 S 560 28, 710 118 S 880 70, 980 96" />
+        <circle cx="214" cy="108" r="2" />
+        <circle cx="676" cy="92" r="1.8" />
+      </svg>
+
       <Container className="home-services-shell">
-        <Reveal>
+        <Reveal className="home-services-head">
           <p className="home-services-eye">
             <span aria-hidden className="home-services-dot" />
             {bento.eyebrow}
           </p>
-          <h2 className="home-services-intro font-display">
-            <span className="block">{bento.titleBefore.trim()}</span>
-            <em>{bento.titleAccent}</em>
-            {bento.titleAfter}
-          </h2>
+          <h2 className="home-services-intro font-display">{bento.title}</h2>
           <p className="home-services-lead">{bento.lead}</p>
         </Reveal>
 
         <ol className="home-services-list">
           {items.map((item, index) => (
-            <li
-              key={item.index}
-              className={index === 0 ? "home-services-row is-lead" : "home-services-row"}
-            >
-              <div className="home-services-meta">
-                <span className="home-services-index">{item.index}</span>
-                <span className="home-services-tag">{item.tag}</span>
-              </div>
-              <h3 className="home-services-title font-display">{item.title}</h3>
-              <div className="home-services-copy">
-                <p>{item.body}</p>
-                <Link href={routes.services} className="home-services-cta">
-                  {bento.coreCta}
-                  <span aria-hidden className="home-services-arrow">
-                    →
-                  </span>
-                </Link>
-                <div className="home-services-figure">
-                  <ServiceFigure kind={item.visual} />
+            <li key={item.index}>
+              <Reveal delay={index * 40} className="home-services-row">
+                <div className="home-services-meta">
+                  <span className="home-services-index">{item.index}</span>
+                  <span className="home-services-tag">{item.tag}</span>
                 </div>
-              </div>
+                <span className="home-services-icon">
+                  <ServiceIcon kind={item.visual} />
+                </span>
+                <h3 className="home-services-title font-display">{item.title}</h3>
+                <div className="home-services-copy">
+                  <p>{item.body}</p>
+                  <Link href={routes.services} className="home-services-cta">
+                    {bento.coreCta}
+                    <span aria-hidden className="home-services-arrow">
+                      →
+                    </span>
+                  </Link>
+                </div>
+              </Reveal>
             </li>
           ))}
         </ol>
+
+        <Reveal delay={80} className="home-services-proof">
+          <ul>
+            {bento.proof.map((item, index) => (
+              <li key={item.index}>
+                <b>
+                  <ProofIcon kind={proofIcons[index] ?? "bolt"} />
+                </b>
+                <strong>{item.index}</strong>
+                <span>{item.title}</span>
+                <small>{item.body}</small>
+              </li>
+            ))}
+          </ul>
+        </Reveal>
       </Container>
     </section>
   );

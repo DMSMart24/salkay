@@ -60,6 +60,7 @@ export type Dictionary = {
       wideTag: string;
       wideTitle: string;
       wideBody: string;
+      proof: Array<{ index: string; title: string; body: string }>;
     };
     kayStory: {
       ariaLabel: string;
@@ -69,6 +70,7 @@ export type Dictionary = {
       process: string;
       goal: string;
       support: string;
+      values: Array<{ title: string; body: string }>;
     };
     homeContact: {
       eyebrow: string;
@@ -121,6 +123,7 @@ export type Dictionary = {
     process: {
       eyebrow: string;
       title: string;
+      lead: string;
       steps: Array<{
         index: string;
         title: string;
@@ -251,7 +254,19 @@ export type Dictionary = {
     title: string;
     description: string;
     lead: string;
+    leadAccent: string;
     body: string[];
+    eyebrow: string;
+    index: string;
+    headline: [string, string];
+    studio: string;
+    location: string;
+    disciplines: [string, string, string, string];
+    capabilities: Array<{ index: string; title: string; body: string }>;
+    system: Array<{ index: string; title: string }>;
+    audience: string;
+    traits: [string, string, string];
+    meta: [string, string];
   };
   blogPage: {
     title: string;
@@ -285,19 +300,28 @@ export type Dictionary = {
       label: string;
       title1: string;
       title2: string;
+      titleAccent1: string;
+      titleAccent2: string;
       features: [string, string, string, string, string];
-      outcome: string;
-      site: {
+      outcome: [string, string, string];
+      principles: Array<{ label: string; body: string }>;
+      metrics: Array<{ value: string; label: string }>;
+      showcase: {
         brand: string;
-        nav: [string, string, string];
-        headline: string;
-        meta: string;
+        eyebrow: string;
+        title1: string;
+        title2: string;
+        body: string;
+        primary: string;
+        devices: [string, string, string];
+        specs: string;
       };
     };
     platform: {
       index: string;
       label: string;
       title1: string;
+      titleAccent: string;
       title2: string;
       body: string;
       features: [string, string, string, string];
@@ -306,41 +330,127 @@ export type Dictionary = {
       metrics: Array<{ value: string; label: string }>;
       activity: string;
       outcome: string;
+      outcomeAccent: string;
+      portal: {
+        brand: string;
+        search: string;
+        customer: string;
+        systemActive: string;
+        secure: string;
+        secureBody: string;
+        projectKicker: string;
+        projectName: string;
+        projectStatus: string;
+        progress: string;
+        steps: Array<{ index: string; title: string; state: "done" | "active" | "next" }>;
+        activityTitle: string;
+        events: Array<{ title: string; time: string }>;
+        messageLabel: string;
+        messageName: string;
+        messageBody: string;
+        trust: Array<{ label: string; body: string }>;
+      };
     };
     ai: {
       index: string;
       label: string;
       title1: string;
+      titleAccent: string;
       title2: string;
       body: string;
-      heading: string;
-      fields: Array<{ label: string; value: string }>;
-      action: string;
       outcome: string;
+      outcomeAccent: string;
+      interface: {
+        brand: string;
+        product: string;
+        live: string;
+        liveShort: string;
+        analysisLabel: string;
+        requestTitle: string;
+        sourceLabel: string;
+        sourceValue: string;
+        statusLabel: string;
+        statusValue: string;
+        confidence: string;
+        confidenceValue: string;
+        cards: Array<{ label: string; value: string; detail?: string }>;
+        missingLabel: string;
+        missingField: string;
+        missingPill: string;
+        suggestionLabel: string;
+        suggestionBody: string;
+        floatLabel: string;
+        floatBody: string;
+        floatPriorityLabel: string;
+        floatPriority: string;
+        flow: [string, string, string, string, string];
+        trust: Array<{ label: string; body: string }>;
+      };
     };
     automation: {
       index: string;
       label: string;
       title1: string;
+      titleAccent: string;
       title2: string;
       body: string;
       flow: [string, string, string, string, string];
       nodes: [string, string, string, string, string, string];
       outcome: string;
+      panel: {
+        title: string;
+        live: string;
+        steps: Array<{ title: string; body: string; time: string }>;
+        statusTitle: string;
+        statusValue: string;
+        statusBody: string;
+        integrationsTitle: string;
+        integrations: [string, string, string, string, string, string];
+        metrics: Array<{ label: string; value: string }>;
+      };
     };
     commerce: {
       index: string;
       label: string;
       title1: string;
       title2: string;
+      titleAccent: string;
       features: [string, string, string, string];
-      product: string;
-      plan: string;
-      variants: [string, string, string];
-      totalLabel: string;
-      total: string;
-      pay: string;
       outcome: string;
+      outcomeAccent: string;
+      dashboard: {
+        brand: string;
+        nav: [string, string, string, string];
+        overview: string;
+        overviewSupport: string;
+        dateRange: string;
+        kpis: Array<{ label: string; value: string; trend: string }>;
+        productsTitle: string;
+        productsLink: string;
+        products: Array<{ name: string; qty: string; value: string }>;
+        channelsTitle: string;
+        channelsTotal: string;
+        channelsTotalLabel: string;
+        channels: Array<{ label: string; value: string }>;
+        insightTitle: string;
+        insightBody: string;
+        insightLink: string;
+        productName: string;
+        productPrice: string;
+        productReviews: string;
+        productVariant: string;
+        productCta: string;
+        productTrust: string;
+        orderTitle: string;
+        orderSubtotalLabel: string;
+        orderSubtotal: string;
+        orderShippingLabel: string;
+        orderShipping: string;
+        orderTotalLabel: string;
+        orderTotal: string;
+        orderCta: string;
+        trust: Array<{ title: string; body: string }>;
+      };
     };
     bridge: {
       title1: string;
@@ -349,6 +459,8 @@ export type Dictionary = {
     outcomes: {
       headline1: string;
       headline2: string;
+      headline3: string;
+      support: string;
       items: Array<{ index: string; title: string; body: string }>;
     };
     cta: {
@@ -365,7 +477,24 @@ export type Dictionary = {
     title: string;
     description: string;
     lead: string;
-    pendingChannels: string;
+    eyebrow: string;
+    index: string;
+    headline: [string, string];
+    intro: [string, string];
+    channels: Array<{
+      label: string;
+      value: "email" | "whatsapp" | "web";
+    }>;
+    availability: string;
+    location: string;
+    role: string;
+    formKicker: string;
+    formIndex: string;
+    formTitle: string;
+    formSub: string;
+    messageHint: string;
+    submitNote: string;
+    trust: [string, string, string, string, string];
     form: {
       name: string;
       company: string;
@@ -375,8 +504,13 @@ export type Dictionary = {
       servicePlaceholder: string;
       message: string;
       submit: string;
+      sending: string;
+      successTitle: string;
+      successBody: string;
+      errorTitle: string;
+      errorBody: string;
+      errorWhatsApp: string;
       required: string;
-      unwired: string;
       services: string[];
     };
   };

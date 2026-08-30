@@ -1,6 +1,15 @@
+import type { Metadata } from "next";
 import { UnsubscribeForm } from "@/components/admin/UnsubscribeForm";
+import { buildMetadata } from "@/lib/metadata";
 
 export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = buildMetadata({
+  title: "Abonelikten çık",
+  description: "SALKAY e-posta listesinden çıkış.",
+  path: "/unsubscribe",
+  index: false,
+});
 
 export default async function UnsubscribePage({
   searchParams,

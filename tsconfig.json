@@ -30,5 +30,13 @@
     ".next/dev/types/**/*.ts",
     "**/*.mts"
   ],
-  "exclude": ["node_modules"]
+  "exclude": [
+    "node_modules",
+    "forma",
+    "src/components/home/HomeStage.tsx",
+    "src/components/home/HomeStageCards.tsx",
+    "src/components/home/HomeStageCta.tsx",
+    "src/components/home/HomeStageMedia.tsx",
+    "src/lib/home-stage.ts"
+  ]
 }

@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
-import { PageHero } from "@/components/page/PageHero";
-import { Container } from "@/components/ui/Container";
+import { AboutStudio } from "@/components/about/AboutStudio";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { buildMetadata } from "@/lib/metadata";
@@ -22,14 +21,7 @@ export default function AboutPage() {
       <JsonLd
         data={breadcrumbSchema([{ name: page.title, path: routes.about }])}
       />
-      <PageHero eyebrow="Stüdyo" title={page.title} lead={page.lead} />
-      <Container className="grid gap-8 pb-24 lg:grid-cols-2">
-        {page.body.map((paragraph) => (
-          <p key={paragraph} className="text-[1.05rem] leading-8 text-muted">
-            {paragraph}
-          </p>
-        ))}
-      </Container>
+      <AboutStudio />
     </>
   );
 }

@@ -3,19 +3,19 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
-import { Logo } from "@/components/brand/Logo";
+import { HeaderLogo } from "@/components/brand/HeaderLogo";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { cn } from "@/lib/cn";
-import { routes, sections } from "@/lib/routes";
+import { routes } from "@/lib/routes";
 
 function isActiveNav(pathname: string, href: string) {
-  if (pathname === href) {
-    return true;
+  if (href.includes("#")) {
+    return false;
   }
 
-  return pathname === routes.services && href === sections.services;
+  return pathname === href;
 }
 
 export function Header() {
@@ -48,10 +48,25 @@ export function Header() {
     };
   }, [open]);
 
+  useEffect(() => {
+    if (!open) {
+      return;
+    }
+
+    const onKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setOpen(false);
+      }
+    };
+
+    window.addEventListener("keydown", onKeyDown);
+    return () => window.removeEventListener("keydown", onKeyDown);
+  }, [open]);
+
   return (
     <header className={cn("site-header", (scrolled || open) && "is-solid")}>
       <Container className="flex h-[4.25rem] items-center justify-between gap-6 min-[920px]:h-[5.15rem]">
-        <Logo tone="on-light" />
+        <HeaderLogo />
 
         <nav
           aria-label="Ana menü"
@@ -73,7 +88,7 @@ export function Header() {
         </nav>
 
         <div className="hidden min-[920px]:block">
-          <Button href={sections.contact} className="site-header-cta min-h-11 px-5">
+          <Button href={routes.contact} className="site-header-cta min-h-11 px-5">
             {dictionary.nav.primaryCta}
           </Button>
         </div>
@@ -111,21 +126,32 @@ export function Header() {
         hidden={!open}
         className="site-header-menu min-[920px]:hidden"
       >
-        <Container className="flex flex-col py-4">
-          {dictionary.nav.items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="site-header-menu-link font-display text-h3"
-              onClick={() => setOpen(false)}
-            >
-              {item.label}
-            </Link>
-          ))}
+        <Container className="site-header-menu-inner">
+          <nav aria-label="Mobil menü" className="site-header-menu-nav">
+            {dictionary.nav.items.map((item) => {
+              const active = isActiveNav(pathname, item.href);
+              return (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  aria-current={active ? "page" : undefined}
+                  className={cn("site-header-menu-link", active && "is-active")}
+                  onClick={() => setOpen(false)}
+                >
+                  {item.label}
+                  <span aria-hidden className="site-header-menu-arrow">
+                    →
+                  </span>
+                </Link>
+              );
+            })}
+          </nav>
           <div className="site-header-menu-cta">
-            <Button href={sections.contact} className="site-header-cta w-full">
+            <Button href={routes.contact} className="site-header-cta site-header-menu-cta-btn">
               {dictionary.nav.primaryCta}
+              <span aria-hidden>→</span>
             </Button>
+            <p className="site-header-menu-note">{dictionary.home.hero.eyebrow}</p>
           </div>
         </Container>
       </div>

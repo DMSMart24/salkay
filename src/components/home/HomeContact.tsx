@@ -2,6 +2,7 @@ import { InquiryForm } from "@/components/contact/InquiryForm";
 import { Reveal } from "@/components/motion/Reveal";
 import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
+import { siteMailto } from "@/lib/site";
 
 export function HomeContact() {
   const { homeContact } = getDictionary().home;
@@ -15,7 +16,9 @@ export function HomeContact() {
           <p className="mt-5 max-w-xl text-muted">{homeContact.body}</p>
           <div className="mt-8 grid gap-2 font-mono text-[0.78rem] tracking-[0.08em] text-muted uppercase">
             <p>{homeContact.locationLabel}</p>
-            <p>{homeContact.mailLabel}</p>
+            <a href={siteMailto()} className="transition-colors hover:text-fg">
+              {homeContact.mailLabel}
+            </a>
           </div>
         </Reveal>
         <Reveal delay={80}>

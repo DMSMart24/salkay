@@ -6,7 +6,7 @@ import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { serviceIndex } from "@/i18n/dictionaries/tr";
 import { routes, sections } from "@/lib/routes";
-import { site } from "@/lib/site";
+import { site, siteMailto, siteWhatsAppUrl } from "@/lib/site";
 
 export function Footer() {
   const dictionary = getDictionary();
@@ -45,18 +45,29 @@ export function Footer() {
             <Link href={routes.projects} className="text-muted hover:text-fg">
               Projeler
             </Link>
-            <Link href={sections.kay} className="text-muted hover:text-fg">
-              KAY
+            <Link href={sections.process} className="text-muted hover:text-fg">
+              Yaklaşımımız
             </Link>
             <Link href={routes.contact} className="text-muted hover:text-fg">
               İletişim
             </Link>
           </FooterColumn>
 
-          <FooterColumn title={dictionary.footer.social}>
-            <span className="text-muted">Instagram</span>
-            <span className="text-muted">LinkedIn</span>
-            <span className="text-faint">{dictionary.footer.socialPending}</span>
+          <FooterColumn title={dictionary.footer.contact}>
+            <a href={siteMailto()} className="text-muted hover:text-fg">
+              {site.email}
+            </a>
+            <a
+              href={siteWhatsAppUrl()}
+              className="text-muted hover:text-fg"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              {site.whatsappDisplay}
+            </a>
+            <a href={site.url} className="text-muted hover:text-fg">
+              {site.domain}
+            </a>
           </FooterColumn>
         </div>
 

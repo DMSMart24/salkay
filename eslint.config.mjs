@@ -12,6 +12,12 @@ const eslintConfig = defineConfig([
     "out/**",
     "build/**",
     "next-env.d.ts",
+    "forma/**",
+    "src/components/home/HomeStage.tsx",
+    "src/components/home/HomeStageCards.tsx",
+    "src/components/home/HomeStageCta.tsx",
+    "src/components/home/HomeStageMedia.tsx",
+    "src/lib/home-stage.ts",
   ]),
 ]);
 
