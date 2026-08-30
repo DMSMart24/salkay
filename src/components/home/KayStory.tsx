@@ -9,7 +9,7 @@ export function KayStory() {
       id="kay"
       data-salkay-brand
       aria-label={kayStory.ariaLabel}
-      className="bg-canvas"
+      className="home-brand"
     >
       <Container>
         <div className="brand-statement">

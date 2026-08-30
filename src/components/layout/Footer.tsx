@@ -13,7 +13,7 @@ export function Footer() {
   const year = 2026;
 
   return (
-    <footer className="border-t border-line bg-canvas-soft text-fg">
+    <footer className="site-footer">
       <Container className="py-16 lg:py-20">
         <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
           <div className="max-w-sm">
@@ -38,6 +38,9 @@ export function Footer() {
           <FooterColumn title={dictionary.footer.company}>
             <Link href={routes.about} className="text-muted hover:text-fg">
               Hakkımızda
+            </Link>
+            <Link href={routes.solutions} className="text-muted hover:text-fg">
+              Çözümler
             </Link>
             <Link href={routes.projects} className="text-muted hover:text-fg">
               Projeler

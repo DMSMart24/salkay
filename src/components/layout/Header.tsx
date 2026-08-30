@@ -49,45 +49,38 @@ export function Header() {
   }, [open]);
 
   return (
-    <header
-      className={cn(
-        "fixed inset-x-0 top-0 z-50 transition-[background-color,border-color,backdrop-filter,padding] duration-300",
-        scrolled || open
-          ? "border-b border-line bg-canvas/72 backdrop-blur-xl"
-          : "border-b border-transparent bg-transparent",
-      )}
-    >
+    <header className={cn("site-header", (scrolled || open) && "is-solid")}>
       <Container className="flex h-[4.25rem] items-center justify-between gap-6 min-[920px]:h-[5.15rem]">
-        <Logo />
+        <Logo tone="on-light" />
 
         <nav
           aria-label="Ana menü"
-          className="hidden items-center gap-5 min-[920px]:flex min-[1280px]:gap-8"
+          className="site-header-nav hidden items-center gap-5 min-[920px]:flex min-[1280px]:gap-8"
         >
-          {dictionary.nav.items.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              aria-current={isActiveNav(pathname, item.href) ? "page" : undefined}
-              className={cn(
-                "text-[0.94rem] tracking-[-0.01em] transition-colors hover:text-fg",
-                isActiveNav(pathname, item.href) ? "text-fg" : "text-muted",
-              )}
-            >
-              {item.label}
-            </Link>
-          ))}
+          {dictionary.nav.items.map((item) => {
+            const active = isActiveNav(pathname, item.href);
+            return (
+              <Link
+                key={item.href}
+                href={item.href}
+                aria-current={active ? "page" : undefined}
+                className={cn("site-header-link", active && "is-active")}
+              >
+                {item.label}
+              </Link>
+            );
+          })}
         </nav>
 
         <div className="hidden min-[920px]:block">
-          <Button href={sections.contact} className="min-h-11 px-5">
+          <Button href={sections.contact} className="site-header-cta min-h-11 px-5">
             {dictionary.nav.primaryCta}
           </Button>
         </div>
 
         <button
           type="button"
-          className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-line text-fg min-[920px]:hidden"
+          className="site-header-toggle min-[920px]:hidden"
           aria-expanded={open}
           aria-controls={menuId}
           aria-label={open ? dictionary.nav.closeMenu : dictionary.nav.openMenu}
@@ -116,21 +109,21 @@ export function Header() {
       <div
         id={menuId}
         hidden={!open}
-        className="border-t border-line bg-canvas min-[920px]:hidden"
+        className="site-header-menu min-[920px]:hidden"
       >
-        <Container className="flex flex-col gap-1 py-6">
+        <Container className="flex flex-col py-4">
           {dictionary.nav.items.map((item) => (
             <Link
               key={item.href}
               href={item.href}
-              className="py-3 font-display text-h3 text-fg"
+              className="site-header-menu-link font-display text-h3"
               onClick={() => setOpen(false)}
             >
               {item.label}
             </Link>
           ))}
-          <div className="pt-4">
-            <Button href={sections.contact} className="w-full">
+          <div className="site-header-menu-cta">
+            <Button href={sections.contact} className="site-header-cta w-full">
               {dictionary.nav.primaryCta}
             </Button>
           </div>

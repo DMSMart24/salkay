@@ -85,6 +85,7 @@ export function HeroVideo() {
       <div className="hero-video-shade" />
       <div className="hero-video-top" />
       <div className="hero-video-bottom" />
+      <div className="hero-header-blend" />
     </div>
   );
 }

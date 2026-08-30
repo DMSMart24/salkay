@@ -259,6 +259,108 @@ export type Dictionary = {
     emptyTitle: string;
     emptyBody: string;
   };
+  solutionsPage: {
+    title: string;
+    description: string;
+    breadcrumb: string;
+    hero: {
+      eyebrow: string;
+      line1: string;
+      line2: string;
+      accent: string;
+      support: string;
+      primaryCta: string;
+      secondaryCta: string;
+    };
+    intro: {
+      eyebrow: string;
+      title1: string;
+      title2: string;
+      body: string;
+      count: string;
+      countLabel: string;
+    };
+    web: {
+      index: string;
+      label: string;
+      title1: string;
+      title2: string;
+      features: [string, string, string, string, string];
+      outcome: string;
+      site: {
+        brand: string;
+        nav: [string, string, string];
+        headline: string;
+        meta: string;
+      };
+    };
+    platform: {
+      index: string;
+      label: string;
+      title1: string;
+      title2: string;
+      body: string;
+      features: [string, string, string, string];
+      nav: [string, string, string, string, string, string];
+      welcome: string;
+      metrics: Array<{ value: string; label: string }>;
+      activity: string;
+      outcome: string;
+    };
+    ai: {
+      index: string;
+      label: string;
+      title1: string;
+      title2: string;
+      body: string;
+      heading: string;
+      fields: Array<{ label: string; value: string }>;
+      action: string;
+      outcome: string;
+    };
+    automation: {
+      index: string;
+      label: string;
+      title1: string;
+      title2: string;
+      body: string;
+      flow: [string, string, string, string, string];
+      nodes: [string, string, string, string, string, string];
+      outcome: string;
+    };
+    commerce: {
+      index: string;
+      label: string;
+      title1: string;
+      title2: string;
+      features: [string, string, string, string];
+      product: string;
+      plan: string;
+      variants: [string, string, string];
+      totalLabel: string;
+      total: string;
+      pay: string;
+      outcome: string;
+    };
+    bridge: {
+      title1: string;
+      title2: string;
+    };
+    outcomes: {
+      headline1: string;
+      headline2: string;
+      items: Array<{ index: string; title: string; body: string }>;
+    };
+    cta: {
+      eyebrow: string;
+      title1: string;
+      title2: string;
+      punch1: string;
+      punch2: string;
+      primary: string;
+      secondary: string;
+    };
+  };
   contactPage: {
     title: string;
     description: string;

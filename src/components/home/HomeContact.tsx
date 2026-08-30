@@ -7,7 +7,7 @@ export function HomeContact() {
   const { homeContact } = getDictionary().home;
 
   return (
-    <section id="iletisim" className="bg-canvas-soft py-20 lg:py-28">
+    <section id="iletisim" className="home-contact">
       <Container className="grid gap-12 min-[920px]:grid-cols-2">
         <Reveal>
           <p className="eyebrow text-cyan">{homeContact.eyebrow}</p>
@@ -19,7 +19,7 @@ export function HomeContact() {
           </div>
         </Reveal>
         <Reveal delay={80}>
-          <InquiryForm compact />
+          <InquiryForm compact tone="on-light" />
         </Reveal>
       </Container>
     </section>

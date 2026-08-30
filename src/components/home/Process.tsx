@@ -6,7 +6,7 @@ export function Process() {
   const { process } = getDictionary().home;
 
   return (
-    <section id="surec" className="bg-canvas-soft py-20 lg:py-28">
+    <section id="surec" className="home-process">
       <Container>
         <Reveal>
           <p className="eyebrow text-cyan">{process.eyebrow}</p>

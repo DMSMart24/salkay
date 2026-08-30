@@ -1,6 +1,7 @@
 export const routes = {
   home: "/",
   services: "/hizmetler",
+  solutions: "/cozumler",
   projects: "/projeler",
   about: "/hakkimizda",
   blog: "/blog",
@@ -38,6 +39,7 @@ export const sections = {
 export const publicPages = [
   routes.home,
   routes.services,
+  routes.solutions,
   routes.projects,
   routes.about,
   routes.blog,
