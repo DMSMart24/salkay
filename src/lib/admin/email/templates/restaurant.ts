@@ -1,5 +1,5 @@
 import { site } from "@/lib/site";
-import { phoneBlockHtml, type CompanyEmailContext } from "@/lib/admin/email/context";
+import { type CompanyEmailContext } from "@/lib/admin/email/context";
 import { applyMerge, escapeHtml } from "@/lib/admin/email/html";
 import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
 import { websiteScoreBand, type WebsiteScoreBand } from "@/lib/admin/qualification";
@@ -50,14 +50,13 @@ function restaurantMailBand(scoreLabel: string) {
   return MAIL_SCORE_BANDS[websiteScoreBand(numeric)];
 }
 
-function compactScoreBar(score: number) {
-  const percent = Math.max(4, Math.min(100, Math.round((score / 10) * 100)));
-  const rest = 100 - percent;
-  return `<table role="presentation" width="160" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;">
-    <tr>
-      <td width="${percent}%" height="6" bgcolor="#16C7FF" style="width:${percent}%;height:6px;background:#16C7FF;border-radius:3px 0 0 3px;font-size:0;line-height:0;">&nbsp;</td>
-      <td width="${rest}%" height="6" bgcolor="#1A2B42" style="width:${rest}%;height:6px;background:#1A2B42;border-radius:0 3px 3px 0;font-size:0;line-height:0;">&nbsp;</td>
-    </tr>
+function editorialScoreBar(score: number) {
+  const cells = Array.from({ length: 10 }, (_, index) => {
+    const on = index < score;
+    return `<td width="24" height="8" bgcolor="${on ? "#16C7FF" : "#2A3B52"}" style="width:24px;height:8px;background:${on ? "#16C7FF" : "#2A3B52"};border-radius:2px;font-size:0;line-height:0;">&nbsp;</td>`;
+  }).join(`<td width="5" style="width:5px;font-size:0;line-height:0;">&nbsp;</td>`);
+  return `<table class="salkay-score-bar" role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:16px 0 0;">
+    <tr>${cells}</tr>
   </table>`;
 }
 
@@ -67,11 +66,11 @@ function numberedRows(items: string[], className: string) {
       const last = index === items.length - 1;
       const num = String(index + 1).padStart(2, "0");
       return `<tr class="${className}">
-        <td style="padding:${index === 0 ? "0" : "12px"} 0 ${last ? "0" : "12px"};border-bottom:${last ? "none" : "1px solid #203047"};">
+        <td style="padding:${index === 0 ? "2px" : "12px"} 0 ${last ? "2px" : "12px"};border-bottom:${last ? "none" : "1px solid #1E3148"};">
           <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
             <tr>
-              <td valign="top" width="28" style="width:28px;padding:2px 10px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;letter-spacing:0.08em;color:#16C7FF;font-weight:700;">${num}</td>
-              <td valign="top" style="font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:22px;color:#FFFFFF;">${escapeHtml(item)}</td>
+              <td valign="top" width="32" style="width:32px;padding:1px 12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;letter-spacing:0.1em;color:#16C7FF;font-weight:700;">${num}</td>
+              <td valign="top" style="font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:23px;color:#F4F7FB;">${escapeHtml(item)}</td>
             </tr>
           </table>
         </td>
@@ -95,26 +94,21 @@ function restaurantScoreBlockHtml(context: CompanyEmailContext) {
   const numericScore = Number(context.scoreLabel.replace(",", "."));
   const scoreText = escapeHtml(context.scoreLabel);
   const band = escapeHtml(restaurantMailBand(context.scoreLabel) || "GELİŞTİRİLEBİLİR");
-  return `<p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">DİJİTAL WEB SKORU</p>
-    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
+  return `<table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:8px 0 0;">
       <tr>
-        <td valign="middle">
-          <p style="margin:0;font-family:Georgia,Times,serif;line-height:36px;">
-            <span style="font-size:36px;color:#16C7FF;font-weight:700;">${scoreText}</span>
-            <span style="font-size:15px;color:#B8C3D1;font-weight:400;">&nbsp;/&nbsp;10</span>
-          </p>
-        </td>
-        <td valign="middle" align="right" style="padding-left:10px;">
-          <table role="presentation" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;">
+        <td style="padding:14px 0 2px;border-top:1px solid #1E3148;">
+          <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.2em;text-transform:uppercase;color:#D5AA62;">DİJİTAL WEB SKORU</p>
+          <p class="salkay-score-num" style="margin:0;font-family:Georgia,Times,serif;font-size:52px;line-height:54px;color:#16C7FF;font-weight:700;">${scoreText}<span style="font-size:16px;line-height:54px;color:#8EA0B8;font-weight:400;font-family:Arial,Helvetica,sans-serif;">&nbsp;/&nbsp;10</span></p>
+          <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:10px 0 0;">
             <tr>
-              <td bgcolor="#0B1729" style="background:#0B1729;border:1px solid #D5AA62;border-radius:4px;padding:5px 8px;font-family:Arial,Helvetica,sans-serif;font-size:10px;line-height:13px;letter-spacing:0.06em;text-transform:uppercase;color:#D5AA62;">${band}</td>
+              <td bgcolor="#0B1729" style="background:#0B1729;border:1px solid #D5AA62;border-radius:4px;padding:6px 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.1em;text-transform:uppercase;color:#D5AA62;">${band}</td>
             </tr>
           </table>
+          ${Number.isFinite(numericScore) ? editorialScoreBar(numericScore) : ""}
+          <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#B8C3D1;">Tasarım, mobil kullanıcı deneyimi, navigasyon ve dönüşüm akışını incelediğimizde markanız için geliştirme potansiyeli gördük.</p>
         </td>
       </tr>
-    </table>
-    ${Number.isFinite(numericScore) ? compactScoreBar(numericScore) : ""}
-    <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:21px;color:#B8C3D1;">Tasarım, mobil kullanıcı deneyimi, navigasyon ve dönüşüm akışını incelediğimizde markanız için geliştirme potansiyeli gördük.</p>`;
+    </table>`;
 }
 
 function restaurantAnalysisHtml(context: CompanyEmailContext) {
@@ -172,15 +166,15 @@ function restaurantImprovementsHtml(context: CompanyEmailContext) {
       const last = index === cards.length - 1;
       const num = String(index + 1).padStart(2, "0");
       return `<tr class="salkay-improve-item">
-        <td style="padding:${index === 0 ? "0" : "12px"} 0 ${last ? "0" : "12px"};border-bottom:${last ? "none" : "1px solid #203047"};">
-          <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.08em;color:#16C7FF;font-weight:700;">${num}&nbsp;&nbsp;<span style="color:#FFFFFF;letter-spacing:0;">${card.title}</span></p>
+        <td style="padding:${index === 0 ? "2px" : "12px"} 0 ${last ? "2px" : "12px"};border-bottom:${last ? "none" : "1px solid #1E3148"};">
+          <p style="margin:0 0 4px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:21px;color:#FFFFFF;font-weight:700;"><span style="color:#16C7FF;letter-spacing:0.08em;font-size:13px;">${num}</span>&nbsp;&nbsp;${card.title}</p>
           <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#B8C3D1;">${card.body}</p>
         </td>
       </tr>`;
     })
     .join("");
 
-  return `<p style="margin:20px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.14em;text-transform:uppercase;color:#D5AA62;">SALKAY İLE NELER GELİŞTİRİLEBİLİR?</p>
+  return `<p style="margin:18px 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.12em;text-transform:uppercase;color:#D5AA62;">SİZİN İÇİN ÖNERDİĞİMİZ GELİŞTİRMELER</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
       ${rows}
     </table>`;
@@ -191,7 +185,7 @@ function gastronomyPill() {
                                 <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:10px;">
                                   <tr>
                                     <td bgcolor="#081525" style="background:#081525;border:1px solid #d5aa62;border-radius:16px;padding:5px 11px;">
-                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;color:#f8f3ea;">Gastronomi Sektörü İçin Dijital Çözümler</p>
+                                      <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:15px;color:#f8f3ea;">Restoranlar için Web Tasarım &amp; Dijital Büyüme</p>
                                     </td>
                                   </tr>
                                 </table>`;
@@ -224,8 +218,11 @@ function mobileHero() {
             <td class="salkay-hero-mobile-cell" bgcolor="#07111f" style="display:none;max-height:0;background:#07111f;border-top:3px solid #d5aa62;padding:0;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;background:#07111f;">
                 <tr>
-                  <td align="center" bgcolor="#07111f" style="padding:0;line-height:0;font-size:0;background:#07111f;">
-                    <img class="salkay-hero-mobile-art" src="{{heroMobileUrl}}" width="390" alt="SALKAY — Gastronomi Sektörü İçin Dijital Çözümler" style="display:block;border:0;margin:0;padding:0;width:100%;max-width:390px;height:auto;background-color:#07111f;color:#f8f3ea;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:22px;">
+                  <td class="salkay-pad" bgcolor="#07111f" style="background:#07111f;padding:10px 20px 10px;">
+                    <p style="margin:0 0 2px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.18em;color:#D5AA62;font-weight:700;">SALKAY</p>
+                    <p style="margin:0 0 2px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:17px;color:#16C7FF;">Web Tasarım · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
+                    <p style="margin:0 0 6px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:17px;color:#C5D2E0;">Restoranlar için Web Tasarım &amp; Dijital Büyüme</p>
+                    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:18px;color:#F4F7FB;">Harika bir restoran deneyimi, güçlü bir dijital vitrinle başlar.</p>
                   </td>
                 </tr>
               </table>
@@ -267,7 +264,7 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
   @media only screen and (max-width: 700px) {
     .salkay-container { width: 100% !important; max-width: 390px !important; }
     .salkay-pad { padding-left: 18px !important; padding-right: 18px !important; }
-    .salkay-intro-wrap { padding: 26px 20px 22px !important; }
+    .salkay-intro-wrap { padding: 22px 20px 18px !important; }
     .salkay-hello,
     .salkay-hello-name { display: block !important; }
     .salkay-intro-title { font-size: 22px !important; line-height: 30px !important; }
@@ -282,8 +279,8 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
     }
     .salkay-hero-copy, .salkay-kay, .salkay-sign-logo, .salkay-sign-contact { display: block !important; width: 100% !important; }
     .salkay-hero-photo { width: 100% !important; height: auto !important; }
-    .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
-    .salkay-audit-card { padding: 18px 16px !important; }
+    .salkay-audit-card { padding: 22px 18px !important; }
+    .salkay-score-num { font-size: 48px !important; line-height: 52px !important; }
     .salkay-cta-wrap { padding: 8px 18px 6px !important; background: #07111F !important; }
     .salkay-cta-inner { padding: 20px 16px 18px !important; }
     .salkay-cta-btn-wrap { width: 92% !important; }
@@ -313,10 +310,11 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
                 <tr>
                   <td class="salkay-pad salkay-hero-copy" valign="top" width="50%" bgcolor="#07111f" style="width:50%;padding:18px 16px 20px 24px;background:#07111f;">
                     <img class="salkay-logo-hero" src="{{logoUrl}}" width="168" height="95" alt="SALKAY" style="display:block;border:0;width:168px;height:auto;max-width:100%;">
-                    <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.12em;text-transform:uppercase;color:#16c7ff;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
+                    <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;letter-spacing:0.08em;text-transform:uppercase;color:#16c7ff;">Web Tasarım · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
                     ${gastronomyPill()}
                     ${heroHeadline(26, 32)}
-                    <p style="margin:12px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#c5d2e0;">Harika yemek deneyimleri, harika bir web sitesi ile daha çok misafire ulaşır.</p>
+                    <p style="margin:12px 0 6px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:21px;color:#c5d2e0;">Harika bir restoran deneyimi, güçlü bir dijital vitrinle başlar.</p>
+                    <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;letter-spacing:0.04em;color:#8EA0B8;">Web Tasarım · Rezervasyon · Mobil Deneyim · Dijital Büyüme</p>
                   </td>
                   <td class="salkay-kay" valign="top" width="50%" bgcolor="#081525" style="width:50%;padding:0;background:#081525;">
                     <img class="salkay-hero-photo" src="{{heroUrl}}" width="350" alt="KAY restoran masasında" style="display:block;border:0;width:100%;height:auto;">
@@ -336,10 +334,10 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
             <td bgcolor="#f8f3ea" class="salkay-pad" style="background:#f8f3ea;padding:0 28px 24px;">
               <table role="presentation" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:collapse;background:#07111F;border:1px solid #1E3A54;">
                 <tr>
-                  <td class="salkay-audit-card" bgcolor="#07111F" style="background:#07111F;padding:22px 20px;">
-                    <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.18em;text-transform:uppercase;color:#D5AA62;">WEB SİTESİ İNCELEMESİ</p>
-                    <p style="margin:0;font-family:Georgia,Times,serif;font-size:22px;line-height:28px;color:#FFFFFF;font-weight:700;">{{companyName}}</p>
-                    <p style="margin:6px 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:18px;color:#B8C3D1;"><span style="color:#16C7FF;">●</span>&nbsp;{{district}}{{locationSep}}{{city}}</p>
+                  <td class="salkay-audit-card" bgcolor="#07111F" style="background:#07111F;padding:26px 24px;">
+                    <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.18em;text-transform:uppercase;color:#D5AA62;">WEB SİTESİ İNCELEMESİ</p>
+                    <p style="margin:0;font-family:Georgia,Times,serif;font-size:24px;line-height:30px;color:#FFFFFF;font-weight:700;">{{companyName}}</p>
+                    <p style="margin:8px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;color:#B8C3D1;"><span style="color:#16C7FF;">●</span>&nbsp;{{district}}{{locationSep}}{{city}}</p>
                     {{scoreBlock}}
                     {{issuesBlock}}
                     {{recommendedServicesBlock}}
@@ -358,8 +356,8 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
                     <p style="margin:0 0 14px;text-align:center;font-family:Arial,Helvetica,sans-serif;font-size:16px;line-height:24px;color:#FFFFFF;font-weight:700;">Size özel hazırladığımız geliştirme fikirlerini ücretsiz paylaşalım.</p>
                     <table role="presentation" class="salkay-cta-btn-wrap" cellpadding="0" cellspacing="0" align="center" style="border-collapse:collapse;">
                       <tr>
-                        <td bgcolor="#D5AA62" align="center" style="background:#D5AA62;border-radius:24px;">
-                          <a class="salkay-cta-btn" href="{{ctaUrl}}" style="display:inline-block;padding:13px 26px;font-family:Arial,Helvetica,sans-serif;font-size:14px;line-height:18px;color:#07111F;text-decoration:none;font-weight:700;">Ücretsiz Web Analizini Konuşalım →</a>
+                        <td bgcolor="#D5AA62" align="center" style="background:#D5AA62;border-radius:28px;">
+                          <a class="salkay-cta-btn" href="{{ctaUrl}}" style="display:inline-block;padding:15px 32px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:20px;color:#07111F;text-decoration:none;font-weight:700;">Ücretsiz Web Analizini Konuşalım →</a>
                         </td>
                       </tr>
                     </table>
@@ -390,10 +388,10 @@ table, td, div, p, a { font-family: Arial, Helvetica, sans-serif !important; }
                         </td>
                         <td class="salkay-sign-contact" valign="middle" width="70%" style="width:70%;padding:0;">
                           <p style="margin:0 0 3px;font-family:Arial,Helvetica,sans-serif;font-size:12px;line-height:16px;letter-spacing:0.14em;color:#07111F;font-weight:700;">SALKAY</p>
-                          <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;color:#5A6A7C;">Web · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
+                          <p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:16px;color:#5A6A7C;">Web Tasarım · Yazılım · Yapay Zekâ · Dijital Büyüme</p>
                           <p style="margin:0 0 1px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;"><a href="mailto:info@salkay.com" style="color:#16C7FF;text-decoration:none;">info@salkay.com</a></p>
-                          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;"><a href="${site.url}" style="color:#16C7FF;text-decoration:none;">salkay.com</a></p>
-                          {{phoneBlock}}
+                          <p style="margin:0 0 1px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;"><a href="${site.url}" style="color:#16C7FF;text-decoration:none;">salkay.com</a></p>
+                          <p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:19px;color:#16C7FF;">${site.whatsappDisplay}</p>
                         </td>
                       </tr>
                     </table>
@@ -439,7 +437,6 @@ export function renderRestaurantEmail(_source: string, context: CompanyEmailCont
     recommendedServices: "",
     recommendedServicesBlock: `<!--safe-->${restaurantImprovementsHtml(context)}`,
     recommendedLine: "",
-    phoneBlock: `<!--safe-->${phoneBlockHtml(context)}`,
     ctaNote: "",
   };
 
