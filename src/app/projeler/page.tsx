@@ -29,7 +29,7 @@ export default function ProjectsPage() {
           {page.architecture.map((item) => (
             <li
               key={item}
-              className="rounded-full border border-line px-3 py-1 text-sm text-muted"
+              className="rounded-full border border-gold/35 px-3 py-1 text-sm text-muted"
             >
               {item}
             </li>

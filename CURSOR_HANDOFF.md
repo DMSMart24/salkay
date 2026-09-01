@@ -6,12 +6,57 @@ Checkpoint for continuing SALKAY in a **second Cursor account**. This file conta
 
 ---
 
+## Overnight checkpoint · 30 August 2026 (evening)
+
+**Do not start from PR #1.** It is stale.
+
+| Fact | Value |
+|---|---|
+| `origin/main` HEAD (Salih, morning) | `b619561c02a3a8d7006a7b39c148106ebbc9f22a` · `feat: refresh public site visual system` · 2026-08-30 08:51 UTC |
+| Previous stale PR | **#1** `cursor/public-site-email-premium-1bbd` · **DIRTY / CONFLICTING / unmergeable** · do **not** merge |
+| This continuation branch | `cursor/email-port-site-polish-798f` |
+| This continuation PR | **#2** https://github.com/DMSMart24/salkay/pull/2 (against current `main`) |
+| Public visual system source of truth | **Salih’s morning refresh on `main`** (`b619561` + `6749726`). Do not revert it to PR #1’s navy rewrite. |
+| Restaurant email | Unchanged. Isolated. Still uses `restaurantPremiumSource()`. |
+| Bar email | Ported from PR #1 onto current main: desktop/mobile 9:16 hide-show, gold gift rail, side-by-side signature, solid gold borders |
+| Live send | **Off.** `OUTREACH_SEND_ENABLED` must stay unset. |
+
+### What PR #1 still had that main was missing
+
+Only the **email** work was still missing after Salih’s visual refresh:
+
+- `src/lib/admin/email/templates/bar.ts` — `mobileHeroHtml()` + `.salkay-hero-desktop` hide/show (same structure as restaurant)
+- `src/lib/admin/email/templates/premium-shell.ts` — mobile hero CSS, gold gift rail (`#D5AA62`), cream gift copy, side-by-side signature lockup, solid gold card borders
+
+PR #1’s public-site navy/gold rewrite **conflicts** with Salih’s morning system (`/cozumler`, new `--sl-*` / `--hs-*` tokens, light header, royal-blue CTAs). That rewrite was **not** re-applied.
+
+### What this continuation did on top of current main
+
+1. Re-applied the missing bar + premium-shell email improvements.
+2. Incremental public polish only (no homepage-flow rewrite):
+   - Official transparent SALKAY lockup in header/footer (no reconstructed typed logo)
+   - Gold header bar, gold PageHero rule, gold project-card / empty-state rails, gold footer hairline
+   - Gold / cream tokens (`--c-gold`, `--c-cream`) added beside Salih’s existing blues
+3. Left alone: hero videos, `kay3dArchived = true`, `/admin`, Prisma/Neon/auth/env, restaurant HTML, `/cozumler` scene system, homepage section order.
+
+### PENDING (next overnight / morning)
+
+- Salih reviews **PR #2** (not #1). Leave it ready — **do not merge to main**.
+- PR #1 stays open as superseded (comment already points at #2) unless Salih closes it.
+- Dedicated 9:16 bar mobile hero is still the same asset as desktop (`/email/bar-kay-hero.jpg`). Restaurant already has a true 9:16 (`restaurant-hero-mobile-final.jpg`). Do not invent a new bar mobile artwork unless Salih supplies one.
+- Enable `OUTREACH_SEND_ENABLED` only if Salih explicitly asks to send.
+- Point salkay.com DNS at Vercel before switching image host.
+- Connect inbound email when ready.
+- Do **not** invent a homepage redesign, CRM rewrite, or another visual-system swap.
+
+---
+
 ## Project
 
 - **SALKAY** — public Turkish marketing site + internal **Outreach Mail Center**
 - **Stack:** Next.js **16.3.3** (App Router), React **19.2.8**, TypeScript, Tailwind **4**, Prisma **6.16.3**, Zod, bcryptjs
 - **Local folder:** the same existing `SalKay` directory (do not clone a second copy unless asked)
-- **Current branch:** `main`
+- **Current branch:** `main` is source of truth for the public visual system. Overnight work lives on `cursor/email-port-site-polish-798f`.
 - **GitHub remote:** `https://github.com/DMSMart24/salkay.git` (`origin`)
 - **Vercel:** existing project **`salkay`** under org **`projekts1`**
   - Project id (from local `.vercel/repo.json`, gitignored): `prj_7svltn7vFtHGIr77Mx11ArH5JrwY`
@@ -35,10 +80,12 @@ Repository shape (high level):
 - **URL:** https://salkay.vercel.app
 - **Public site URL in code:** `https://salkay.com` (`src/lib/site.ts`) — registrar DNS is still **not** serving this Next app; `/email/...` 404s on salkay.com
 - **Branch:** `main`
-- **Last application commit on origin/main at handoff start:** `5def48f970d05e7a2a96e2b513d30d431d169289`  
-  `SALKAY restaurant email uses final approved mobile hero`
-- **Last known production deploy of that commit:** `dpl_CX1KfMfjTGXwbQme5FgKELF3SJXS` — **READY**, aliased to https://salkay.vercel.app
-- Adding this handoff file does **not** require a new deploy.
+- **`origin/main` HEAD (do not rewind):** `b619561c02a3a8d7006a7b39c148106ebbc9f22a`  
+  `feat: refresh public site visual system` (Salih, 2026-08-30 08:51 UTC)
+- **Immediately before that:** `6749726` `feat: simplify homepage brand statement`
+- **Restaurant email on main before the visual refresh:** completed through `6285593` / earlier restaurant commits
+- **Last known production deploy mentioned in the prior handoff:** `dpl_CX1KfMfjTGXwbQme5FgKELF3SJXS` — **READY**, aliased to https://salkay.vercel.app (may predate Salih’s morning commits; do not assume production equals `b619561` until checked)
+- A handoff / PR commit does **not** require a new deploy unless Salih asks.
 
 ---
 
@@ -216,8 +263,9 @@ Implemented in `emailAssetBaseUrl()` — **do not use salkay.com for image asset
 |---|---|
 | Desktop scene (right column) | `/email/restaurant-hero-scene.jpg` |
 | Desktop landscape reference | `/email/restaurant-hero-banner.jpg` |
-| **Final mobile hero** | `/email/restaurant-hero-mobile-final.jpg` |
-| Transparent logo (hero/signature/footer) | `/email/salkay-logo-transparent.png` |
+| **Final restaurant mobile hero** | `/email/restaurant-hero-mobile-final.jpg` |
+| Bar desktop + current mobile | `/email/bar-kay-hero.jpg` (same file until a dedicated 9:16 exists) |
+| Transparent logo (hero/signature/footer + public chrome) | `/email/salkay-logo-transparent.png` |
 | Transparent logo 2x | `/email/salkay-logo-transparent-2x.png` |
 | KAY (CTA + signature) | `/email/kay-restaurant.png` |
 
@@ -245,6 +293,8 @@ Only paths that exist:
 ### Restaurant email
 
 - `src/lib/admin/email/templates/restaurant.ts`
+- `src/lib/admin/email/templates/bar.ts` — isolated bar source (`barPremiumSource()`, `<!-- salkay-email:bar -->`)
+- `src/lib/admin/email/templates/premium-shell.ts` — shared bar shell (not used by restaurant)
 - `src/lib/admin/email/assets.ts`
 - `src/lib/admin/email/context.ts`
 - `src/lib/admin/email/localize.ts`
@@ -397,44 +447,48 @@ A handoff commit does **not** require deploy.
 
 ## Current next step
 
-**Stopped Saturday 29 August 2026** after the restaurant email visual track.
+**Stopped Sunday 30 August 2026 (evening)** after porting leftover email work onto Salih’s current `main` and a small public-site identity polish.
 
 | Item | Status |
 |---|---|
-| Desktop landscape restaurant hero | **Completed**, on `main`, in production |
-| Personalized cream intro + gift mini-card | **Completed** (`7212301`), in production |
-| Final mobile 9:16 hero replacement | **Completed · committed · deployed** |
-| Commit | `5def48f970d05e7a2a96e2b513d30d431d169289` |
-| Deploy | `dpl_CX1KfMfjTGXwbQme5FgKELF3SJXS` READY on https://salkay.vercel.app |
+| Salih public visual refresh | **On `main`** · `b619561` · source of truth for the site |
+| Homepage brand statement | **On `main`** · `6749726` |
+| PR #1 public-site + email identity | **STALE / DIRTY** · do not merge · superseded by the new PR |
+| Bar desktop/mobile 9:16 structure | **Ported** onto current main in this continuation |
+| Premium-shell gold borders / gift rail / signature | **Ported** onto current main in this continuation |
+| Restaurant email | **Unchanged** (already complete; isolated from the shell) |
+| Official transparent lockup on public chrome | **This continuation** (header/footer) |
+| Incremental gold accents on generic inner pages | **This continuation** (PageHero, projects, blog empty, footer rule) |
 | Live outreach | **Intentionally disabled** |
 | Inbox sync | **Not connected** (known gap, not this task) |
 | salkay.com DNS for `/email` assets | **Pending** (assets stay on vercel.app) |
-
-There is **no unfinished restaurant-hero coding task** from this session.
+| Dedicated bar 9:16 mobile artwork | **Pending asset** — structure is ready; file is still `bar-kay-hero.jpg` |
 
 **PENDING (product / ops, not a broken deploy):**
 
+- Salih morning review of the **new** PR. Do not merge to `main`.
 - Enable `OUTREACH_SEND_ENABLED` only if Salih explicitly asks to send
 - Point salkay.com DNS at Vercel before switching image host
 - Connect inbound email when ready
-- Next *product* work is whatever Salih requests next — do not invent a redesign
+- Next *product* work is whatever Salih requests next — do not invent a redesign or overwrite `b619561`
 
 ---
 
 # SECOND CURSOR START HERE
 
 1. Open the **existing** SALKAY project folder (do not create a new repo).
-2. Read **this file** (`CURSOR_HANDOFF.md`) completely.
-3. Run `git status`.
-4. Run `git log -15 --oneline`.
-5. Inspect `package.json`.
-6. **Do not change anything yet.**
-7. Confirm local `main` matches `origin/main`.
+2. Read **this file** (`CURSOR_HANDOFF.md`) completely — especially **Overnight checkpoint**.
+3. Run `git fetch origin main` and confirm `origin/main` is still `b619561` **or newer Salih commits**. If Salih pushed again, start from that, not from this PR branch blindly.
+4. Run `git status` and `git log -15 --oneline`.
+5. **Ignore PR #1** (`cursor/public-site-email-premium-1bbd`) except as a reference for already-ported email diffs. It is DIRTY.
+6. Inspect `package.json`.
+7. **Do not change anything yet** until you know whether Salih merged the new PR or pushed more `main`.
 8. Never overwrite local work automatically.
 9. Never change env values.
 10. Never run destructive Prisma commands (`migrate reset`, db wipe, delete restaurant group).
 11. Continue from **Current next step** above.
+12. `kay3dArchived` stays `true`. No GLB/3D on the homepage. No live send.
 
 ### Suggested first prompt
 
-> Read CURSOR_HANDOFF.md completely and inspect the current repository state. Do not modify anything. Compare the handoff with git status, latest commits and the relevant SALKAY email/CRM files. Then tell me exactly where the previous Cursor stopped, what is already complete, what is pending, and whether the local repository matches origin/main.
+> Read CURSOR_HANDOFF.md completely and inspect the current repository state. Do not modify anything. Confirm origin/main HEAD, that PR #1 is still stale, and whether the email-port PR was merged. Then tell me exactly where the previous Cursor stopped, what is already complete, and what Salih still needs to review.
