@@ -134,7 +134,7 @@ function personalizedIntro() {
                     <table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin:0 0 18px;">
                       <tr><td width="50" height="2" bgcolor="#d5aa62" style="background:#d5aa62;font-size:0;line-height:0;">&nbsp;</td></tr>
                     </table>
-                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Web sitenizi sizin için kısaca inceledik.</p>
+                    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">{{analysisIntro}}</p>
                     <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">{{companyName}}’in dijital tarafta daha güçlü bir deneyim sunabileceği bazı geliştirme fırsatları gördük.</p>
                     <p style="margin:0 0 20px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:26px;color:#07111f;">Özellikle <strong style="font-weight:700;">kullanıcı deneyimi</strong>, <strong style="font-weight:700;">rezervasyon akışı</strong> ve <strong style="font-weight:700;">mobil görünüm</strong> tarafında yapılacak dokunuşlarla daha güçlü bir dijital deneyim oluşturulabilir.</p>
                     <table role="presentation" class="salkay-intro-gift" width="100%" cellpadding="0" cellspacing="0" bgcolor="#07111F" style="border-collapse:collapse;margin-top:20px;background-color:#07111F !important;border:1px solid #D5AA62 !important;border-radius:8px;">

@@ -8699,6 +8699,91 @@ header.site-header a.site-header-menu-cta-btn {
   background: color-mix(in srgb, #2ee59d 18%, transparent);
 }
 
+.admin-badge-web-very_good {
+  background: color-mix(in srgb, #38bdf8 20%, transparent);
+}
+
+.admin-badge-web-improvable {
+  background: color-mix(in srgb, #d5aa62 20%, transparent);
+}
+
+.admin-badge-web-weak,
+.admin-badge-web-very_weak,
+.admin-badge-web-average {
+  background: color-mix(in srgb, #d5aa62 14%, transparent);
+}
+
+.admin-badge-web-no_website,
+.admin-badge-web-not_verified,
+.admin-badge-web-unknown {
+  background: color-mix(in srgb, #16c7ff 10%, transparent);
+}
+
+.admin-badge-lead-aplus,
+.admin-badge-lead-a {
+  background: color-mix(in srgb, #d5aa62 22%, transparent);
+}
+
+.admin-badge-lead-b {
+  background: color-mix(in srgb, #16c7ff 16%, transparent);
+}
+
+.admin-badge-lead-c,
+.admin-badge-lead-d {
+  background: color-mix(in srgb, #8ea0b8 16%, transparent);
+}
+
+.admin-qual {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.admin-qual-score {
+  font-size: 1.15rem;
+  font-weight: 700;
+}
+
+.admin-qual-internal {
+  margin-left: 0.4rem;
+  letter-spacing: 0.08em;
+  font-size: 0.68rem;
+  color: var(--c-text-dim);
+}
+
+.admin-analysis-list {
+  margin: 0 0 1rem;
+  padding: 0;
+  list-style: none;
+  display: grid;
+  gap: 0.55rem;
+}
+
+.admin-analysis-list li {
+  display: grid;
+  grid-template-columns: 1.6rem 1fr;
+  gap: 0.55rem;
+}
+
+.admin-analysis-list span {
+  color: #16c7ff;
+  font-size: 0.75rem;
+  letter-spacing: 0.08em;
+}
+
+.admin-check-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+  gap: 0.45rem 1rem;
+  margin: 0 0 1rem;
+  padding: 0;
+  border: 0;
+}
+
+.admin-check-grid legend {
+  margin-bottom: 0.4rem;
+  color: var(--c-text-dim);
+  font-size: 0.75rem;
+}
+
 .admin-wizard {
   display: grid;
   gap: 1rem;

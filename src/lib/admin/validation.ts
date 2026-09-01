@@ -49,11 +49,48 @@ export const companySchema = z.object({
   outreachStatus: z.nativeEnum(OutreachStatus).optional(),
   websiteScore: z.preprocess(
     (value) => (value === "" || value === null || value === undefined ? undefined : value),
-    z.coerce.number().int().min(1).max(10).optional(),
+    z.coerce.number().min(0).max(10).optional(),
   ),
   websiteStatus: z.nativeEnum(WebsiteStatus).optional(),
   websiteIssues: optionalText,
   recommendedServices: optionalText,
+  leadScore: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(1).max(10).optional(),
+  ),
+  scoreDesign: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(0).max(2).optional(),
+  ),
+  scoreMobile: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(0).max(2).optional(),
+  ),
+  scoreUx: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(0).max(2).optional(),
+  ),
+  scoreConversion: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(0).max(2).optional(),
+  ),
+  scoreTechnical: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(0).max(1).optional(),
+  ),
+  scoreSeo: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(0).max(1).optional(),
+  ),
+  opportunities: z
+    .union([z.array(z.string()), z.string()])
+    .optional()
+    .transform((value) => {
+      if (!value) return [];
+      return Array.isArray(value) ? value : [value];
+    }),
+  salesPitch: optionalText,
+  instagram: optionalText,
   researchSource: optionalText,
   groupId: optionalText,
   priority: z.nativeEnum(CompanyPriority),
@@ -212,7 +249,7 @@ export const bulkSendSchema = z.object({
   groupId: optionalText,
   companyIds: z.array(z.string().min(1)).optional(),
   recipientMode: z.enum(["unsent", "selected", "score", "valid_email"]),
-  websiteScoreMin: z.coerce.number().int().min(1).max(10).optional(),
+  websiteScoreMin: z.coerce.number().min(1).max(10).optional(),
   templateId: z.string().min(1, "Şablon seçin."),
   allowResend: z.boolean().optional(),
   confirm: z.boolean().optional(),

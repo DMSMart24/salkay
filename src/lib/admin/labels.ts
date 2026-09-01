@@ -116,7 +116,13 @@ export const websiteStatusLabels: Record<WebsiteStatus, string> = {
   GOOD: "İyi",
   AVERAGE: "Orta",
   NEEDS_UPGRADE: "Güncellenmeli",
-  UNKNOWN: "Bilinmiyor",
+  UNKNOWN: "Henüz İncelenmedi",
+  NO_WEBSITE: "Web sitesi bulunamadı",
+  VERY_WEAK: "Çok Zayıf",
+  WEAK: "Zayıf",
+  IMPROVABLE: "Geliştirilebilir",
+  VERY_GOOD: "Çok İyi",
+  NOT_VERIFIED: "Henüz İncelenmedi",
 };
 
 export const suppressionSourceLabels: Record<string, string> = {

@@ -39,22 +39,36 @@ export async function listCompanies(input: CompanyListQuery) {
   if (input.priority) where.priority = input.priority;
   if (input.tag) where.tags = { has: input.tag };
 
-  const orderBy: Prisma.CompanyOrderByWithRelationInput = (() => {
-    switch (input.sort) {
-      case "name":
-        return { companyName: "asc" };
-      case "last":
-        return { lastContactedAt: "desc" };
-      case "followup":
-        return { nextFollowUpAt: "asc" };
-      case "priority":
-        return { priority: "desc" };
-      case "score":
-        return { websiteScore: "desc" };
-      default:
-        return { updatedAt: "desc" };
-    }
-  })();
+  const orderBy: Prisma.CompanyOrderByWithRelationInput | Prisma.CompanyOrderByWithRelationInput[] =
+    (() => {
+      switch (input.sort) {
+        case "name":
+          return { companyName: "asc" };
+        case "last":
+          return { lastContactedAt: "desc" };
+        case "followup":
+          return { nextFollowUpAt: "asc" };
+        case "priority":
+          return { priority: "desc" };
+        case "score":
+          return { websiteScore: "desc" };
+        case "leadScore":
+          return { leadScore: { sort: "desc", nulls: "last" } };
+        case "websiteScoreAsc":
+          return { websiteScore: { sort: "asc", nulls: "last" } };
+        case "reviewed":
+          return { researchedAt: { sort: "desc", nulls: "last" } };
+        case "unreviewed":
+          return { researchedAt: { sort: "asc", nulls: "first" } };
+        case "pipeline":
+          return [
+            { leadScore: { sort: "desc", nulls: "last" } },
+            { websiteScore: { sort: "asc", nulls: "last" } },
+          ];
+        default:
+          return { updatedAt: "desc" };
+      }
+    })();
 
   const [total, rows, filteredIds] = await Promise.all([
     prisma.company.count({ where }),
@@ -176,10 +190,21 @@ export async function findCompanyDuplicates(input: {
   contactEmail?: string | null;
   companyName?: string | null;
   city?: string | null;
+  phone?: string | null;
+  address?: string | null;
 }) {
   const prisma = getPrisma();
   const clauses: Prisma.CompanyWhereInput[] = [];
   if (input.domain) clauses.push({ domain: input.domain });
+  if (input.phone) {
+    clauses.push({ phone: { equals: input.phone, mode: "insensitive" } });
+  }
+  if (input.address && input.companyName) {
+    clauses.push({
+      companyName: { equals: input.companyName, mode: "insensitive" },
+      address: { equals: input.address, mode: "insensitive" },
+    });
+  }
   if (input.generalEmail) {
     clauses.push({ generalEmail: { equals: input.generalEmail, mode: "insensitive" } });
     clauses.push({

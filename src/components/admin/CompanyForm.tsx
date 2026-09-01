@@ -5,6 +5,7 @@ import type { Company, OutreachStatus, WebsiteStatus } from "@prisma/client";
 import { createCompanyAction, updateCompanyAction } from "@/app/admin/actions/crm";
 import { ActionMessage } from "@/components/admin/ActionMessage";
 import { outreachStatusLabels, websiteStatusLabels } from "@/lib/admin/labels";
+import { OPPORTUNITY_TYPES, opportunityLabels } from "@/lib/admin/qualification";
 import type { FormState } from "@/lib/admin/validation";
 
 const outreachStatuses = Object.keys(outreachStatusLabels) as OutreachStatus[];
@@ -69,6 +70,14 @@ export function CompanyForm({ mode, company, groups = [] }: CompanyFormProps) {
           <input name="phone" defaultValue={company?.phone ?? ""} />
         </label>
         <label>
+          Instagram
+          <input name="instagram" defaultValue={company?.instagram ?? ""} />
+        </label>
+        <label>
+          Adres
+          <input name="address" defaultValue={company?.address ?? ""} />
+        </label>
+        <label>
           Şehir
           <input name="city" defaultValue={company?.city ?? ""} />
         </label>
@@ -95,9 +104,21 @@ export function CompanyForm({ mode, company, groups = [] }: CompanyFormProps) {
           <input
             name="websiteScore"
             type="number"
+            min={0}
+            max={10}
+            step={0.1}
+            defaultValue={company?.websiteScore ?? ""}
+          />
+        </label>
+        <label>
+          Lead skoru (intern)
+          <input
+            name="leadScore"
+            type="number"
             min={1}
             max={10}
-            defaultValue={company?.websiteScore ?? ""}
+            step={0.1}
+            defaultValue={company?.leadScore ?? ""}
           />
         </label>
         <label>
@@ -118,7 +139,45 @@ export function CompanyForm({ mode, company, groups = [] }: CompanyFormProps) {
           Etiketler
           <input name="tags" placeholder="web, seo" defaultValue={company?.tags.join(", ") ?? ""} />
         </label>
+        <label>
+          Design / 2
+          <input name="scoreDesign" type="number" min={0} max={2} step={0.1} defaultValue={company?.scoreDesign ?? ""} />
+        </label>
+        <label>
+          Mobile / 2
+          <input name="scoreMobile" type="number" min={0} max={2} step={0.1} defaultValue={company?.scoreMobile ?? ""} />
+        </label>
+        <label>
+          UX / 2
+          <input name="scoreUx" type="number" min={0} max={2} step={0.1} defaultValue={company?.scoreUx ?? ""} />
+        </label>
+        <label>
+          Conversion / 2
+          <input name="scoreConversion" type="number" min={0} max={2} step={0.1} defaultValue={company?.scoreConversion ?? ""} />
+        </label>
+        <label>
+          Teknik / 1
+          <input name="scoreTechnical" type="number" min={0} max={1} step={0.1} defaultValue={company?.scoreTechnical ?? ""} />
+        </label>
+        <label>
+          SEO / 1
+          <input name="scoreSeo" type="number" min={0} max={1} step={0.1} defaultValue={company?.scoreSeo ?? ""} />
+        </label>
       </div>
+      <fieldset className="admin-check-grid">
+        <legend>Opportunity</legend>
+        {OPPORTUNITY_TYPES.map((type) => (
+          <label key={type} className="admin-check">
+            <input
+              type="checkbox"
+              name="opportunities"
+              value={type}
+              defaultChecked={company?.opportunities?.includes(type)}
+            />
+            {opportunityLabels[type]}
+          </label>
+        ))}
+      </fieldset>
       <label>
         Tespit edilen sorunlar
         <textarea
@@ -134,6 +193,10 @@ export function CompanyForm({ mode, company, groups = [] }: CompanyFormProps) {
           rows={2}
           defaultValue={company?.recommendedServices.join("\n") ?? ""}
         />
+      </label>
+      <label>
+        Recommended Pitch
+        <textarea name="salesPitch" rows={3} defaultValue={company?.salesPitch ?? ""} />
       </label>
       <label>
         Notlar

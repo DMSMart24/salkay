@@ -5,6 +5,7 @@ import {
   priorityLabels,
   websiteStatusLabels,
 } from "@/lib/admin/labels";
+import { leadPriorityLabels, type LeadPriorityBand } from "@/lib/admin/qualification";
 
 export function StatusBadge({ status }: { status: CompanyStatus }) {
   return (
@@ -34,6 +35,15 @@ export function PriorityBadge({ priority }: { priority: CompanyPriority }) {
   return (
     <span className={`admin-priority admin-priority-${priority.toLowerCase()}`}>
       {priorityLabels[priority]}
+    </span>
+  );
+}
+
+export function LeadPriorityBadge({ band }: { band: LeadPriorityBand }) {
+  const slug = band === "A+" ? "aplus" : band.toLowerCase();
+  return (
+    <span className={`admin-badge admin-badge-lead-${slug}`} title={leadPriorityLabels[band]}>
+      {band}
     </span>
   );
 }

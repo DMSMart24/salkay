@@ -34,6 +34,8 @@ export async function GET(
     "district",
     "outreachStatus",
     "websiteScore",
+    "leadScore",
+    "websiteStatus",
   ];
   const lines = [
     header.join(","),
@@ -48,6 +50,8 @@ export async function GET(
         company.district ?? "",
         company.outreachStatus,
         company.websiteScore ?? "",
+        company.leadScore ?? "",
+        company.websiteStatus,
       ]
         .map((value) => `"${String(value).replaceAll('"', '""')}"`)
         .join(","),

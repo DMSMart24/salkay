@@ -1,8 +1,15 @@
+import type { WebsiteStatus } from "@prisma/client";
 import { site } from "@/lib/site";
 import {
+  canShowCustomerWebsiteScore,
+  formatScore,
+  websiteScoreBand,
+  websiteScoreBandLabels,
+} from "@/lib/admin/qualification";
+import {
+  barCtaUrl,
   emailAssetUrl,
   emailAssets,
-  barCtaUrl,
   emailCtaUrl,
   isEmailCtaConfigured,
   restaurantCtaUrl,
@@ -26,6 +33,7 @@ export type CompanyEmailInput = {
   city?: string | null;
   district?: string | null;
   websiteScore?: number | null;
+  websiteStatus?: WebsiteStatus | null;
   websiteIssues?: string[] | null;
   recommendedServices?: string[] | null;
   contacts?: Array<{
@@ -45,7 +53,10 @@ export type CompanyEmailContext = {
   issueReviewNeeded: string[];
   recommendedServices: string[];
   hasScore: boolean;
+  noWebsite: boolean;
   scoreLabel: string;
+  scoreBandLabel: string;
+  analysisIntro: string;
   ctaConfigured: boolean;
   ctaUrl: string;
   phoneVisible: boolean;
@@ -104,8 +115,17 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
   const issueReviewNeeded = localizedIssues.filter((row) => !row.matched).map((row) => row.original);
   const recommendedInternal = cleanList(company.recommendedServices);
   const recommendedServices = localizeRecommendedServices(recommendedInternal, "tr").map((row) => row.customer);
-  const hasScore = typeof company.websiteScore === "number" && company.websiteScore >= 1 && company.websiteScore <= 10;
-  const scoreLabel = hasScore ? String(company.websiteScore) : "Analiz devam ediyor";
+  const noWebsite = company.websiteStatus === "NO_WEBSITE";
+  const hasScore = canShowCustomerWebsiteScore(company);
+  const formattedScore = hasScore ? formatScore(company.websiteScore) : null;
+  const scoreBandLabel =
+    hasScore && typeof company.websiteScore === "number"
+      ? websiteScoreBandLabels[websiteScoreBand(company.websiteScore)]
+      : "";
+  const analysisIntro = noWebsite
+    ? "Markanızın Google ve sosyal medya dışındaki bağımsız dijital varlığını güçlendirecek modern bir web deneyimi için önemli bir fırsat görüyoruz."
+    : "Web sitenizi sizin için kısaca inceledik.";
+  const scoreLabel = formattedScore ?? (noWebsite ? "Web sitesi bulunamadı" : "Analiz devam ediyor");
   const phone = salkayPhone();
   const ctaUrl = emailCtaUrl();
   const district = company.district?.trim() || "";
@@ -125,7 +145,9 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     city,
     location,
     industry: company.industry?.trim() || "",
-    score: hasScore ? String(company.websiteScore) : "",
+    score: formattedScore ?? "",
+    scoreBand: scoreBandLabel,
+    analysisIntro,
     issue_1: customerIssues[0] ?? "",
     issue_2: customerIssues[1] ?? "",
     issue_3: customerIssues[2] ?? "",
@@ -153,7 +175,10 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     issueReviewNeeded,
     recommendedServices,
     hasScore,
+    noWebsite,
     scoreLabel,
+    scoreBandLabel,
+    analysisIntro,
     ctaConfigured: isEmailCtaConfigured(),
     ctaUrl,
     phoneVisible: Boolean(phone),
@@ -277,22 +302,49 @@ export function developmentAreasHtml(issues: string[]) {
 }
 
 function scoreBarHtml(score: number) {
+  const filled = Math.max(0, Math.min(10, Math.round(score)));
   const cells = Array.from({ length: 10 }, (_, index) => {
-    const on = index < score;
+    const on = index < filled;
     return `<td width="18" height="6" bgcolor="${on ? "#16C7FF" : "#1A2B42"}" style="width:18px;height:6px;background:${on ? "#16C7FF" : "#1A2B42"};border-radius:3px;font-size:0;line-height:0;">&nbsp;</td>`;
   }).join(`<td width="5" style="width:5px;font-size:0;line-height:0;">&nbsp;</td>`);
   return `<table role="presentation" cellpadding="0" cellspacing="0" style="border-collapse:collapse;margin-top:12px;"><tr>${cells}</tr></table>`;
 }
 
+function noWebsiteScoreBlockHtml() {
+  const items = [
+    "Marka odaklı web sitesi",
+    "Mobil deneyim",
+    "Menü",
+    "Rezervasyon",
+    "WhatsApp",
+    "Google / Local SEO",
+  ];
+  const rows = items
+    .map(
+      (item) =>
+        `<tr><td style="padding:4px 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:20px;color:#FFFFFF;">• ${escapeHtml(item)}</td></tr>`,
+    )
+    .join("");
+  return `<p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">DİJİTAL FIRSAT</p>
+    <p style="margin:0 0 10px;font-family:Georgia,Times,serif;font-size:18px;line-height:24px;color:#FFFFFF;font-weight:700;">Bağımsız web sitesi bulunamadı</p>
+    <p style="margin:0 0 14px;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:21px;color:#B8C3D1;">Markanızın Google ve sosyal medya dışındaki bağımsız dijital varlığını güçlendirecek modern bir web deneyimi için önemli bir fırsat görüyoruz.</p>
+    <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">${rows}</table>`;
+}
+
 export function scoreBlockHtml(context: CompanyEmailContext) {
+  if (context.noWebsite) {
+    return noWebsiteScoreBlockHtml();
+  }
+
   if (!context.hasScore) {
-    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">GENEL SKOR</p>
+    return `<p style="margin:0;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">DİJİTAL WEB SKORU</p>
       <p style="margin:10px 0 0;font-family:Georgia,Times,serif;font-size:18px;line-height:24px;color:#D5AA62;font-weight:700;">Analiz devam ediyor</p>`;
   }
 
-  const score = Number(context.scoreLabel);
+  const numericScore = Number(context.scoreLabel.replace(",", "."));
   const scoreText = escapeHtml(context.scoreLabel);
-  return `<p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">GENEL SKOR</p>
+  const band = escapeHtml(context.scoreBandLabel || "Geliştirme potansiyeli");
+  return `<p style="margin:0 0 8px;font-family:Arial,Helvetica,sans-serif;font-size:11px;line-height:14px;letter-spacing:0.16em;text-transform:uppercase;color:#D5AA62;">DİJİTAL WEB SKORU</p>
     <table role="presentation" width="100%" cellpadding="0" cellspacing="0" style="border-collapse:collapse;">
       <tr>
         <td valign="middle">
@@ -304,13 +356,14 @@ export function scoreBlockHtml(context: CompanyEmailContext) {
         <td valign="middle" align="right" style="padding-left:10px;">
           <table role="presentation" cellpadding="0" cellspacing="0" align="right" style="border-collapse:collapse;">
             <tr>
-              <td bgcolor="#0B1729" style="background:#0B1729;border:1px solid #D5AA62;border-radius:4px;padding:5px 8px;font-family:Arial,Helvetica,sans-serif;font-size:9px;line-height:12px;letter-spacing:0.08em;text-transform:uppercase;color:#D5AA62;white-space:nowrap;">İYİLEŞTİRME FIRSATI</td>
+              <td bgcolor="#0B1729" style="background:#0B1729;border:1px solid #D5AA62;border-radius:4px;padding:5px 8px;font-family:Arial,Helvetica,sans-serif;font-size:9px;line-height:12px;letter-spacing:0.08em;text-transform:uppercase;color:#D5AA62;white-space:nowrap;">${band}</td>
             </tr>
           </table>
         </td>
       </tr>
     </table>
-    ${Number.isFinite(score) ? scoreBarHtml(score) : ""}`;
+    ${Number.isFinite(numericScore) ? scoreBarHtml(numericScore) : ""}
+    <p style="margin:14px 0 0;font-family:Arial,Helvetica,sans-serif;font-size:13px;line-height:21px;color:#B8C3D1;">Tasarım, mobil kullanıcı deneyimi, navigasyon, dönüşüm yapısı ve dijital görünürlük açısından gerçekleştirdiğimiz incelemede geliştirme potansiyeli tespit ettik.</p>`;
 }
 
 export function recommendedServicesChipsHtml(services: string[]) {

@@ -6,7 +6,8 @@ import type { CompanyStatus } from "@prisma/client";
 import { recordActivity } from "@/lib/admin/activity";
 import { companyStatusLabels } from "@/lib/admin/labels";
 import { normalizeDomain, normalizeEmail, normalizeWebsite, splitTags } from "@/lib/admin/normalize";
-import { parseStringList } from "@/lib/admin/outreach";
+import { parseOpportunities, parseStringList } from "@/lib/admin/outreach";
+import { companyPriorityFromLeadScore, sanitizeQualificationWrite } from "@/lib/admin/qualification";
 import { getPrisma } from "@/lib/admin/prisma";
 import { findCompanyDuplicates } from "@/lib/admin/queries";
 import { requireAdmin } from "@/lib/admin/session";
@@ -48,6 +49,16 @@ function companyPayload(formData: FormData, confirmDuplicate: boolean) {
     websiteStatus: formData.get("websiteStatus") || "UNKNOWN",
     websiteIssues: formData.get("websiteIssues") || undefined,
     recommendedServices: formData.get("recommendedServices") || undefined,
+    leadScore: formData.get("leadScore") || undefined,
+    scoreDesign: formData.get("scoreDesign") || undefined,
+    scoreMobile: formData.get("scoreMobile") || undefined,
+    scoreUx: formData.get("scoreUx") || undefined,
+    scoreConversion: formData.get("scoreConversion") || undefined,
+    scoreTechnical: formData.get("scoreTechnical") || undefined,
+    scoreSeo: formData.get("scoreSeo") || undefined,
+    opportunities: formData.getAll("opportunities"),
+    salesPitch: formData.get("salesPitch") || undefined,
+    instagram: formData.get("instagram") || undefined,
     researchSource: formData.get("researchSource") || undefined,
     groupId: formData.get("groupId") || undefined,
     priority: formData.get("priority") || "MEDIUM",
@@ -70,11 +81,25 @@ export async function createCompanyAction(
   const website = normalizeWebsite(parsed.data.website);
   const domain = normalizeDomain(parsed.data.domain || parsed.data.website);
   const generalEmail = normalizeEmail(parsed.data.generalEmail);
+  const qualification = sanitizeQualificationWrite({
+    websiteStatus: parsed.data.websiteStatus,
+    websiteScore: parsed.data.websiteScore,
+    scoreDesign: parsed.data.scoreDesign,
+    scoreMobile: parsed.data.scoreMobile,
+    scoreUx: parsed.data.scoreUx,
+    scoreConversion: parsed.data.scoreConversion,
+    scoreTechnical: parsed.data.scoreTechnical,
+    scoreSeo: parsed.data.scoreSeo,
+    leadScore: parsed.data.leadScore,
+    opportunities: parseOpportunities(parsed.data.opportunities),
+  });
   const duplicates = await findCompanyDuplicates({
     domain,
     generalEmail,
     companyName: parsed.data.companyName,
     city: parsed.data.city,
+    phone: parsed.data.phone,
+    address: parsed.data.address,
   });
 
   if (duplicates.length > 0 && !parsed.data.confirmDuplicate) {
@@ -103,14 +128,33 @@ export async function createCompanyAction(
         notes: parsed.data.notes,
         status: parsed.data.status,
         outreachStatus: parsed.data.outreachStatus ?? "NEW",
-        websiteScore: parsed.data.websiteScore ?? null,
-        websiteStatus: parsed.data.websiteStatus ?? "UNKNOWN",
-        websiteIssues: parseStringList(parsed.data.websiteIssues),
+        websiteScore: qualification.websiteScore,
+        websiteStatus: qualification.websiteStatus,
+        websiteIssues: parseStringList(parsed.data.websiteIssues).slice(0, 4),
         recommendedServices: parseStringList(parsed.data.recommendedServices),
+        leadScore: qualification.leadScore,
+        scoreDesign: qualification.scoreDesign,
+        scoreMobile: qualification.scoreMobile,
+        scoreUx: qualification.scoreUx,
+        scoreConversion: qualification.scoreConversion,
+        scoreTechnical: qualification.scoreTechnical,
+        scoreSeo: qualification.scoreSeo,
+        opportunities: qualification.opportunities,
+        salesPitch: parsed.data.salesPitch,
+        instagram: parsed.data.instagram,
         researchSource: parsed.data.researchSource,
-        researchedAt: parsed.data.researchSource || parsed.data.websiteScore ? new Date() : null,
+        researchedAt:
+          parsed.data.researchSource ||
+          qualification.websiteScore != null ||
+          qualification.leadScore != null ||
+          qualification.websiteStatus !== "UNKNOWN"
+            ? new Date()
+            : null,
         groupId: parsed.data.groupId,
-        priority: parsed.data.priority,
+        priority:
+          qualification.leadScore != null
+            ? companyPriorityFromLeadScore(qualification.leadScore)
+            : parsed.data.priority,
         tags: splitTags(parsed.data.tags),
         assignedToId: session.userId,
       },
@@ -142,6 +186,19 @@ export async function updateCompanyAction(
     return { error: parsed.success ? "Firma bulunamadı." : parsed.error.issues[0]?.message };
   }
 
+  const qualification = sanitizeQualificationWrite({
+    websiteStatus: parsed.data.websiteStatus,
+    websiteScore: parsed.data.websiteScore,
+    scoreDesign: parsed.data.scoreDesign,
+    scoreMobile: parsed.data.scoreMobile,
+    scoreUx: parsed.data.scoreUx,
+    scoreConversion: parsed.data.scoreConversion,
+    scoreTechnical: parsed.data.scoreTechnical,
+    scoreSeo: parsed.data.scoreSeo,
+    leadScore: parsed.data.leadScore,
+    opportunities: parseOpportunities(parsed.data.opportunities),
+  });
+
   await getPrisma().$transaction(async (tx) => {
     await tx.company.update({
       where: { id },
@@ -160,14 +217,33 @@ export async function updateCompanyAction(
         notes: parsed.data.notes,
         status: parsed.data.status,
         outreachStatus: parsed.data.outreachStatus ?? "NEW",
-        websiteScore: parsed.data.websiteScore ?? null,
-        websiteStatus: parsed.data.websiteStatus ?? "UNKNOWN",
-        websiteIssues: parseStringList(parsed.data.websiteIssues),
+        websiteScore: qualification.websiteScore,
+        websiteStatus: qualification.websiteStatus,
+        websiteIssues: parseStringList(parsed.data.websiteIssues).slice(0, 4),
         recommendedServices: parseStringList(parsed.data.recommendedServices),
+        leadScore: qualification.leadScore,
+        scoreDesign: qualification.scoreDesign,
+        scoreMobile: qualification.scoreMobile,
+        scoreUx: qualification.scoreUx,
+        scoreConversion: qualification.scoreConversion,
+        scoreTechnical: qualification.scoreTechnical,
+        scoreSeo: qualification.scoreSeo,
+        opportunities: qualification.opportunities,
+        salesPitch: parsed.data.salesPitch,
+        instagram: parsed.data.instagram,
         researchSource: parsed.data.researchSource,
-        researchedAt: parsed.data.researchSource || parsed.data.websiteScore ? new Date() : null,
+        researchedAt:
+          parsed.data.researchSource ||
+          qualification.websiteScore != null ||
+          qualification.leadScore != null ||
+          qualification.websiteStatus !== "UNKNOWN"
+            ? new Date()
+            : null,
         groupId: parsed.data.groupId ?? null,
-        priority: parsed.data.priority,
+        priority:
+          qualification.leadScore != null
+            ? companyPriorityFromLeadScore(qualification.leadScore)
+            : parsed.data.priority,
         tags: splitTags(parsed.data.tags),
       },
     });

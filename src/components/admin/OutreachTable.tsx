@@ -8,9 +8,10 @@ import {
   moveCompaniesToGroupForm,
   suppressSelectedForm,
 } from "@/app/admin/actions/outreach";
-import { OutreachBadge } from "@/components/admin/StatusBadge";
+import { LeadPriorityBadge, OutreachBadge, WebsiteBadge } from "@/components/admin/StatusBadge";
 import { formatDate } from "@/lib/admin/format";
 import { outreachStatusLabels } from "@/lib/admin/labels";
+import { formatScore, leadPriorityBand } from "@/lib/admin/qualification";
 
 type Row = Company & {
   contacts: Contact[];
@@ -103,11 +104,12 @@ export function OutreachTable({ rows, filteredIds, groups, emailHref = "/admin/e
               />
             </th>
             <th>Firma</th>
+            <th>İlçe</th>
             <th>Website</th>
-            <th>E-posta</th>
-            <th>Telefon</th>
-            <th>Bölge</th>
-            <th>Website Skoru</th>
+            <th>Website Score</th>
+            <th>Lead Score</th>
+            <th>Priority</th>
+            <th>Kontakt</th>
             <th>Durum</th>
             <th>Son E-posta</th>
             <th>Yanıt</th>
@@ -141,19 +143,34 @@ export function OutreachTable({ rows, filteredIds, groups, emailHref = "/admin/e
                   </Link>
                   <p>{company.group?.name || company.industry || "—"}</p>
                 </td>
+                <td>{company.district || "—"}</td>
                 <td>
                   {company.website ? (
                     <a href={company.website} target="_blank" rel="noreferrer">
                       {company.domain || company.website}
                     </a>
                   ) : (
+                    <WebsiteBadge status={company.websiteStatus} />
+                  )}
+                </td>
+                <td>
+                  {company.websiteStatus === "NO_WEBSITE"
+                    ? "—"
+                    : formatScore(company.websiteScore)
+                      ? `${formatScore(company.websiteScore)} / 10`
+                      : "—"}
+                </td>
+                <td>{formatScore(company.leadScore) ? `${formatScore(company.leadScore)} / 10` : "—"}</td>
+                <td>
+                  {typeof company.leadScore === "number" ? (
+                    <LeadPriorityBadge band={leadPriorityBand(company.leadScore)} />
+                  ) : (
                     "—"
                   )}
                 </td>
-                <td>{contact?.email || company.generalEmail || "—"}</td>
-                <td>{company.phone || "—"}</td>
-                <td>{[company.district, company.city].filter(Boolean).join(", ") || "—"}</td>
-                <td>{company.websiteScore ?? "—"}</td>
+                <td>
+                  {contact?.email || company.generalEmail || company.phone || "—"}
+                </td>
                 <td>
                   <OutreachBadge status={company.outreachStatus} />
                 </td>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { OutreachStatus, WebsiteStatus } from "@prisma/client";
 import { OutreachTable } from "@/components/admin/OutreachTable";
 import { outreachStatusLabels, websiteStatusLabels } from "@/lib/admin/labels";
+import { leadPriorityLabels, type LeadPriorityBand } from "@/lib/admin/qualification";
 import { listCompanies, listFilterOptions } from "@/lib/admin/queries";
 
 export const dynamic = "force-dynamic";
@@ -14,6 +15,7 @@ type Search = {
   district?: string;
   websiteStatus?: string;
   websiteScore?: string;
+  leadPriority?: string;
   outreachStatus?: string;
   email?: string;
   sort?: string;
@@ -34,6 +36,7 @@ export default async function CompaniesPage({
     district: params.district,
     websiteStatus: (params.websiteStatus || "") as WebsiteStatus | "",
     websiteScoreMin: params.websiteScore ? Number(params.websiteScore) : undefined,
+    leadPriority: (params.leadPriority || "") as LeadPriorityBand | "",
     outreachStatus: (params.outreachStatus || "") as OutreachStatus | "",
     hasEmail: (params.email || "") as "yes" | "no" | "",
     sort: params.sort,
@@ -106,6 +109,14 @@ export default async function CompaniesPage({
             </option>
           ))}
         </select>
+        <select name="leadPriority" defaultValue={params.leadPriority ?? ""}>
+          <option value="">Lead Priority</option>
+          {(Object.keys(leadPriorityLabels) as LeadPriorityBand[]).map((band) => (
+            <option key={band} value={band}>
+              {band}
+            </option>
+          ))}
+        </select>
         <select name="outreachStatus" defaultValue={params.outreachStatus ?? ""}>
           <option value="">Durum</option>
           {Object.entries(outreachStatusLabels).map(([value, label]) => (
@@ -121,6 +132,11 @@ export default async function CompaniesPage({
         </select>
         <select name="sort" defaultValue={params.sort ?? "updated"}>
           <option value="updated">Son güncelleme</option>
+          <option value="pipeline">Pipeline (Lead yüksek / Web düşük)</option>
+          <option value="leadScore">Highest Lead Score</option>
+          <option value="websiteScoreAsc">Lowest Website Score</option>
+          <option value="reviewed">Recently Reviewed</option>
+          <option value="unreviewed">Unreviewed</option>
           <option value="name">Ad</option>
           <option value="last">Son iletişim</option>
           <option value="score">Website skoru</option>

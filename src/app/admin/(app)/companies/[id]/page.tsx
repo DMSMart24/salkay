@@ -7,10 +7,16 @@ import {
 import { CompanyForm } from "@/components/admin/CompanyForm";
 import { ComposeEmail } from "@/components/admin/ComposeEmail";
 import { NoteForm } from "@/components/admin/SimpleForms";
-import { OutreachBadge, WebsiteBadge } from "@/components/admin/StatusBadge";
+import { LeadPriorityBadge, OutreachBadge, WebsiteBadge } from "@/components/admin/StatusBadge";
 import { formatDate, formatDateTime } from "@/lib/admin/format";
-import { directionLabels, emailStatusLabels } from "@/lib/admin/labels";
+import { directionLabels, emailStatusLabels, websiteStatusLabels } from "@/lib/admin/labels";
 import { isOutreachSendEnabled } from "@/lib/admin/outreach";
+import {
+  formatScore,
+  leadPriorityBand,
+  opportunityLabels,
+  isOpportunityType,
+} from "@/lib/admin/qualification";
 import { getPrisma } from "@/lib/admin/prisma";
 import { getCompanyDetail } from "@/lib/admin/queries";
 
@@ -112,6 +118,10 @@ export default async function CompanyDetailPage({
               <dd>{company.phone || "—"}</dd>
             </div>
             <div>
+              <dt>Instagram</dt>
+              <dd>{company.instagram || "—"}</dd>
+            </div>
+            <div>
               <dt>Konum</dt>
               <dd>{[company.district, company.city, company.country].filter(Boolean).join(", ") || "—"}</dd>
             </div>
@@ -119,24 +129,86 @@ export default async function CompanyDetailPage({
         </section>
 
         <section className="admin-panel">
-          <h2>Website Analizi</h2>
-          <dl className="admin-dl">
+          <h2>Lead Qualifizierung</h2>
+          <dl className="admin-dl admin-qual">
             <div>
-              <dt>Skor</dt>
-              <dd>{company.websiteScore ?? "—"}</dd>
+              <dt>Website Score</dt>
+              <dd className="admin-qual-score">
+                {company.websiteStatus === "NO_WEBSITE"
+                  ? "—"
+                  : formatScore(company.websiteScore)
+                    ? `${formatScore(company.websiteScore)} / 10`
+                    : "—"}
+              </dd>
             </div>
             <div>
-              <dt>Durum</dt>
+              <dt>
+                Lead Score <span className="admin-qual-internal">INTERN</span>
+              </dt>
+              <dd className="admin-qual-score">
+                {formatScore(company.leadScore) ? `${formatScore(company.leadScore)} / 10` : "—"}
+              </dd>
+            </div>
+            <div>
+              <dt>Website</dt>
               <dd>
                 <WebsiteBadge status={company.websiteStatus} />
               </dd>
             </div>
             <div>
-              <dt>Kaynak</dt>
-              <dd>{company.researchSource || "—"}</dd>
+              <dt>Opportunity</dt>
+              <dd>
+                {company.opportunities.filter(isOpportunityType).map((item) => opportunityLabels[item]).join(", ") ||
+                  "—"}
+              </dd>
+            </div>
+            <div>
+              <dt>Priority</dt>
+              <dd>
+                {typeof company.leadScore === "number" ? (
+                  <LeadPriorityBadge band={leadPriorityBand(company.leadScore)} />
+                ) : (
+                  "—"
+                )}
+              </dd>
+            </div>
+            <div>
+              <dt>Last reviewed</dt>
+              <dd>{company.researchedAt ? formatDate(company.researchedAt) : "—"}</dd>
             </div>
           </dl>
-          <p>{company.websiteIssues.join(", ") || "Tespit edilen sorun yok."}</p>
+          {company.websiteStatus !== "NO_WEBSITE" &&
+          (company.scoreDesign != null ||
+            company.scoreMobile != null ||
+            company.scoreUx != null ||
+            company.scoreConversion != null ||
+            company.scoreTechnical != null ||
+            company.scoreSeo != null) ? (
+            <p className="admin-help">
+              Design {formatScore(company.scoreDesign) ?? "—"} / 2 · Mobile{" "}
+              {formatScore(company.scoreMobile) ?? "—"} / 2 · UX {formatScore(company.scoreUx) ?? "—"} / 2 ·
+              Conversion {formatScore(company.scoreConversion) ?? "—"} / 2 · Technik{" "}
+              {formatScore(company.scoreTechnical) ?? "—"} / 1 · SEO {formatScore(company.scoreSeo) ?? "—"} / 1
+            </p>
+          ) : null}
+          {company.websiteStatus === "NO_WEBSITE" ? (
+            <p className="admin-help">{websiteStatusLabels.NO_WEBSITE}</p>
+          ) : null}
+          <h3>Website Analysis</h3>
+          {company.websiteIssues.length === 0 ? (
+            <p className="admin-help">Henüz analiz noktası yok.</p>
+          ) : (
+            <ol className="admin-analysis-list">
+              {company.websiteIssues.slice(0, 4).map((issue, index) => (
+                <li key={`${issue}-${index}`}>
+                  <span>{String(index + 1).padStart(2, "0")}</span>
+                  {issue}
+                </li>
+              ))}
+            </ol>
+          )}
+          <h3>Recommended Pitch</h3>
+          <p>{company.salesPitch || "—"}</p>
           <p className="admin-help">
             Önerilen hizmetler: {company.recommendedServices.join(", ") || "—"}
           </p>

@@ -63,6 +63,12 @@ enum WebsiteStatus {
   AVERAGE
   NEEDS_UPGRADE
   UNKNOWN
+  NO_WEBSITE
+  VERY_WEAK
+  WEAK
+  IMPROVABLE
+  VERY_GOOD
+  NOT_VERIFIED
 }
 
 enum TaskType {
@@ -192,10 +198,20 @@ model Company {
   notes           String?
   status          CompanyStatus    @default(NEW)
   outreachStatus  OutreachStatus   @default(NEW)
-  websiteScore    Int?
+  websiteScore    Float?
   websiteStatus   WebsiteStatus    @default(UNKNOWN)
   websiteIssues   String[]
   recommendedServices String[]
+  leadScore       Float?
+  scoreDesign     Float?
+  scoreMobile     Float?
+  scoreUx         Float?
+  scoreConversion Float?
+  scoreTechnical  Float?
+  scoreSeo        Float?
+  opportunities   String[]         @default([])
+  salesPitch      String?
+  instagram       String?
   researchSource  String?
   researchedAt    DateTime?
   groupId         String?
@@ -228,6 +244,8 @@ model Company {
   @@index([groupId])
   @@index([websiteStatus])
   @@index([district])
+  @@index([leadScore])
+  @@index([researchedAt])
 }
 
 model Contact {

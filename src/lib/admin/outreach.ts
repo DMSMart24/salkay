@@ -2,6 +2,12 @@ import type { OutreachStatus, Prisma, WebsiteStatus } from "@prisma/client";
 import { normalizeEmail, isValidEmail } from "@/lib/admin/normalize";
 import { getPrisma } from "@/lib/admin/prisma";
 import { isAddressSuppressed } from "@/lib/admin/suppression";
+import {
+  isOpportunityType,
+  leadPriorityRange,
+  type LeadPriorityBand,
+  type OpportunityType,
+} from "@/lib/admin/qualification";
 
 export const DEFAULT_BATCH_SIZE = 20;
 export const MAX_BATCH_SIZE = 50;
@@ -29,6 +35,7 @@ export type CompanyFilterInput = {
   country?: string;
   websiteStatus?: WebsiteStatus | "";
   websiteScoreMin?: number;
+  leadPriority?: LeadPriorityBand | "";
   outreachStatus?: OutreachStatus | "";
   hasEmail?: "yes" | "no" | "";
   archived?: boolean;
@@ -81,6 +88,9 @@ export function companyFilterWhere(input: CompanyFilterInput): Prisma.CompanyWhe
   if (input.websiteStatus) where.websiteStatus = input.websiteStatus;
   if (typeof input.websiteScoreMin === "number" && Number.isFinite(input.websiteScoreMin)) {
     where.websiteScore = { gte: input.websiteScoreMin };
+  }
+  if (input.leadPriority) {
+    where.leadScore = leadPriorityRange(input.leadPriority);
   }
   if (input.outreachStatus) where.outreachStatus = input.outreachStatus;
   if (input.hasEmail === "yes") {
@@ -169,22 +179,26 @@ export function parseStringList(value: unknown): string[] {
   return [];
 }
 
-export function parseWebsiteScore(value: unknown) {
+export function parseWebsiteScore(value: unknown, max = 10) {
   if (value === null || value === undefined || value === "") {
     return null;
   }
-  const score = Number(value);
-  if (!Number.isInteger(score) || score < 1 || score > 10) {
+  const score = Number(String(value).replace(",", "."));
+  if (!Number.isFinite(score) || score < 0 || score > max) {
     return undefined;
   }
-  return score;
+  return Math.round(score * 10) / 10;
+}
+
+export function parseOpportunities(value: unknown): OpportunityType[] {
+  return parseStringList(value).filter(isOpportunityType);
 }
 
 export function parseWebsiteStatus(value: unknown): WebsiteStatus | undefined {
   if (value === null || value === undefined || value === "") {
     return "UNKNOWN";
   }
-  switch (String(value).trim().toUpperCase()) {
+  switch (String(value).trim().toUpperCase().replace(/\s+/g, "_")) {
     case "GOOD":
       return "GOOD";
     case "AVERAGE":
@@ -193,6 +207,19 @@ export function parseWebsiteStatus(value: unknown): WebsiteStatus | undefined {
       return "NEEDS_UPGRADE";
     case "UNKNOWN":
       return "UNKNOWN";
+    case "NO_WEBSITE":
+    case "SOCIAL_ONLY":
+      return "NO_WEBSITE";
+    case "VERY_WEAK":
+      return "VERY_WEAK";
+    case "WEAK":
+      return "WEAK";
+    case "IMPROVABLE":
+      return "IMPROVABLE";
+    case "VERY_GOOD":
+      return "VERY_GOOD";
+    case "NOT_VERIFIED":
+      return "NOT_VERIFIED";
     default:
       return undefined;
   }

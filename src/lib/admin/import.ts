@@ -5,7 +5,13 @@ import {
   normalizeEmail,
   normalizeWebsite,
 } from "@/lib/admin/normalize";
-import { parseStringList, parseWebsiteScore, parseWebsiteStatus } from "@/lib/admin/outreach";
+import {
+  parseOpportunities,
+  parseStringList,
+  parseWebsiteScore,
+  parseWebsiteStatus,
+} from "@/lib/admin/outreach";
+import { sanitizeQualificationWrite } from "@/lib/admin/qualification";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export type ResearchImportRow = {
@@ -22,6 +28,17 @@ export type ResearchImportRow = {
   websiteStatus?: WebsiteStatus;
   websiteIssues?: string[];
   recommendedServices?: string[];
+  leadScore?: number | null;
+  scoreDesign?: number | null;
+  scoreMobile?: number | null;
+  scoreUx?: number | null;
+  scoreConversion?: number | null;
+  scoreTechnical?: number | null;
+  scoreSeo?: number | null;
+  opportunities?: string[];
+  salesPitch?: string | null;
+  instagram?: string | null;
+  address?: string | null;
   researchSource?: string | null;
 };
 
@@ -67,14 +84,30 @@ export function parseResearchRow(raw: unknown, index: number): ParsedImportRow {
   const website = text(record.website);
   const email = text(record.email);
   const score = parseWebsiteScore(record.websiteScore);
+  const leadScore = parseWebsiteScore(record.leadScore);
   const websiteStatus = parseWebsiteStatus(record.websiteStatus);
+  const qualification = sanitizeQualificationWrite({
+    websiteStatus,
+    websiteScore: score === undefined ? null : score,
+    leadScore: leadScore === undefined ? null : leadScore,
+    scoreDesign: parseWebsiteScore(record.scoreDesign, 2),
+    scoreMobile: parseWebsiteScore(record.scoreMobile, 2),
+    scoreUx: parseWebsiteScore(record.scoreUx, 2),
+    scoreConversion: parseWebsiteScore(record.scoreConversion, 2),
+    scoreTechnical: parseWebsiteScore(record.scoreTechnical, 1),
+    scoreSeo: parseWebsiteScore(record.scoreSeo, 1),
+    opportunities: parseOpportunities(record.opportunities),
+  });
   const errors: string[] = [];
 
   if (!companyName) {
     errors.push("Firma adı gerekli");
   }
   if (record.websiteScore !== undefined && record.websiteScore !== null && record.websiteScore !== "" && score === undefined) {
-    errors.push("websiteScore 1–10 olmalı");
+    errors.push("websiteScore 0–10 olmalı");
+  }
+  if (record.leadScore !== undefined && record.leadScore !== null && record.leadScore !== "" && leadScore === undefined) {
+    errors.push("leadScore 1–10 olmalı");
   }
   if (record.websiteStatus !== undefined && record.websiteStatus !== null && record.websiteStatus !== "" && !websiteStatus) {
     errors.push("websiteStatus geçersiz");
@@ -101,10 +134,21 @@ export function parseResearchRow(raw: unknown, index: number): ParsedImportRow {
     city: text(record.city),
     district: text(record.district),
     country: text(record.country),
-    websiteScore: score === undefined ? null : score,
-    websiteStatus: websiteStatus ?? "UNKNOWN",
-    websiteIssues: parseStringList(record.websiteIssues),
+    websiteScore: qualification.websiteScore,
+    websiteStatus: qualification.websiteStatus,
+    websiteIssues: parseStringList(record.websiteIssues).slice(0, 4),
     recommendedServices: parseStringList(record.recommendedServices),
+    leadScore: qualification.leadScore,
+    scoreDesign: qualification.scoreDesign,
+    scoreMobile: qualification.scoreMobile,
+    scoreUx: qualification.scoreUx,
+    scoreConversion: qualification.scoreConversion,
+    scoreTechnical: qualification.scoreTechnical,
+    scoreSeo: qualification.scoreSeo,
+    opportunities: qualification.opportunities,
+    salesPitch: text(record.salesPitch),
+    instagram: text(record.instagram),
+    address: text(record.address),
     researchSource: text(record.researchSource),
     errors,
   };
