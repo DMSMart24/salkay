@@ -3,7 +3,8 @@
 import { revalidatePath } from "next/cache";
 import { randomUUID } from "node:crypto";
 import { recordActivity } from "@/lib/admin/activity";
-import { getEmailFrom, getEmailProvider } from "@/lib/admin/email/provider";
+import { OUTREACH_FROM_DISPLAY_NAME } from "@/lib/admin/email/from";
+import { getEmailFrom, getEmailProvider, getOutreachFrom } from "@/lib/admin/email/provider";
 import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import { looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import {
@@ -112,7 +113,7 @@ export async function composeEmailAction(
           contactId: contact?.id,
           threadId: randomUUID(),
           direction: "OUTBOUND",
-          fromAddress: getEmailFrom() || session.email,
+          fromAddress: getOutreachFrom() || getEmailFrom() || session.email,
           toAddress: parsed.data.to,
           cc: parsed.data.cc,
           subject: mergedSubject,
@@ -146,6 +147,7 @@ export async function composeEmailAction(
     subject: mergedSubject,
     bodyText: mergedBody,
     bodyHtml: mergedHtml,
+    fromName: OUTREACH_FROM_DISPLAY_NAME,
   });
 
   if (!sent.ok) {
@@ -160,7 +162,7 @@ export async function composeEmailAction(
         threadId: sent.threadId || sent.providerMessageId,
         providerMessageId: sent.providerMessageId,
         direction: "OUTBOUND",
-        fromAddress: getEmailFrom() || session.email,
+        fromAddress: getOutreachFrom() || getEmailFrom() || session.email,
         toAddress: parsed.data.to,
         cc: parsed.data.cc,
         subject: mergedSubject,
@@ -250,6 +252,7 @@ export async function sendTestEmailAction(
     subject: rendered.subject,
     bodyText: rendered.bodyText,
     bodyHtml: rendered.bodyHtml,
+    fromName: OUTREACH_FROM_DISPLAY_NAME,
   });
   if (!sent.ok) {
     return { error: sent.error };

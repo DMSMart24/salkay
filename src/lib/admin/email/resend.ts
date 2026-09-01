@@ -1,3 +1,4 @@
+import { applyFromDisplayName } from "@/lib/admin/email/from";
 import type { EmailProvider, EmailSendInput, InboxSyncResult } from "@/lib/admin/email/types";
 
 type ResendResponse = {
@@ -24,7 +25,7 @@ export class ResendEmailProvider implements EmailProvider {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        from: input.from || this.from,
+        from: resolveResendFrom(input.from || this.from, input.fromName),
         to: [input.to],
         cc: input.cc
           ? input.cc
@@ -69,4 +70,9 @@ export class ResendEmailProvider implements EmailProvider {
   async getMessage() {
     return null;
   }
+}
+
+function resolveResendFrom(from: string, fromName?: string) {
+  if (!fromName?.trim()) return from;
+  return applyFromDisplayName(from, fromName.trim());
 }

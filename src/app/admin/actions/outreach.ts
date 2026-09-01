@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { randomUUID } from "node:crypto";
 import type { OutreachStatus } from "@prisma/client";
 import { recordActivity } from "@/lib/admin/activity";
-import { getEmailFrom, getEmailProvider } from "@/lib/admin/email/provider";
+import { OUTREACH_FROM_DISPLAY_NAME } from "@/lib/admin/email/from";
+import { getEmailFrom, getEmailProvider, getOutreachFrom } from "@/lib/admin/email/provider";
 import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import { normalizeEmail } from "@/lib/admin/normalize";
 import {
@@ -348,7 +349,7 @@ export async function queueBulkSendAction(
           contactId: contact?.id,
           threadId: randomUUID(),
           direction: "OUTBOUND",
-          fromAddress: getEmailFrom() || session.email,
+          fromAddress: getOutreachFrom() || getEmailFrom() || session.email,
           toAddress: eligibility.email,
           subject: recipient.subject,
           bodyText: recipient.body,
@@ -368,6 +369,7 @@ export async function queueBulkSendAction(
           subject: recipient.subject,
           bodyText: recipient.body,
           bodyHtml: recipient.bodyHtml,
+          fromName: OUTREACH_FROM_DISPLAY_NAME,
         });
         if (sent.ok) {
           await tx.emailMessage.update({

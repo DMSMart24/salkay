@@ -5,6 +5,7 @@ export type EmailSendInput = {
   bodyText: string;
   bodyHtml?: string;
   from?: string;
+  fromName?: string;
 };
 
 export type EmailSendResult =
