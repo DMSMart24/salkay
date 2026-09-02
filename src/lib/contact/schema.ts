@@ -24,6 +24,7 @@ export const contactInquirySchema = z
     phone: optionalText(40),
     service: z.string().trim().max(80).optional(),
     projectType: z.string().trim().max(80).optional(),
+    package: optionalText(40),
     message: z.string().trim().min(10).max(4000),
     website: optionalText(200),
   })
@@ -49,6 +50,7 @@ export const contactInquirySchema = z
     service: (value.service || value.projectType || undefined) as
       | ContactProjectType
       | undefined,
+    package: value.package,
     message: value.message,
     website: value.website,
   }));

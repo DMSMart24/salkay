@@ -164,8 +164,8 @@ function HeadphoneArt() {
         strokeWidth="8"
         strokeLinecap="round"
       />
-      <rect x="28" y="58" width="28" height="34" rx="10" fill="#246bfd" />
-      <rect x="104" y="58" width="28" height="34" rx="10" fill="#246bfd" />
+      <rect x="28" y="58" width="28" height="34" rx="10" fill="#1554F0" />
+      <rect x="104" y="58" width="28" height="34" rx="10" fill="#1554F0" />
       <rect x="33" y="63" width="18" height="24" rx="7" fill="#0b1527" />
       <rect x="109" y="63" width="18" height="24" rx="7" fill="#0b1527" />
     </svg>
@@ -176,7 +176,7 @@ function ChannelDonut() {
   const radius = 34;
   const circumference = 2 * Math.PI * radius;
   const parts = [0.62, 0.18, 0.12, 0.08];
-  const colors = ["#246bfd", "#16c7ff", "#7ba6ff", "#c9d7ea"];
+  const colors = ["#1554F0", "#38BDF8", "#0B1E4D", "#EEF2FA"];
   let offset = 0;
 
   return (

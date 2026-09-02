@@ -6,6 +6,7 @@ export const routes = {
   about: "/hakkimizda",
   blog: "/blog",
   contact: "/iletisim",
+  webDesign: "/web-tasarim",
 } as const;
 
 export const futureRoutes = {
@@ -34,6 +35,7 @@ export const sections = {
   software: "/#hizmetler",
   contact: "/#iletisim",
   cta: "/#iletisim",
+  packages: `${routes.webDesign}#paketler`,
 } as const;
 
 export const publicPages = [
@@ -44,4 +46,5 @@ export const publicPages = [
   routes.about,
   routes.blog,
   routes.contact,
+  routes.webDesign,
 ] as const;

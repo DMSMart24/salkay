@@ -499,7 +499,7 @@ function KayLights() {
         position={[2.05, 1.25, 2.35]}
       />
       <directionalLight
-        color="#3768FF"
+        color="#1554F0"
         intensity={0.1}
         position={[1.9, 1.65, -1.75]}
       />

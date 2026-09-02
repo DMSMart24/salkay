@@ -200,31 +200,6 @@ export function ServicesHeroSystem() {
   );
 }
 
-export function ExperienceVisual() {
-  return (
-    <svg
-      aria-hidden
-      viewBox="0 0 360 250"
-      className="svc-experience-svg"
-      preserveAspectRatio="xMidYMid meet"
-    >
-      <rect x="36" y="24" width="228" height="162" rx="14" className="svc-core-panel" />
-      <rect x="36" y="24" width="228" height="28" rx="14" className="svc-core-chrome" />
-      <circle cx="56" cy="38" r="3.5" className="svc-core-dot" />
-      <circle cx="70" cy="38" r="3.5" className="svc-core-dot" />
-      <circle cx="84" cy="38" r="3.5" className="svc-core-dot" />
-      <rect x="52" y="70" width="86" height="10" rx="2" className="svc-core-bar" />
-      <rect x="52" y="90" width="118" height="6" rx="2" className="svc-core-bar dim" />
-      <rect x="52" y="110" width="68" height="48" rx="6" className="svc-core-tile" />
-      <rect x="130" y="110" width="68" height="48" rx="6" className="svc-core-tile" />
-      <rect x="208" y="70" width="40" height="88" rx="6" className="svc-core-tile tall" />
-      <rect x="276" y="78" width="52" height="92" rx="10" className="svc-core-panel" />
-      <rect x="286" y="90" width="32" height="6" rx="2" className="svc-core-bar" />
-      <rect x="286" y="104" width="32" height="48" rx="5" className="svc-core-tile" />
-    </svg>
-  );
-}
-
 export function GrowthVisual() {
   return (
     <svg

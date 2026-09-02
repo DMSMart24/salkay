@@ -19,6 +19,11 @@ export function siteMailto() {
   return `mailto:${site.email}`;
 }
 
-export function siteWhatsAppUrl() {
-  return `https://wa.me/${site.whatsappE164}`;
+export function siteWhatsAppUrl(message?: string) {
+  const url = `https://wa.me/${site.whatsappE164}`;
+  if (!message) {
+    return url;
+  }
+
+  return `${url}?text=${encodeURIComponent(message)}`;
 }

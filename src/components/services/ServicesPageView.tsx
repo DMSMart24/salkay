@@ -1,22 +1,17 @@
 import { Reveal } from "@/components/motion/Reveal";
+import { DataShowcase } from "@/components/services/DataShowcase";
+import { GrowthShowcase } from "@/components/services/GrowthShowcase";
 import {
-  DataMergeVisual,
-  ExperienceVisual,
-  EyebrowLabel,
   FinaleAtmosphere,
-  GrowthVisual,
-  ServiceIcon,
   ServicesHeroAtmosphere,
   ServicesHeroSystem,
 } from "@/components/services/ServicesVisuals";
+import { SystemsShowcase } from "@/components/services/SystemsShowcase";
+import { WebShowcase } from "@/components/services/WebShowcase";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { routes } from "@/lib/routes";
-
-const systemKinds = ["software", "config", "ai"] as const;
-const growthKinds = ["seo", "ads", "marketing"] as const;
-const dataKinds = ["analytics", "creative"] as const;
 
 export function ServicesPageView() {
   const page = getDictionary().servicesPage;
@@ -60,7 +55,7 @@ export function ServicesPageView() {
         </Container>
       </section>
 
-      <section className="svc-approach">
+      <section className="svc-approach svc-theme-light">
         <Container className="svc-shell">
           <Reveal>
             <p className="eyebrow inline-flex items-center gap-2 text-cyan">
@@ -87,93 +82,23 @@ export function ServicesPageView() {
         </Container>
       </section>
 
-      <section id="hizmetler" className="svc-group svc-experience">
-        <Container className="svc-shell">
-          <Reveal>
-            <h2 className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.experience.eyebrow}
-            </h2>
-          </Reveal>
-          <article id="web-tasarim" className="svc-card svc-feature">
-            <div className="svc-feature-copy">
-              <div className="svc-card-head">
-                <span className="svc-index" aria-hidden>
-                  {page.experience.featureIndex}
-                </span>
-                <EyebrowLabel>{page.experience.featureLabel}</EyebrowLabel>
-              </div>
-              <h3 className="svc-feature-title font-display text-fg">
-                {page.experience.featureTitle}
-              </h3>
-              <p className="svc-card-body text-muted">
-                {page.experience.featureBody}
-              </p>
-            </div>
-            <div className="svc-visual">
-              <ExperienceVisual />
-            </div>
-          </article>
-          <article id="web-development" className="svc-card svc-support">
-            <div className="svc-card-head">
-              <span className="svc-index" aria-hidden>
-                {page.experience.supportIndex}
-              </span>
-              <span aria-hidden className="svc-node" />
-            </div>
-            <h3 className="svc-card-title font-display text-fg">
-              {page.experience.supportTitle}
-            </h3>
-            <p className="svc-card-body text-muted">
-              {page.experience.supportBody}
-            </p>
-          </article>
+      <section id="hizmetler" className="svc-group svc-experience svc-theme-light">
+        <span className="svc-showcase-field" aria-hidden />
+        <Container className="svc-shell relative">
+          <WebShowcase
+            eyebrow={page.experience.eyebrow}
+            index={page.experience.featureIndex}
+            label={page.experience.featureLabel}
+            body={page.experience.featureBody}
+            cta="Paketleri İncele"
+          />
         </Container>
       </section>
 
       <section className="svc-group svc-systems">
-        <Container className="svc-shell">
-          <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.systems.eyebrow}
-            </p>
-            <h2 className="svc-section-title font-display text-fg">
-              {page.systems.title}
-            </h2>
-          </Reveal>
-          <div className="svc-systems-grid">
-            <div aria-hidden className="svc-systems-links">
-              <span className="svc-connect svc-connect-1" />
-              <span className="svc-connect svc-connect-2" />
-            </div>
-            {page.systems.items.map((item, index) => {
-              const kind = systemKinds[index];
-              return (
-              <Reveal key={item.title} delay={index * 70}>
-                <article className="svc-card svc-module">
-                  <div className="svc-card-head">
-                    <span className="svc-index" aria-hidden>
-                      {item.index}
-                    </span>
-                    {kind ? <ServiceIcon kind={kind} /> : null}
-                  </div>
-                  <EyebrowLabel>{item.label}</EyebrowLabel>
-                  <h3 className="svc-card-title font-display text-fg">
-                    {item.title}
-                  </h3>
-                  <p className="svc-card-body text-muted">{item.body}</p>
-                </article>
-              </Reveal>
-              );
-            })}
-          </div>
+        <span className="svc-sys-field" aria-hidden />
+        <Container className="svc-shell relative">
+          <SystemsShowcase />
         </Container>
       </section>
 
@@ -196,94 +121,17 @@ export function ServicesPageView() {
         </Container>
       </section>
 
-      <section className="svc-group svc-growth">
-        <Container className="svc-shell">
-          <div className="svc-growth-head">
-            <Reveal>
-              <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-                <span
-                  aria-hidden
-                  className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-                />
-                {page.growth.eyebrow}
-              </p>
-              <h2 className="svc-section-title font-display text-fg">
-                <span className="block">{page.growth.titleLine1}</span>
-                <span className="block">{page.growth.titleLine2}</span>
-                <span className="text-blue">{page.growth.titleAccent}</span>
-              </h2>
-            </Reveal>
-            <div className="svc-growth-visual">
-              <GrowthVisual />
-            </div>
-          </div>
-          <div className="svc-growth-grid">
-            {page.growth.items.map((item, index) => {
-              const kind = growthKinds[index];
-              return (
-              <Reveal key={item.title} delay={index * 70}>
-                <article className="svc-card svc-module">
-                  <div className="svc-card-head">
-                    <span className="svc-index" aria-hidden>
-                      {item.index}
-                    </span>
-                    {kind ? <ServiceIcon kind={kind} /> : null}
-                  </div>
-                  <EyebrowLabel>{item.label}</EyebrowLabel>
-                  <h3 className="svc-card-title font-display text-fg">
-                    {item.title}
-                  </h3>
-                  <p className="svc-card-body text-muted">{item.body}</p>
-                </article>
-              </Reveal>
-              );
-            })}
-          </div>
+      <section className="svc-group svc-growth svc-theme-light">
+        <span className="svc-grow-field" aria-hidden />
+        <Container className="svc-shell relative">
+          <GrowthShowcase />
         </Container>
       </section>
 
       <section className="svc-group svc-data">
-        <Container className="svc-shell">
-          <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span
-                aria-hidden
-                className="h-1.5 w-1.5 rounded-full bg-cyan shadow-[0_0_12px_var(--c-cyan)]"
-              />
-              {page.data.eyebrow}
-            </p>
-            <h2 className="svc-section-title font-display text-fg">
-              <span>{page.data.titleBefore}</span>
-              <span className="block">{page.data.titleAfter}</span>
-            </h2>
-          </Reveal>
-          <div className="svc-data-grid">
-            {page.data.items.map((item, index) => {
-              const kind = dataKinds[index];
-              return (
-              <Reveal key={item.title} delay={index * 70}>
-                <article className="svc-card svc-module svc-data-card">
-                  <div className="svc-card-head">
-                    <span className="svc-index" aria-hidden>
-                      {item.index}
-                    </span>
-                    {kind ? <ServiceIcon kind={kind} /> : null}
-                  </div>
-                  <EyebrowLabel>{item.label}</EyebrowLabel>
-                  <h3 className="svc-card-title font-display text-fg">
-                    {item.title}
-                  </h3>
-                  <p className="svc-card-body text-muted">{item.body}</p>
-                  {index === 0 ? (
-                    <div className="svc-visual svc-data-visual">
-                      <DataMergeVisual />
-                    </div>
-                  ) : null}
-                </article>
-              </Reveal>
-              );
-            })}
-          </div>
+        <span className="svc-dc-field" aria-hidden />
+        <Container className="svc-shell relative">
+          <DataShowcase />
         </Container>
       </section>
 

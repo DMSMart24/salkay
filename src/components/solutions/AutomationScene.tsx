@@ -216,8 +216,8 @@ export function AutomationScene() {
                   <svg viewBox="0 0 80 80">
                     <defs>
                       <linearGradient id="sl-auto-ring-grad" x1="8%" y1="0%" x2="92%" y2="100%">
-                        <stop offset="0%" stopColor="#246bfd" />
-                        <stop offset="100%" stopColor="#16c7ff" />
+                        <stop offset="0%" stopColor="#1554F0" />
+                        <stop offset="100%" stopColor="#38BDF8" />
                       </linearGradient>
                     </defs>
                     <circle cx="40" cy="40" r="32" />

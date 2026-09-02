@@ -1,6 +1,5 @@
 import { HomeContact } from "@/components/home/HomeContact";
 import { Hero } from "@/components/home/Hero";
-import { KayStory } from "@/components/home/KayStory";
 import { Marquee } from "@/components/home/Marquee";
 import { Process } from "@/components/home/Process";
 import { ServicesBento } from "@/components/home/ServicesBento";
@@ -17,7 +16,6 @@ export default function HomePage() {
       <Marquee />
       <ServicesBento />
       <Process />
-      <KayStory />
       <HomeContact />
     </>
   );

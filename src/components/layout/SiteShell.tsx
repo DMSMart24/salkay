@@ -1,5 +1,9 @@
-import type { ReactNode } from "react";
+import { Suspense, type ReactNode } from "react";
 import { headers } from "next/headers";
+import {
+  FloatingWhatsApp,
+  FloatingWhatsAppFallback,
+} from "@/components/layout/FloatingWhatsApp";
 import { Footer } from "@/components/layout/Footer";
 import { Header } from "@/components/layout/Header";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -26,6 +30,9 @@ export async function SiteShell({ children }: SiteShellProps) {
         {children}
       </main>
       <Footer />
+      <Suspense fallback={<FloatingWhatsAppFallback />}>
+        <FloatingWhatsApp />
+      </Suspense>
     </>
   );
 }

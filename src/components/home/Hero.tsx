@@ -12,24 +12,26 @@ export function Hero() {
     <HeroExperience>
       <Container className="hero-shell">
         <div className="hero-copy">
-          <Reveal>
-            <p className="eyebrow inline-flex items-center gap-2 text-cyan">
-              <span className="h-1.5 w-1.5 bg-cyan shadow-[0_0_12px_var(--c-cyan)]" />
-              {hero.eyebrow}
-            </p>
-          </Reveal>
-          <Reveal delay={60}>
-            <h1 className="hero-title font-display font-bold text-fg">
-              <span className="hero-title-segment">{hero.titleBefore}</span>{" "}
-              <span className="hero-title-accent text-blue">
-                {hero.titleAccent}
-              </span>{" "}
-              <span className="hero-title-segment">{hero.titleAfter}</span>
-            </h1>
-          </Reveal>
-          <Reveal delay={120}>
-            <p className="hero-lead text-muted">{hero.lead}</p>
-          </Reveal>
+          <div className="hero-read">
+            <Reveal>
+              <p className="eyebrow inline-flex items-center gap-2 text-cyan">
+                <span className="h-1.5 w-1.5 bg-cyan shadow-[0_0_12px_var(--c-cyan)]" />
+                {hero.eyebrow}
+              </p>
+            </Reveal>
+            <Reveal delay={60}>
+              <h1 className="hero-title font-display font-bold text-fg">
+                <span className="hero-title-segment">{hero.titleBefore}</span>{" "}
+                <span className="hero-title-accent text-blue">
+                  {hero.titleAccent}
+                </span>{" "}
+                <span className="hero-title-segment">{hero.titleAfter}</span>
+              </h1>
+            </Reveal>
+            <Reveal delay={120}>
+              <p className="hero-lead text-muted">{hero.lead}</p>
+            </Reveal>
+          </div>
           <Reveal delay={180}>
             <div className="hero-actions">
               <Button href={sections.contact} className="hero-cta">

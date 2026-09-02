@@ -12,15 +12,22 @@ export const metadata: Metadata = buildMetadata({
   path: routes.contact,
 });
 
-export default function ContactPage() {
+export default async function ContactPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ package?: string | string[] }>;
+}) {
   const page = getDictionary().contactPage;
+  const params = await searchParams;
+  const raw = params.package;
+  const packageSlug = Array.isArray(raw) ? raw[0] : raw;
 
   return (
     <>
       <JsonLd
         data={breadcrumbSchema([{ name: page.title, path: routes.contact }])}
       />
-      <ContactStudio />
+      <ContactStudio packageSlug={packageSlug} />
     </>
   );
 }

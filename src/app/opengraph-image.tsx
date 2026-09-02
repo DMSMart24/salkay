@@ -17,8 +17,8 @@ export default function OpenGraphImage() {
           display: "flex",
           flexDirection: "column",
           justifyContent: "space-between",
-          background: "#0B0C0F",
-          color: "#F2F3F5",
+          background: "#EEF2FA",
+          color: "#0A0E1B",
           padding: "72px",
         }}
       >
@@ -32,8 +32,8 @@ export default function OpenGraphImage() {
           }}
         >
           <svg width="22" height="22" viewBox="0 0 100 100">
-            <path d="M50 8 L92 88 L70 88 L50 46 L30 88 L8 88 Z" fill="#F2F3F5" />
-            <rect x="37" y="61" width="26" height="11" fill="#0B0C0F" />
+            <path d="M50 8 L92 88 L70 88 L50 46 L30 88 L8 88 Z" fill="#0A0E1B" />
+            <rect x="37" y="61" width="26" height="11" fill="#EEF2FA" />
           </svg>
           SALKAY
         </div>
@@ -52,7 +52,7 @@ export default function OpenGraphImage() {
         <div
           style={{
             display: "flex",
-            color: "#49E8FF",
+            color: "#1554F0",
             fontSize: 22,
             letterSpacing: "0.08em",
           }}

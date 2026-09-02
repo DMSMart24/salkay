@@ -10,12 +10,28 @@ import { getDictionary } from "@/i18n/get-dictionary";
 import { cn } from "@/lib/cn";
 import { routes } from "@/lib/routes";
 
+function navPath(href: string) {
+  return href.split("#")[0] || "/";
+}
+
 function isActiveNav(pathname: string, href: string) {
-  if (href.includes("#")) {
+  const path = navPath(href);
+  if (href.includes("#") && path === "/") {
     return false;
   }
 
-  return pathname === href;
+  return pathname === path;
+}
+
+function scrollToNavHash(pathname: string, href: string) {
+  const hash = href.split("#")[1];
+  if (!hash || pathname !== navPath(href)) {
+    return;
+  }
+
+  window.requestAnimationFrame(() => {
+    document.getElementById(hash)?.scrollIntoView();
+  });
 }
 
 export function Header() {
@@ -80,6 +96,7 @@ export function Header() {
                 href={item.href}
                 aria-current={active ? "page" : undefined}
                 className={cn("site-header-link", active && "is-active")}
+                onClick={() => scrollToNavHash(pathname, item.href)}
               >
                 {item.label}
               </Link>
@@ -136,7 +153,10 @@ export function Header() {
                   href={item.href}
                   aria-current={active ? "page" : undefined}
                   className={cn("site-header-menu-link", active && "is-active")}
-                  onClick={() => setOpen(false)}
+                  onClick={() => {
+                    setOpen(false);
+                    scrollToNavHash(pathname, item.href);
+                  }}
                 >
                   {item.label}
                   <span aria-hidden className="site-header-menu-arrow">

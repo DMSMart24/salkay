@@ -1,14 +1,16 @@
 "use client";
 
-import { useRef, useState, type FormEvent } from "react";
+import { useEffect, useRef, useState, type FormEvent } from "react";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { cn } from "@/lib/cn";
+import { resolveContactPackageSurface } from "@/lib/contact/package-surface";
 import { siteWhatsAppUrl } from "@/lib/site";
 
 type InquiryFormProps = {
   compact?: boolean;
   tone?: "on-dark" | "on-light";
   variant?: "default" | "studio";
+  packageSlug?: string;
 };
 
 type FormStatus = "idle" | "loading" | "success" | "error";
@@ -17,18 +19,34 @@ const fieldClass =
   "min-h-12 rounded-xl border border-line bg-surface px-4 text-fg placeholder:text-faint";
 
 const lightFieldClass =
-  "min-h-12 rounded-xl border border-[rgba(10,16,32,0.12)] bg-white px-4 text-[#0A1020] placeholder:text-[#596579]";
+  "min-h-12 rounded-xl border border-[color:var(--sl-border-light)] bg-white px-4 text-[#0A0E1B] placeholder:text-[#64748B]";
 
 export function InquiryForm({
   compact = false,
   tone = "on-dark",
   variant = "default",
+  packageSlug,
 }: InquiryFormProps) {
   const studio = variant === "studio";
   const fields = tone === "on-light" ? lightFieldClass : fieldClass;
   const { form, messageHint, submitNote } = getDictionary().contactPage;
+  const selectedPackage = resolveContactPackageSurface(packageSlug);
   const [status, setStatus] = useState<FormStatus>("idle");
   const submittingRef = useRef(false);
+  const messagePrefix = selectedPackage
+    ? `İlgilendiğim paket: ${selectedPackage.displayName}`
+    : "";
+
+  useEffect(() => {
+    if (!packageSlug) {
+      return;
+    }
+
+    document.getElementById("sl-contact-selected")?.scrollIntoView({
+      block: "nearest",
+      behavior: "smooth",
+    });
+  }, [packageSlug]);
 
   async function handleSubmit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -38,6 +56,11 @@ export function InquiryForm({
 
     const formElement = event.currentTarget;
     const data = new FormData(formElement);
+    const rawMessage = String(data.get("message") ?? "");
+    const message =
+      selectedPackage && !rawMessage.includes(messagePrefix)
+        ? `${messagePrefix}\n\n${rawMessage}`
+        : rawMessage;
     submittingRef.current = true;
     setStatus("loading");
 
@@ -51,7 +74,8 @@ export function InquiryForm({
           company: String(data.get("company") ?? ""),
           phone: String(data.get("phone") ?? ""),
           service: String(data.get("service") ?? ""),
-          message: String(data.get("message") ?? ""),
+          package: selectedPackage?.slug ?? "",
+          message,
           website: String(data.get("website") ?? ""),
         }),
       });
@@ -73,13 +97,22 @@ export function InquiryForm({
   const busy = status === "loading";
 
   const statusNode = (
-    <FormStatusMessage status={status} studio={studio} tone={tone} form={form} />
+    <FormStatusMessage
+      status={status}
+      studio={studio}
+      tone={tone}
+      form={form}
+      packageName={selectedPackage?.displayName}
+    />
   );
 
   if (studio) {
     return (
       <form onSubmit={handleSubmit} className="sl-contact-form" noValidate={false}>
         <Honeypot />
+        {selectedPackage ? (
+          <input type="hidden" name="package" value={selectedPackage.slug} />
+        ) : null}
         <div className="sl-contact-fields">
           <StudioField label={form.name} name="name" required />
           <StudioField label={form.email} name="email" type="email" required />
@@ -89,7 +122,11 @@ export function InquiryForm({
 
         <label className="sl-contact-field sl-contact-field-full">
           <span className="sl-contact-label">{form.service}</span>
-          <select name="service" defaultValue="" className="sl-contact-input">
+          <select
+            name="service"
+            defaultValue={selectedPackage?.service ?? ""}
+            className="sl-contact-input"
+          >
             <option value="" disabled>
               {form.servicePlaceholder}
             </option>
@@ -105,7 +142,13 @@ export function InquiryForm({
           <span className="sl-contact-label">
             {form.message} <i>*</i>
           </span>
-          <textarea name="message" required rows={7} className="sl-contact-input sl-contact-area" />
+          <textarea
+            name="message"
+            required
+            rows={7}
+            defaultValue={selectedPackage?.messagePrefill ?? ""}
+            className="sl-contact-input sl-contact-area"
+          />
           <small className="sl-contact-hint">{messageHint}</small>
         </label>
 
@@ -125,6 +168,9 @@ export function InquiryForm({
   return (
     <form onSubmit={handleSubmit} className="grid gap-5" noValidate={false}>
       <Honeypot />
+      {selectedPackage ? (
+        <input type="hidden" name="package" value={selectedPackage.slug} />
+      ) : null}
       <div className="grid gap-5 sm:grid-cols-2">
         <Field label={form.name} name="name" required tone={tone} inputClass={fields} />
         <Field label={form.email} name="email" type="email" required tone={tone} inputClass={fields} />
@@ -135,10 +181,10 @@ export function InquiryForm({
       </div>
 
       <label className="grid gap-2">
-        <span className={cn("text-sm", tone === "on-light" ? "text-[#596579]" : "text-muted")}>
+        <span className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}>
           {form.service}
         </span>
-        <select name="service" defaultValue="" className={fields}>
+        <select name="service" defaultValue={selectedPackage?.service ?? ""} className={fields}>
           <option value="" disabled>
             {form.servicePlaceholder}
           </option>
@@ -151,10 +197,16 @@ export function InquiryForm({
       </label>
 
       <label className="grid gap-2">
-        <span className={cn("text-sm", tone === "on-light" ? "text-[#596579]" : "text-muted")}>
-          {form.message} <span className={tone === "on-light" ? "text-[#596579]" : "text-faint"}>*</span>
+        <span className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}>
+          {form.message} <span className={tone === "on-light" ? "text-[#64748B]" : "text-faint"}>*</span>
         </span>
-        <textarea name="message" required rows={6} className={`${fields} py-3`} />
+        <textarea
+          name="message"
+          required
+          rows={6}
+          defaultValue={selectedPackage?.messagePrefill ?? ""}
+          className={`${fields} py-3`}
+        />
       </label>
 
       <button
@@ -164,9 +216,7 @@ export function InquiryForm({
         className={cn(
           "inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[0.95rem] font-medium",
           "transition-colors disabled:cursor-not-allowed disabled:opacity-70",
-          tone === "on-light"
-            ? "bg-[#246BFD] text-white hover:bg-[#1557E8]"
-            : "bg-blue text-fg hover:bg-salkay-bright",
+          "bg-blue text-fg hover:bg-salkay-bright",
         )}
       >
         {busy ? form.sending : form.submit}
@@ -182,11 +232,13 @@ function FormStatusMessage({
   studio,
   tone,
   form,
+  packageName,
 }: {
   status: FormStatus;
   studio: boolean;
   tone: "on-dark" | "on-light";
   form: ReturnType<typeof getDictionary>["contactPage"]["form"];
+  packageName?: string;
 }) {
   if (status === "idle" || status === "loading") {
     return null;
@@ -196,13 +248,23 @@ function FormStatusMessage({
     ? cn("sl-contact-status", status === "success" && "is-ok", status === "error" && "is-err")
     : cn(
         "text-sm leading-6",
-        tone === "on-light" ? "text-[#596579]" : "text-muted",
+        tone === "on-light" ? "text-[#64748B]" : "text-muted",
       );
 
   if (status === "success") {
     return (
       <p role="status" className={className}>
-        <strong>{form.successTitle}</strong> {form.successBody}
+        {packageName ? (
+          <>
+            <strong>Talebiniz alındı.</strong> Projenizi inceleyip sizinle en kısa sürede
+            iletişime geçeceğiz.
+            <span className="sl-contact-status-package">Seçilen paket: {packageName}</span>
+          </>
+        ) : (
+          <>
+            <strong>{form.successTitle}</strong> {form.successBody}
+          </>
+        )}
       </p>
     );
   }
@@ -268,11 +330,11 @@ function Field({
   return (
     <label className="grid gap-2">
       <span
-        className={cn("text-sm", tone === "on-light" ? "text-[#596579]" : "text-muted")}
+        className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}
       >
         {label}
         {required ? (
-          <span className={tone === "on-light" ? "text-[#596579]" : "text-faint"}>
+          <span className={tone === "on-light" ? "text-[#64748B]" : "text-faint"}>
             {" "}
             *
           </span>

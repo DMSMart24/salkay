@@ -73,6 +73,42 @@ export function serviceSchema() {
   };
 }
 
+export function webDesignServiceSchema() {
+  return {
+    "@context": "https://schema.org",
+    "@type": "Service",
+    name: "Professional Web Design & Development",
+    serviceType: "Web design and development",
+    url: absoluteUrl(routes.webDesign),
+    provider: {
+      "@type": "Organization",
+      name: site.name,
+      url: site.url,
+    },
+    areaServed: {
+      "@type": "Country",
+      name: "Türkiye",
+    },
+  };
+}
+
+export function faqPageSchema(
+  items: Array<{ question: string; answer: string }>,
+) {
+  return {
+    "@context": "https://schema.org",
+    "@type": "FAQPage",
+    mainEntity: items.map((item) => ({
+      "@type": "Question",
+      name: item.question,
+      acceptedAnswer: {
+        "@type": "Answer",
+        text: item.answer,
+      },
+    })),
+  };
+}
+
 export function breadcrumbSchema(items: Array<{ name: string; path: string }>) {
   return {
     "@context": "https://schema.org",

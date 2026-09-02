@@ -2,6 +2,7 @@ import Image from "next/image";
 import { InquiryForm } from "@/components/contact/InquiryForm";
 import { Reveal } from "@/components/motion/Reveal";
 import { getDictionary } from "@/i18n/get-dictionary";
+import { resolveContactPackageSurface } from "@/lib/contact/package-surface";
 import { site, siteMailto, siteWhatsAppUrl } from "@/lib/site";
 
 function contactChannel(kind: "email" | "whatsapp" | "web") {
@@ -19,8 +20,9 @@ function contactChannel(kind: "email" | "whatsapp" | "web") {
   }
 }
 
-export function ContactStudio() {
+export function ContactStudio({ packageSlug }: { packageSlug?: string }) {
   const page = getDictionary().contactPage;
+  const selectedPackage = resolveContactPackageSurface(packageSlug);
 
   return (
     <section className="sl-contact" aria-labelledby="sl-contact-title">
@@ -96,7 +98,15 @@ export function ContactStudio() {
                 <h2 className="sl-contact-panel-title font-display">{page.formTitle}</h2>
                 <p className="sl-contact-panel-sub">{page.formSub}</p>
               </header>
-              <InquiryForm variant="studio" />
+              {selectedPackage ? (
+                <aside id="sl-contact-selected" className="sl-contact-selected">
+                  <p className="sl-contact-selected-eye">Seçilen paket</p>
+                  <p className="sl-contact-selected-name">{selectedPackage.displayName}</p>
+                  <p className="sl-contact-selected-price">{selectedPackage.priceLabel}</p>
+                  <p className="sl-contact-selected-lead">{selectedPackage.lead}</p>
+                </aside>
+              ) : null}
+              <InquiryForm variant="studio" packageSlug={packageSlug} />
               <p className="sl-contact-trust">
                 {page.trust.map((item) => (
                   <span key={item}>{item}</span>

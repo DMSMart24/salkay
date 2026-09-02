@@ -14,6 +14,7 @@ export function HeroExperience({ children }: HeroExperienceProps) {
       <div className="hero-visual">
         <HeroVideo />
       </div>
+      <div className="hero-veil" aria-hidden />
       {children}
     </section>
   );

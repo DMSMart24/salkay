@@ -141,7 +141,7 @@ function AiCore() {
       <defs>
         <radialGradient id="sl-ai-orb" cx="46%" cy="40%" r="52%">
           <stop offset="0%" stopColor="#9ec4ff" />
-          <stop offset="38%" stopColor="#246bfd" />
+          <stop offset="38%" stopColor="#1554F0" />
           <stop offset="100%" stopColor="#6a4cff" stopOpacity="0.15" />
         </radialGradient>
       </defs>
@@ -239,8 +239,8 @@ export function AIScene() {
                   <svg viewBox="0 0 80 80">
                     <defs>
                       <linearGradient id="sl-ai-ring-grad" x1="8%" y1="0%" x2="92%" y2="100%">
-                        <stop offset="0%" stopColor="#246bfd" />
-                        <stop offset="100%" stopColor="#16c7ff" />
+                        <stop offset="0%" stopColor="#1554F0" />
+                        <stop offset="100%" stopColor="#38BDF8" />
                       </linearGradient>
                     </defs>
                     <circle cx="40" cy="40" r="32" />

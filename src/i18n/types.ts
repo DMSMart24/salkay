@@ -62,16 +62,6 @@ export type Dictionary = {
       wideBody: string;
       proof: Array<{ index: string; title: string; body: string }>;
     };
-    kayStory: {
-      ariaLabel: string;
-      eyebrow: string;
-      line: string;
-      team: string;
-      process: string;
-      goal: string;
-      support: string;
-      values: Array<{ title: string; body: string }>;
-    };
     homeContact: {
       eyebrow: string;
       title: string;
@@ -203,10 +193,16 @@ export type Dictionary = {
     systems: {
       eyebrow: string;
       title: string;
+      intro: string;
       items: [
         { index: string; label: string; title: string; body: string },
         { index: string; label: string; title: string; body: string },
         { index: string; label: string; title: string; body: string },
+      ];
+      benefits: [
+        { title: string; body: string },
+        { title: string; body: string },
+        { title: string; body: string },
       ];
     };
     statement: {
@@ -220,10 +216,17 @@ export type Dictionary = {
       titleLine1: string;
       titleLine2: string;
       titleAccent: string;
+      intro: string;
       items: [
         { index: string; label: string; title: string; body: string },
         { index: string; label: string; title: string; body: string },
         { index: string; label: string; title: string; body: string },
+      ];
+      benefits: [
+        { title: string; body: string },
+        { title: string; body: string },
+        { title: string; body: string },
+        { title: string; body: string },
       ];
     };
     data: {
@@ -233,6 +236,11 @@ export type Dictionary = {
       items: [
         { index: string; label: string; title: string; body: string },
         { index: string; label: string; title: string; body: string },
+      ];
+      process: [
+        { index: string; title: string; body: string },
+        { index: string; title: string; body: string },
+        { index: string; title: string; body: string },
       ];
     };
     finale: {

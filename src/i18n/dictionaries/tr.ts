@@ -30,6 +30,7 @@ export const tr: Dictionary = {
     primaryCta: "Görüşme Planlayın",
     items: [
       { href: routes.services, label: "Hizmetler" },
+      { href: sections.packages, label: "Fiyatlar" },
       { href: routes.solutions, label: "Çözümler" },
       { href: sections.process, label: "Yaklaşımımız" },
       { href: routes.about, label: "Hakkımızda" },
@@ -122,21 +123,6 @@ export const tr: Dictionary = {
         { index: "02", title: "KULLANICI ODAKLI", body: "Net ve güçlü dijital deneyimler." },
         { index: "03", title: "ÖLÇEKLENEBİLİR", body: "Büyümeye hazır altyapılar." },
         { index: "04", title: "DESTEK", body: "Proje sonrası sürdürülebilir destek." },
-      ],
-    },
-    kayStory: {
-      ariaLabel: "SALKAY",
-      eyebrow: "Fikirden Dijitale.",
-      line: "Web · Yazılım · Yapay Zekâ · Büyüme",
-      team: "Tek ekip.",
-      process: "Tek süreç.",
-      goal: "Tek hedef.",
-      support: "İşinizi dijitalde ileri taşımak.",
-      values: [
-        { title: "GÜVENLİ", body: "Verinizi güvenle koruyoruz." },
-        { title: "HIZLI", body: "Performans odaklı altyapılar." },
-        { title: "ÖLÇEKLENEBİLİR", body: "Büyümeye hazır esnek çözümler." },
-        { title: "DESTEK ODAKLI", body: "Proje sonrası kesintisiz destek." },
       ],
     },
     homeContact: {
@@ -463,24 +449,40 @@ export const tr: Dictionary = {
     systems: {
       eyebrow: "Yazılım & Sistemler",
       title: "İşinize göre çalışan teknoloji.",
+      intro:
+        "İhtiyaçlarınıza özel yazılım ve sistem çözümleri geliştiriyor; süreçlerinizi dijitalleştirerek işinizi daha verimli ve sürdürülebilir hale getiriyoruz.",
       items: [
         {
-          index: "03",
+          index: "01",
           label: "Sistem",
           title: "Özel Yazılım",
           body: "Portallar, yönetim panelleri ve işletmenizin süreçlerine özel web uygulamaları.",
         },
         {
-          index: "09",
+          index: "02",
           label: "Araç",
           title: "Konfigüratörler",
           body: "Ürün seçimi, fiyatlandırma ve teklif süreçlerini kolaylaştıran interaktif sistemler.",
         },
         {
-          index: "08",
+          index: "03",
           label: "Otomasyon",
           title: "AI & Otomasyon",
-          body: "Tekrarlayan işleri otomatikleştiren ve ekiplerin daha verimli çalışmasını sağlayan yapay zekâ çözümleri.",
+          body: "Tekrarlayan işleri otomatikleştiren ve ekiplerin daha verimli çalışmasını destekleyen yapay zekâ çözümleri.",
+        },
+      ],
+      benefits: [
+        {
+          title: "Tek Sistem",
+          body: "İhtiyaçlarınıza göre dijital çözümleri tek bir altyapıda bir araya getiriyoruz.",
+        },
+        {
+          title: "Entegre Veri",
+          body: "Sistemler arasında daha düzenli ve bağlantılı veri akışları oluşturuyoruz.",
+        },
+        {
+          title: "Otomatik Süreçler",
+          body: "Tekrarlayan süreçleri otomasyonlarla daha verimli hale getiriyoruz.",
         },
       ],
     },
@@ -499,6 +501,8 @@ export const tr: Dictionary = {
       titleLine1: "Görünür olun.",
       titleLine2: "Doğru kitleye ulaşın.",
       titleAccent: "Büyüyün.",
+      intro:
+        "Dijital görünürlüğünüzü artırıyor, doğru kitleye ulaşmanızı destekliyor ve sürdürülebilir büyüme için güçlü bir dijital altyapı oluşturuyoruz.",
       items: [
         {
           index: "04",
@@ -519,10 +523,28 @@ export const tr: Dictionary = {
           body: "İçerik, görünürlük ve talep yaratmayı tek bir büyüme stratejisinde birleştiriyoruz.",
         },
       ],
+      benefits: [
+        {
+          title: "Doğru Kitle",
+          body: "Markanızın doğru hedef kitleyle daha güçlü şekilde buluşmasına odaklanıyoruz.",
+        },
+        {
+          title: "Ölçülebilir Sonuçlar",
+          body: "Veriye dayalı analizlerle performansı takip ediyor ve kararları güçlendiriyoruz.",
+        },
+        {
+          title: "Sürdürülebilir Büyüme",
+          body: "Kısa vadeli sonuçların yanında uzun vadeli dijital gelişimi gözetiyoruz.",
+        },
+        {
+          title: "Stratejik İş Ortaklığı",
+          body: "Dijital büyüme sürecinde markanızla birlikte hareket ediyoruz.",
+        },
+      ],
     },
     data: {
       eyebrow: "Veri & Creative",
-      titleBefore: "Ölçün. Anlayın. ",
+      titleBefore: "Ölçün. Anlayın.",
       titleAfter: "Daha iyi anlatın.",
       items: [
         {
@@ -532,10 +554,27 @@ export const tr: Dictionary = {
           body: "Trafik, kullanıcı davranışı, dönüşüm ve kampanya performansını ölçerek kararlarınızı gerçek verilerle destekliyoruz.",
         },
         {
-          index: "10",
+          index: "08",
           label: "Anlatı",
           title: "Video & Creative",
           body: "Markanızı sosyal medya, reklam ve dijital kampanyalarda güçlü şekilde anlatan video ve kreatif içerikler üretiyoruz.",
+        },
+      ],
+      process: [
+        {
+          index: "01",
+          title: "Strateji & Konsept",
+          body: "Hedefe uygun yaratıcı yaklaşım",
+        },
+        {
+          index: "02",
+          title: "Prodüksiyon",
+          body: "Profesyonel çekim & kurgu",
+        },
+        {
+          index: "03",
+          title: "Yayın & Performans",
+          body: "Doğru platformda etkili yayılım",
         },
       ],
     },
@@ -986,7 +1025,7 @@ export const tr: Dictionary = {
 export const serviceIndex = [
   {
     title: "Web Tasarım",
-    href: routes.services,
+    href: routes.webDesign,
     body: "Kurumsal siteler, yenileme, landing page ve markaya uygun arayüz.",
   },
   {

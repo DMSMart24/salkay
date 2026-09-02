@@ -1,4 +1,5 @@
 import { site } from "@/lib/site";
+import { resolveContactPackage } from "@/lib/contact/packages";
 import type { ContactInquiry } from "@/lib/contact/schema";
 
 function escapeHtml(value: string) {
@@ -15,7 +16,9 @@ function line(label: string, value: string | undefined) {
 }
 
 export function buildContactEmail(inquiry: ContactInquiry) {
+  const selected = resolveContactPackage(inquiry.package);
   const rows: Array<[string, string | undefined]> = [
+    ...(selected ? ([["Paket", selected.displayName]] as Array<[string, string]>) : []),
     ["Ad Soyad", inquiry.name],
     ["E-posta", inquiry.email],
     ["Şirket", inquiry.company],
