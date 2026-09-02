@@ -52,6 +52,21 @@ export function templateCardPreview(name: string, body: string) {
   if (/restoran/i.test(name) || /salkay-email:restaurant/i.test(body)) {
     return "Restoranlar için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
   }
+  if (/inşaat|insaat|salkay-email:construction/i.test(`${name} ${body}`)) {
+    return "İnşaat firmaları için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
+  }
+  if (/mimarlık|mimarlik|salkay-email:architecture/i.test(`${name} ${body}`)) {
+    return "Mimarlık ofisleri için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
+  }
+  if (/gayrimenkul|salkay-email:real-estate/i.test(`${name} ${body}`)) {
+    return "Gayrimenkul firmaları için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
+  }
+  if (/(^|[^a-zıi])otel|salkay-email:hotel/i.test(`${name} ${body}`)) {
+    return "Oteller için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
+  }
+  if (/otomotiv|salkay-email:automotive/i.test(`${name} ${body}`)) {
+    return "Otomotiv firmaları için kişiselleştirilmiş website analizi ve ücretsiz geliştirme önerisi.";
+  }
 
   const text = htmlToPlainText(body)
     .replace(/\{\{\s*[^}]+\s*\}\}/g, "")

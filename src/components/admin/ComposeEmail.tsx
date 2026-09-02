@@ -3,17 +3,27 @@
 import { useActionState, useMemo, useState } from "react";
 import { composeEmailAction, sendTestEmailAction } from "@/app/admin/actions/comms";
 import { ActionMessage } from "@/components/admin/ActionMessage";
+import { isArchitectureCompany } from "@/lib/admin/email/templates/architecture";
+import { isAutomotiveCompany } from "@/lib/admin/email/templates/automotive";
 import {
   BAR_TEMPLATE_NAME,
-  BAR_TEMPLATE_SUBJECT,
   isBarCompany,
   isBarPremiumTemplate,
 } from "@/lib/admin/email/templates/bar";
+import { isConstructionCompany } from "@/lib/admin/email/templates/construction";
+import { isHotelCompany } from "@/lib/admin/email/templates/hotel";
+import { industrySpec } from "@/lib/admin/email/templates/premium-industry";
+import {
+  isCodeBackedPremiumKind,
+  resolvePremiumEmailKind,
+  type PremiumIndustryKind,
+} from "@/lib/admin/email/templates/premium-kind";
+import { composePlaceholderForKind, premiumSubject } from "@/lib/admin/email/templates/premium-source";
+import { isRealEstateCompany } from "@/lib/admin/email/templates/real-estate";
 import {
   isRestaurantCompany,
   isRestaurantPremiumTemplate,
   RESTAURANT_TEMPLATE_NAME,
-  RESTAURANT_TEMPLATE_SUBJECT,
 } from "@/lib/admin/email/templates/restaurant";
 import { mergeTemplate } from "@/lib/admin/merge";
 import type { FormState } from "@/lib/admin/validation";
@@ -58,8 +68,20 @@ export function ComposeEmail({
   templates,
   outreachSendEnabled = false,
 }: ComposeEmailProps) {
-  const barCompany = isBarCompany({ industry, groupName, groupIndustry });
-  const restaurantCompany = isRestaurantCompany({ industry, groupName, groupIndustry });
+  const companyInput = { industry, groupName, groupIndustry };
+  const barCompany = isBarCompany(companyInput);
+  const restaurantCompany = isRestaurantCompany(companyInput);
+  const industryCompanyKind: PremiumIndustryKind | null = isConstructionCompany(companyInput)
+    ? "construction"
+    : isArchitectureCompany(companyInput)
+      ? "architecture"
+      : isRealEstateCompany(companyInput)
+        ? "realEstate"
+        : isHotelCompany(companyInput)
+          ? "hotel"
+          : isAutomotiveCompany(companyInput)
+            ? "automotive"
+            : null;
   const barTemplate = useMemo(
     () =>
       templates.find((row) => row.name === BAR_TEMPLATE_NAME) ??
@@ -72,11 +94,19 @@ export function ComposeEmail({
       templates.find((row) => isRestaurantPremiumTemplate(row)),
     [templates],
   );
+  const industryTemplate = useMemo(() => {
+    if (!industryCompanyKind) return undefined;
+    const spec = industrySpec(industryCompanyKind);
+    return (
+      templates.find((row) => row.name === spec.templateName) ??
+      templates.find((row) => resolvePremiumEmailKind(row) === industryCompanyKind)
+    );
+  }, [industryCompanyKind, templates]);
   const initialTemplateId = barCompany
     ? barTemplate?.id ?? ""
     : restaurantCompany
       ? restaurantTemplate?.id ?? ""
-      : "";
+      : industryTemplate?.id ?? "";
 
   const [open, setOpen] = useState(false);
   const [state, action, pending] = useActionState<FormState, FormData>(composeEmailAction, {});
@@ -94,16 +124,11 @@ export function ComposeEmail({
       city: city ?? undefined,
       industry: industry ?? undefined,
     };
-    if (template && isBarPremiumTemplate(template)) {
+    const kind = template ? resolvePremiumEmailKind(template) : "custom";
+    if (template && isCodeBackedPremiumKind(kind)) {
       return {
-        subject: mergeTemplate(BAR_TEMPLATE_SUBJECT, vars),
-        body: "Bar premium HTML şablonu gönderimde otomatik kullanılır.",
-      };
-    }
-    if (template && isRestaurantPremiumTemplate(template)) {
-      return {
-        subject: mergeTemplate(RESTAURANT_TEMPLATE_SUBJECT, vars),
-        body: "Restoran premium HTML şablonu gönderimde otomatik kullanılır.",
+        subject: mergeTemplate(premiumSubject(kind), vars),
+        body: composePlaceholderForKind(kind),
       };
     }
     if (!template) return { subject: "", body: "" };
@@ -133,14 +158,10 @@ export function ComposeEmail({
       city: city ?? undefined,
       industry: industry ?? undefined,
     };
-    if (isBarPremiumTemplate(template)) {
-      setSubject(mergeTemplate(BAR_TEMPLATE_SUBJECT, vars));
-      setBody("Bar premium HTML şablonu gönderimde otomatik kullanılır.");
-      return;
-    }
-    if (isRestaurantPremiumTemplate(template)) {
-      setSubject(mergeTemplate(RESTAURANT_TEMPLATE_SUBJECT, vars));
-      setBody("Restoran premium HTML şablonu gönderimde otomatik kullanılır.");
+    const kind = resolvePremiumEmailKind(template);
+    if (isCodeBackedPremiumKind(kind)) {
+      setSubject(mergeTemplate(premiumSubject(kind), vars));
+      setBody(composePlaceholderForKind(kind));
       return;
     }
     setSubject(mergeTemplate(template.subject, vars));

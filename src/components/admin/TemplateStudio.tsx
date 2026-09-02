@@ -4,12 +4,14 @@ import { startTransition, useActionState, useEffect, useState } from "react";
 import {
   previewTemplateAction,
   resetBarTemplateForm,
+  resetIndustryTemplateForm,
   resetRestaurantTemplateForm,
   saveTemplateTestDraftForm,
   updateTemplateAction,
   type TemplatePreviewState,
 } from "@/app/admin/actions/templates";
 import { isBarPremiumTemplate } from "@/lib/admin/email/templates/bar";
+import { isPremiumIndustryKind, resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
 import { isRestaurantPremiumTemplate } from "@/lib/admin/email/templates/restaurant";
 import { ActionMessage } from "@/components/admin/ActionMessage";
 import { mergeVariableHelp } from "@/lib/admin/merge";
@@ -200,6 +202,12 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
         ) : null}
         {isBarPremiumTemplate(template) ? (
           <form action={resetBarTemplateForm}>
+            <input type="hidden" name="templateId" value={template.id} />
+            <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
+          </form>
+        ) : null}
+        {isPremiumIndustryKind(resolvePremiumEmailKind(template)) ? (
+          <form action={resetIndustryTemplateForm}>
             <input type="hidden" name="templateId" value={template.id} />
             <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
           </form>

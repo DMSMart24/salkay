@@ -3,9 +3,8 @@ import { notFound } from "next/navigation";
 import { duplicateTemplateForm } from "@/app/admin/actions/templates";
 import { TemplateStudio } from "@/components/admin/TemplateStudio";
 import { formatDateTime } from "@/lib/admin/format";
-import { barPremiumSource } from "@/lib/admin/email/templates/bar";
 import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
-import { restaurantPremiumSource } from "@/lib/admin/email/templates/restaurant";
+import { premiumHtmlSource } from "@/lib/admin/email/templates/premium-source";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
@@ -15,14 +14,34 @@ function previewRank(
     companyName: string;
     group: { name: string; industry: string | null } | null;
   },
-  barTemplate: boolean,
+  kind: ReturnType<typeof resolvePremiumEmailKind>,
 ) {
   const name = company.companyName.toLocaleLowerCase("tr");
   const group = `${company.group?.name ?? ""} ${company.group?.industry ?? ""}`.toLocaleLowerCase("tr");
-  if (barTemplate) {
+  if (kind === "bar") {
     if (name.includes("galeron")) return 0;
     if (group.includes("barlar") || group.includes("cocktail") || /\bbar\b/.test(group)) return 1;
     if (name.includes("valuna")) return 10;
+    return 20;
+  }
+  if (kind === "construction") {
+    if (group.includes("inşaat") || group.includes("insaat") || group.includes("construction")) return 0;
+    return 20;
+  }
+  if (kind === "architecture") {
+    if (group.includes("mimarlık") || group.includes("mimarlik") || group.includes("architecture")) return 0;
+    return 20;
+  }
+  if (kind === "realEstate") {
+    if (group.includes("gayrimenkul") || group.includes("real estate") || group.includes("emlak")) return 0;
+    return 20;
+  }
+  if (kind === "hotel") {
+    if (group.includes("otel") || group.includes("hotel")) return 0;
+    return 20;
+  }
+  if (kind === "automotive") {
+    if (group.includes("otomotiv") || group.includes("automotive")) return 0;
     return 20;
   }
   if (name.includes("develi")) return 0;
@@ -58,23 +77,7 @@ export default async function TemplateDetailPage({
     name: template.name,
     category: template.category,
   });
-  const barTemplate = kind === "bar";
-  let studioBody = template.body;
-  switch (kind) {
-    case "bar":
-      studioBody = barPremiumSource();
-      break;
-    case "restaurant":
-      studioBody = restaurantPremiumSource();
-      break;
-    case "custom":
-      studioBody = template.body;
-      break;
-    default: {
-      const _never: never = kind;
-      throw new Error(`Unhandled premium email kind: ${_never}`);
-    }
-  }
+  const studioBody = kind === "custom" ? template.body : premiumHtmlSource(kind);
 
   return (
     <div className="admin-page">
@@ -105,7 +108,7 @@ export default async function TemplateDetailPage({
           updatedAt: template.updatedAt.toISOString(),
         }}
         companies={[...companies]
-          .sort((left, right) => previewRank(left, barTemplate) - previewRank(right, barTemplate))
+          .sort((left, right) => previewRank(left, kind) - previewRank(right, kind))
           .map(({ id, companyName }) => ({ id, companyName }))}
       />
     </div>

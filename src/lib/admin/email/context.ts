@@ -7,15 +7,21 @@ import {
   websiteScoreBandLabels,
 } from "@/lib/admin/qualification";
 import {
+  architectureCtaUrl,
+  automotiveCtaUrl,
   barCtaUrl,
+  constructionCtaUrl,
   emailAssetUrl,
   emailAssets,
   emailCtaUrl,
+  hotelCtaUrl,
   isEmailCtaConfigured,
+  realEstateCtaUrl,
   restaurantCtaUrl,
   salkayPhone,
   salkayWhatsAppNumber,
 } from "@/lib/admin/email/assets";
+import type { PremiumIndustryKind } from "@/lib/admin/email/templates/premium-kind";
 import { escapeHtml } from "@/lib/admin/email/html";
 import {
   localizeOutreachIssues,
@@ -99,6 +105,65 @@ export function buildBarEmailContext(company: CompanyEmailInput): CompanyEmailCo
       recommendedServices: recommendedServices.join(" · "),
       heroUrl,
       heroMobileUrl,
+    },
+  };
+}
+
+export function buildConstructionEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+  return withIndustryWhatsApp(company, constructionCtaUrl(company.companyName), INDUSTRY_SERVICE_CHIPS.construction);
+}
+
+export function buildArchitectureEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+  return withIndustryWhatsApp(company, architectureCtaUrl(company.companyName), INDUSTRY_SERVICE_CHIPS.architecture);
+}
+
+export function buildRealEstateEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+  return withIndustryWhatsApp(company, realEstateCtaUrl(company.companyName), INDUSTRY_SERVICE_CHIPS.realEstate);
+}
+
+export function buildHotelEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+  return withIndustryWhatsApp(company, hotelCtaUrl(company.companyName), INDUSTRY_SERVICE_CHIPS.hotel);
+}
+
+export function buildAutomotiveEmailContext(company: CompanyEmailInput): CompanyEmailContext {
+  return withIndustryWhatsApp(company, automotiveCtaUrl(company.companyName), INDUSTRY_SERVICE_CHIPS.automotive);
+}
+
+export function buildIndustryEmailContext(
+  kind: PremiumIndustryKind,
+  company: CompanyEmailInput,
+): CompanyEmailContext {
+  switch (kind) {
+    case "construction":
+      return buildConstructionEmailContext(company);
+    case "architecture":
+      return buildArchitectureEmailContext(company);
+    case "realEstate":
+      return buildRealEstateEmailContext(company);
+    case "hotel":
+      return buildHotelEmailContext(company);
+    case "automotive":
+      return buildAutomotiveEmailContext(company);
+    default: {
+      const _never: never = kind;
+      throw new Error(`Unhandled premium industry kind: ${_never}`);
+    }
+  }
+}
+
+function withIndustryWhatsApp(
+  company: CompanyEmailInput,
+  ctaUrl: string,
+  chips: readonly string[],
+): CompanyEmailContext {
+  const context = withWhatsAppCta(company, ctaUrl);
+  const recommendedServices = mapIndustryRecommendedServices(context.recommendedServices, chips);
+  return {
+    ...context,
+    recommendedServices,
+    vars: {
+      ...context.vars,
+      recommendedServices: recommendedServices.join(" · "),
     },
   };
 }
@@ -251,6 +316,52 @@ function mapBarRecommendedServices(services: string[]) {
     if (chips.length === 4) break;
   }
   return chips;
+}
+
+const INDUSTRY_SERVICE_CHIPS: Record<PremiumIndustryKind, readonly string[]> = {
+  construction: ["Web Tasarımı", "Mobil UX", "Portföy", "Local SEO"],
+  architecture: ["Web Tasarımı", "Mobil UX", "Portföy", "Local SEO"],
+  realEstate: ["Web Tasarımı", "Mobil UX", "İlanlar", "Local SEO"],
+  hotel: ["Web Tasarımı", "Mobil UX", "Rezervasyon", "Local SEO"],
+  automotive: ["Web Tasarımı", "Mobil UX", "Stok", "Local SEO"],
+};
+
+const INDUSTRY_SERVICE_ALIASES: Record<string, string> = {
+  "web tasarımı": "Web Tasarımı",
+  "premium web yeniden tasarım": "Web Tasarımı",
+  "web yeniden tasarım": "Web Tasarımı",
+  "mobil ux": "Mobil UX",
+  "mobil kullanıcı deneyimi": "Mobil UX",
+  "mobil iyileştirme": "Mobil UX",
+  "kullanıcı deneyimi yenileme": "Mobil UX",
+  "kullanıcı deneyimi iyileştirme": "Mobil UX",
+  rezervasyon: "Rezervasyon",
+  "rezervasyon sürecinin iyileştirilmesi": "Rezervasyon",
+  "rezervasyon entegrasyonu": "Rezervasyon",
+  portföy: "Portföy",
+  "proje portföyü": "Portföy",
+  ilanlar: "İlanlar",
+  "ilan portföyü": "İlanlar",
+  stok: "Stok",
+  "stok & model": "Stok",
+  "local seo": "Local SEO",
+  "yerel seo": "Local SEO",
+  "seo denetimi": "Local SEO",
+};
+
+function mapIndustryRecommendedServices(services: string[], chips: readonly string[]) {
+  const seen = new Set<string>();
+  const mapped: string[] = [];
+  for (const service of services) {
+    const key = service.trim().toLowerCase();
+    const label =
+      INDUSTRY_SERVICE_ALIASES[key] ?? chips.find((chip) => chip.toLowerCase() === key);
+    if (!label || !chips.includes(label) || seen.has(label)) continue;
+    seen.add(label);
+    mapped.push(label);
+    if (mapped.length === 4) break;
+  }
+  return mapped;
 }
 
 function serviceChipLabel(service: string) {

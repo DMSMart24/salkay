@@ -3,8 +3,11 @@ import { toggleTemplateAction } from "@/app/admin/actions/comms";
 import {
   duplicateTemplateForm,
   ensureBarTemplateForm,
+  ensureIndustryTemplateForm,
   ensureRestaurantTemplateForm,
 } from "@/app/admin/actions/templates";
+import { INDUSTRY_SPECS } from "@/lib/admin/email/templates/premium-industry";
+import { PREMIUM_INDUSTRY_KINDS } from "@/lib/admin/email/templates/premium-kind";
 import { TemplateForm } from "@/components/admin/SimpleForms";
 import { templateCardPreview } from "@/lib/admin/email/html";
 import { formatDate } from "@/lib/admin/format";
@@ -31,6 +34,12 @@ export default async function TemplatesPage() {
           <form action={ensureBarTemplateForm}>
             <button className="admin-btn ghost">Bar şablonunu aç / kur</button>
           </form>
+          {PREMIUM_INDUSTRY_KINDS.map((kind) => (
+            <form key={kind} action={ensureIndustryTemplateForm}>
+              <input type="hidden" name="industry" value={kind} />
+              <button className="admin-btn ghost">{INDUSTRY_SPECS[kind].category} şablonunu aç / kur</button>
+            </form>
+          ))}
         </div>
       </header>
       <TemplateForm />

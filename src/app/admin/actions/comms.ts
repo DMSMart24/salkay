@@ -8,15 +8,10 @@ import { getEmailFrom, getEmailProvider, getOutreachFrom } from "@/lib/admin/ema
 import { renderPersonalizedEmail } from "@/lib/admin/email/render";
 import { looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import {
-  BAR_TEMPLATE_SUBJECT,
-  barPremiumSource,
-  isBarPremiumTemplate,
-} from "@/lib/admin/email/templates/bar";
-import {
-  isRestaurantPremiumTemplate,
-  RESTAURANT_TEMPLATE_SUBJECT,
-  restaurantPremiumSource,
-} from "@/lib/admin/email/templates/restaurant";
+  isCodeBackedPremiumKind,
+  resolvePremiumEmailKind,
+} from "@/lib/admin/email/templates/premium-kind";
+import { premiumHtmlSource, premiumSubject } from "@/lib/admin/email/templates/premium-source";
 import { normalizeEmail } from "@/lib/admin/normalize";
 import { isOutreachSendEnabled } from "@/lib/admin/outreach";
 import { getPrisma } from "@/lib/admin/prisma";
@@ -98,10 +93,9 @@ export async function composeEmailAction(
   });
   const mergedSubject = rendered.subject;
   const mergedBody = rendered.bodyText;
+  const templateKind = resolvePremiumEmailKind(template ?? {});
   const mergedHtml =
-    looksLikeHtmlEmail(parsed.data.body) ||
-    isRestaurantPremiumTemplate(template ?? {}) ||
-    isBarPremiumTemplate(template ?? {})
+    looksLikeHtmlEmail(parsed.data.body) || isCodeBackedPremiumKind(templateKind)
       ? rendered.bodyHtml
       : undefined;
 
@@ -229,11 +223,10 @@ export async function sendTestEmailAction(
     return { error: "Şablon bulunamadı." };
   }
 
-  const bar = isBarPremiumTemplate(template);
-  const restaurant = !bar && isRestaurantPremiumTemplate(template);
+  const kind = resolvePremiumEmailKind(template);
   const rendered = renderPersonalizedEmail({
-    subject: bar ? BAR_TEMPLATE_SUBJECT : restaurant ? RESTAURANT_TEMPLATE_SUBJECT : template.subject,
-    body: bar ? barPremiumSource() : restaurant ? restaurantPremiumSource() : template.body,
+    subject: isCodeBackedPremiumKind(kind) ? premiumSubject(kind) : template.subject,
+    body: isCodeBackedPremiumKind(kind) ? premiumHtmlSource(kind) : template.body,
     company,
     templateName: template.name,
     templateCategory: template.category,

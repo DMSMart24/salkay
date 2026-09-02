@@ -66,6 +66,46 @@ export function barCtaUrl(companyName: string) {
   return whatsAppCtaUrl(barWhatsAppMessage(companyName));
 }
 
+export function constructionWhatsAppMessage(companyName: string) {
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. İnşaat projemizin dijital görünümü ve referans sunumu hakkında detaylı bilgi almak istiyorum.`;
+}
+
+export function constructionCtaUrl(companyName: string) {
+  return whatsAppCtaUrl(constructionWhatsAppMessage(companyName));
+}
+
+export function architectureWhatsAppMessage(companyName: string) {
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Mimari portföyümüzün dijital sunumu ve proje görünürlüğü hakkında detaylı bilgi almak istiyorum.`;
+}
+
+export function architectureCtaUrl(companyName: string) {
+  return whatsAppCtaUrl(architectureWhatsAppMessage(companyName));
+}
+
+export function realEstateWhatsAppMessage(companyName: string) {
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Gayrimenkul portföyümüzün dijital görünümü ve ilan süreci hakkında detaylı bilgi almak istiyorum.`;
+}
+
+export function realEstateCtaUrl(companyName: string) {
+  return whatsAppCtaUrl(realEstateWhatsAppMessage(companyName));
+}
+
+export function hotelWhatsAppMessage(companyName: string) {
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Otelimizin dijital görünümü ve rezervasyon süreci hakkında detaylı bilgi almak istiyorum.`;
+}
+
+export function hotelCtaUrl(companyName: string) {
+  return whatsAppCtaUrl(hotelWhatsAppMessage(companyName));
+}
+
+export function automotiveWhatsAppMessage(companyName: string) {
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Showroomumuzun dijital görünümü ve araç stok sunumu hakkında detaylı bilgi almak istiyorum.`;
+}
+
+export function automotiveCtaUrl(companyName: string) {
+  return whatsAppCtaUrl(automotiveWhatsAppMessage(companyName));
+}
+
 export const emailAssets = {
   logo: "/email/salkay-logo-transparent.png",
   logoHeader: "/email/salkay-logo-transparent-2x.png",

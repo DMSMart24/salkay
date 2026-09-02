@@ -1,16 +1,23 @@
 import type { CompanyEmailInput } from "@/lib/admin/email/context";
-import { buildBarEmailContext, buildRestaurantEmailContext } from "@/lib/admin/email/context";
+import {
+  buildBarEmailContext,
+  buildIndustryEmailContext,
+  buildRestaurantEmailContext,
+} from "@/lib/admin/email/context";
 import { applyMerge, hasUnresolvedMerge, htmlToPlainText, looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import { mergeTemplate } from "@/lib/admin/merge";
+import { renderArchitectureEmail } from "@/lib/admin/email/templates/architecture";
+import { renderAutomotiveEmail } from "@/lib/admin/email/templates/automotive";
+import { barPremiumSource, renderBarEmail } from "@/lib/admin/email/templates/bar";
+import { renderConstructionEmail } from "@/lib/admin/email/templates/construction";
+import { renderHotelEmail } from "@/lib/admin/email/templates/hotel";
 import {
-  barPremiumSource,
-  renderBarEmail,
-} from "@/lib/admin/email/templates/bar";
-import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
-import {
-  renderRestaurantEmail,
-  restaurantPremiumSource,
-} from "@/lib/admin/email/templates/restaurant";
+  isPremiumIndustryKind,
+  resolvePremiumEmailKind,
+} from "@/lib/admin/email/templates/premium-kind";
+import { premiumHtmlSource } from "@/lib/admin/email/templates/premium-source";
+import { renderRealEstateEmail } from "@/lib/admin/email/templates/real-estate";
+import { renderRestaurantEmail, restaurantPremiumSource } from "@/lib/admin/email/templates/restaurant";
 
 export function renderPersonalizedEmail(input: {
   subject: string;
@@ -25,8 +32,11 @@ export function renderPersonalizedEmail(input: {
     category: input.templateCategory,
   };
   const kind = resolvePremiumEmailKind(templateMeta);
-  const context =
-    kind === "bar" ? buildBarEmailContext(input.company) : buildRestaurantEmailContext(input.company);
+  const context = isPremiumIndustryKind(kind)
+    ? buildIndustryEmailContext(kind, input.company)
+    : kind === "bar"
+      ? buildBarEmailContext(input.company)
+      : buildRestaurantEmailContext(input.company);
   const subject = mergeTemplate(input.subject, context.vars);
   let bodyHtml: string;
   switch (kind) {
@@ -35,6 +45,21 @@ export function renderPersonalizedEmail(input: {
       break;
     case "restaurant":
       bodyHtml = renderRestaurantEmail(restaurantPremiumSource(), context);
+      break;
+    case "construction":
+      bodyHtml = renderConstructionEmail(premiumHtmlSource(kind), context);
+      break;
+    case "architecture":
+      bodyHtml = renderArchitectureEmail(premiumHtmlSource(kind), context);
+      break;
+    case "realEstate":
+      bodyHtml = renderRealEstateEmail(premiumHtmlSource(kind), context);
+      break;
+    case "hotel":
+      bodyHtml = renderHotelEmail(premiumHtmlSource(kind), context);
+      break;
+    case "automotive":
+      bodyHtml = renderAutomotiveEmail(premiumHtmlSource(kind), context);
       break;
     case "custom":
       bodyHtml = looksLikeHtmlEmail(input.body)

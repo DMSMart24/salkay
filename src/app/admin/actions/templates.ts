@@ -13,7 +13,15 @@ import {
   barPremiumSource,
 } from "@/lib/admin/email/templates/bar";
 import { ensureBarOutreachRecords } from "@/lib/admin/email/templates/ensure-bar";
-import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
+import { ensureIndustryTemplateRecord } from "@/lib/admin/email/templates/ensure-industries";
+import { industrySpec } from "@/lib/admin/email/templates/premium-industry";
+import {
+  isPremiumIndustryKind,
+  PREMIUM_INDUSTRY_KINDS,
+  resolvePremiumEmailKind,
+  type PremiumIndustryKind,
+} from "@/lib/admin/email/templates/premium-kind";
+import { premiumHtmlSource } from "@/lib/admin/email/templates/premium-source";
 import {
   RESTAURANT_TEMPLATE_NAME,
   RESTAURANT_TEMPLATE_SUBJECT,
@@ -132,18 +140,14 @@ function premiumTemplateSource(template: { name?: string | null; body?: string |
     category: template.category,
     body: template.body,
   });
-  switch (kind) {
-    case "bar":
-      return barPremiumSource();
-    case "restaurant":
-      return restaurantPremiumSource();
-    case "custom":
-      return template.body ?? "";
-    default: {
-      const _never: never = kind;
-      throw new Error(`Unhandled premium email kind: ${_never}`);
-    }
-  }
+  if (kind === "custom") return template.body ?? "";
+  return premiumHtmlSource(kind);
+}
+
+function parseIndustryKind(raw: string): PremiumIndustryKind | null {
+  return (PREMIUM_INDUSTRY_KINDS as readonly string[]).includes(raw)
+    ? (raw as PremiumIndustryKind)
+    : null;
 }
 
 export async function ensureBarTemplateForm(formData: FormData) {
@@ -183,6 +187,51 @@ export async function resetBarTemplateForm(formData: FormData) {
       language: "tr",
       subject: BAR_TEMPLATE_SUBJECT,
       body: barPremiumSource(),
+    },
+  });
+  touchTemplates(id);
+}
+
+export async function ensureIndustryTemplateForm(formData: FormData) {
+  const session = await requireAdmin();
+  const kind = parseIndustryKind(String(formData.get("industry") ?? ""));
+  if (!kind) return;
+  const prisma = getPrisma();
+  const spec = industrySpec(kind);
+  const result = await ensureIndustryTemplateRecord(prisma, session.userId, kind);
+  if (result.templateCreated) {
+    await recordActivity(prisma, {
+      type: "TEMPLATE_CREATED",
+      message: spec.templateName,
+      userId: session.userId,
+    });
+    touchTemplates(result.templateId);
+  }
+  redirect(`/admin/templates/${result.templateId}`);
+}
+
+export async function resetIndustryTemplateForm(formData: FormData) {
+  await requireAdmin();
+  const id = String(formData.get("templateId") ?? "");
+  if (!id) return;
+  const prisma = getPrisma();
+  const template = await prisma.emailTemplate.findUnique({ where: { id } });
+  if (!template) return;
+  const kind = resolvePremiumEmailKind({
+    name: template.name,
+    category: template.category,
+    body: template.body,
+  });
+  if (!isPremiumIndustryKind(kind)) return;
+  const spec = industrySpec(kind);
+  await prisma.emailTemplate.update({
+    where: { id },
+    data: {
+      name: spec.templateName,
+      category: spec.category,
+      language: "tr",
+      subject: spec.subject,
+      body: premiumHtmlSource(kind),
     },
   });
   touchTemplates(id);
