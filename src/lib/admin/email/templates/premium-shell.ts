@@ -7,6 +7,13 @@ export const PREMIUM_EMAIL_CSS = `
     max-width: 700px !important;
     height: auto !important;
   }
+  .salkay-hero-mobile,
+  .salkay-hero-mobile-cell {
+    display: none !important;
+    max-height: 0 !important;
+    overflow: hidden !important;
+    mso-hide: all;
+  }
   .salkay-hello,
   .salkay-hello-name { display: block !important; }
   @media only screen and (min-width: 701px) {
@@ -30,7 +37,17 @@ export const PREMIUM_EMAIL_CSS = `
       border-color: #16384A !important;
     }
     .salkay-intro-gift-link { display: block !important; width: 100% !important; text-decoration: none !important; color: #FFFFFF !important; }
+    .salkay-hero-desktop { display: none !important; max-height: 0 !important; overflow: hidden !important; }
+    .salkay-hero-mobile { display: table-row !important; max-height: none !important; overflow: visible !important; }
+    .salkay-hero-mobile-cell {
+      display: table-cell !important;
+      max-height: none !important;
+      overflow: visible !important;
+      font-size: inherit !important;
+      line-height: inherit !important;
+    }
     .salkay-hero-full { width: 100% !important; max-width: 390px !important; height: auto !important; }
+    .salkay-hero-mobile-art { width: 100% !important; max-width: 390px !important; height: auto !important; }
     .salkay-intro, .salkay-audit, .salkay-benefit, .salkay-sign-logo, .salkay-sign-contact { display: block !important; width: 100% !important; }
     .salkay-benefit { padding: 0 0 14px 0 !important; }
     .salkay-benefit-last { padding-bottom: 0 !important; }
