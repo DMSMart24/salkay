@@ -190,7 +190,7 @@ function realEstateOpportunity(service: string): OpportunityCard {
   }
   if (/mobil|ux/.test(key)) {
     return {
-      title: "Mobil lead",
+      title: "Mobil iletişim",
       body: "Telefonda ilan ve iletişim adımlarının daha sade olması.",
     };
   }
@@ -279,7 +279,7 @@ export const RESTAURANT_OUTREACH: OutreachCopySpec = {
     not_verified:
       "Restoranınızın dijitalde daha net görünmesi; menü, rezervasyon ve WhatsApp yolunu sadeleştirmek için kısa bir fikir paylaşabiliriz.",
     no_website:
-      "Google ve sosyal medya dışında, misafirin doğrudan size ulaşabileceği sade bir dijital vitrin çoğu restoran için fark yaratıyor.",
+      "Misafir menüyü, rezervasyonu ve konumu tek yerden görmek istiyor; bunu sakin bir sayfada toplayabiliriz.",
   },
   offer:
     "İsterseniz işletmeniz için nasıl bir dijital yenileme önerdiğimizi ücretsiz ve kısa bir örnek üzerinden paylaşabiliriz.",
@@ -398,7 +398,7 @@ export const REAL_ESTATE_OUTREACH: OutreachCopySpec = {
   ctaLabel: CTA_LABEL,
   defaultOpportunities: [
     { title: "Güven hissi", body: "Ofisin ciddiyetini dijitalde daha sakin göstermek." },
-    { title: "Mobil lead", body: "Telefonda iletişim adımlarının daha sade olması." },
+    { title: "Mobil iletişim", body: "Telefonda iletişim adımlarının daha sade olması." },
     { title: "Yerel arama", body: "Bölge aramalarında ofisinizin daha net görünmesi." },
   ],
   mapOpportunity: realEstateOpportunity,

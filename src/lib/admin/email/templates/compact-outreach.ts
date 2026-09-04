@@ -11,7 +11,8 @@ const COMPACT_CSS = `
   @media only screen and (max-width: 700px) {
     .salkay-container { width: 100% !important; max-width: 390px !important; }
     .salkay-pad { padding-left: 20px !important; padding-right: 20px !important; }
-    .salkay-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; }
+    .salkay-hello { font-size: 20px !important; line-height: 28px !important; }
+    .salkay-cta-btn { display: block !important; width: 100% !important; text-align: center !important; box-sizing: border-box !important; padding: 15px 20px !important; }
     .salkay-cta-btn-wrap { width: 100% !important; }
   }
 `;
@@ -27,14 +28,7 @@ function locationLine(context: CompanyEmailContext) {
 }
 
 function analysisItems(context: CompanyEmailContext) {
-  if (context.copyKind === "not_verified") return [];
-  if (context.copyKind === "no_website") {
-    return [
-      "Markanızı sakin ve net anlatan bağımsız bir sayfa",
-      "Telefonda kolay okunan iletişim yolu",
-      "Harita ve yerel aramada daha görünür olmak",
-    ];
-  }
+  if (context.copyKind === "not_verified" || context.copyKind === "no_website") return [];
   return context.customerIssues.map((item) => item.trim()).filter(Boolean).slice(0, 3);
 }
 
@@ -122,7 +116,7 @@ ${COMPACT_CSS}
           </tr>
           <tr>
             <td class="salkay-pad" bgcolor="#081526" style="background:#081526;padding:18px 32px 8px;">
-              <p style="margin:0 0 14px;font-family:Georgia,Times,serif;font-size:22px;line-height:30px;color:#FFFFFF;">Merhaba {{companyName}} Ekibi,</p>
+              <p class="salkay-hello" style="margin:0 0 14px;font-family:Georgia,Times,serif;font-size:22px;line-height:30px;color:#FFFFFF;">Merhaba {{companyName}} Ekibi,</p>
               <p style="margin:0 0 12px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:#E8EDF5;">{{analysisIntro}}</p>
               <p style="margin:0 0 10px;font-family:Arial,Helvetica,sans-serif;font-size:15px;line-height:24px;color:#E8EDF5;">{{followOn}}</p>
               {{locationLine}}
