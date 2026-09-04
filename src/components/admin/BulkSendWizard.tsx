@@ -36,8 +36,8 @@ export function BulkSendWizard({
     <div className="admin-wizard">
       <p className="admin-help">
         {sendEnabled
-          ? "Onaydan sonra en fazla 20 alıcı işlenir."
-          : "Test modu açık: onay taslak kaydeder, gerçek e-posta gitmez."}
+          ? "Onaydan sonra en fazla 20 alıcı işlenir. Geçerli e-postası olmayan firmalar asla eklenmez."
+          : "Test modu açık: onay taslak kaydeder, gerçek e-posta gitmez. Geçerli e-postası olmayan firmalar asla eklenmez."}
       </p>
       <form action={previewAction} className="admin-form admin-panel">
         <ActionMessage state={preview} />

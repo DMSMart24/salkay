@@ -1,7 +1,8 @@
 import type { OutreachStatus, Prisma, WebsiteStatus } from "@prisma/client";
-import { normalizeEmail, isValidEmail } from "@/lib/admin/normalize";
+import { normalizeEmail } from "@/lib/admin/normalize";
 import { getPrisma } from "@/lib/admin/prisma";
 import { isAddressSuppressed } from "@/lib/admin/suppression";
+import { evaluateEmailOutreachEligibility } from "@/lib/admin/email-outreach";
 import {
   isOpportunityType,
   leadPriorityRange,
@@ -124,32 +125,28 @@ export async function evaluateSendEligibility(company: {
   id: string;
   archivedAt?: Date | null;
   outreachStatus: OutreachStatus;
+  status?: string | null;
+  tags?: string[] | null;
   lastContactedAt?: Date | null;
   generalEmail?: string | null;
   contacts?: Array<{ email?: string | null; isPrimary?: boolean }>;
   allowResend?: boolean;
 }) {
-  if (company.archivedAt) {
-    return { ok: false as const, reason: "Arşivlenmiş" };
-  }
-  if (company.outreachStatus === "DO_NOT_CONTACT") {
-    return { ok: false as const, reason: "İletişim kurma" };
-  }
-
   const email = primaryEmail(company);
-  if (!email || !isValidEmail(email)) {
-    return { ok: false as const, reason: "Geçerli e-posta yok" };
-  }
-
-  if (await isAddressSuppressed(email)) {
-    return { ok: false as const, reason: "Sperrliste" };
+  const suppressed = email ? await isAddressSuppressed(email) : false;
+  const eligibility = evaluateEmailOutreachEligibility({
+    ...company,
+    suppressed,
+  });
+  if (!eligibility.ok) {
+    return { ok: false as const, reason: eligibility.reason };
   }
 
   if (!company.allowResend && (company.outreachStatus === "SENT" || company.outreachStatus === "REPLIED")) {
     return { ok: false as const, reason: "Zaten gönderildi" };
   }
 
-  return { ok: true as const, email };
+  return { ok: true as const, email: eligibility.email };
 }
 
 export async function markCompanyReplied(companyId: string) {

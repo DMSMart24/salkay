@@ -1,4 +1,12 @@
 import type { CompanyPriority, OutreachStatus, Prisma, WebsiteStatus } from "@prisma/client";
+import {
+  collectUsableEmails,
+  matchesRestaurantPreset,
+  restaurantLeadWhere,
+  selectTop20Outreach,
+  summarizeRestaurantLeads,
+  type RestaurantLeadPreset,
+} from "@/lib/admin/email-outreach";
 import { companyFilterWhere, DEFAULT_GROUPS, type CompanyFilterInput } from "@/lib/admin/outreach";
 import { getPrisma } from "@/lib/admin/prisma";
 
@@ -302,6 +310,80 @@ function unique(values: Array<string | null | undefined>) {
   return [...new Set(values.filter((value): value is string => Boolean(value)))].sort((a, b) =>
     a.localeCompare(b, "tr"),
   );
+}
+
+export function parseRestaurantLeadPreset(value?: string | null): RestaurantLeadPreset {
+  switch (value) {
+    case "top":
+    case "high":
+    case "no_website":
+    case "has_email":
+    case "no_email":
+    case "ready_to_email":
+    case "not_contacted":
+    case "contacted":
+    case "qualified_out":
+    case "top20":
+      return value;
+    default:
+      return "all";
+  }
+}
+
+export async function getRestaurantLeadWorkspace(preset: RestaurantLeadPreset, page = 1) {
+  const prisma = getPrisma();
+  const companies = await prisma.company.findMany({
+    where: restaurantLeadWhere(),
+    include: {
+      ...companyListInclude,
+      contacts: {
+        orderBy: [{ isPrimary: "desc" as const }, { createdAt: "asc" as const }],
+      },
+      suppressions: { select: { emailNorm: true, domain: true } },
+    },
+    orderBy: [{ leadScore: { sort: "desc", nulls: "last" } }, { companyName: "asc" }],
+  });
+
+  const emails = companies.flatMap((company) => collectUsableEmails(company));
+  const domains = unique(emails.map((email) => email.split("@")[1]));
+  const suppressionWhere: Prisma.SuppressionWhereInput[] = [];
+  if (emails.length) suppressionWhere.push({ emailNorm: { in: emails } });
+  if (domains.length) suppressionWhere.push({ domain: { in: domains } });
+  const suppressions = suppressionWhere.length
+    ? await prisma.suppression.findMany({
+        where: { OR: suppressionWhere },
+        select: { emailNorm: true, domain: true },
+      })
+    : [];
+  const suppressedEmails = new Set(suppressions.map((row) => row.emailNorm));
+  const suppressedDomains = new Set(suppressions.map((row) => row.domain).filter((value): value is string => Boolean(value)));
+
+  const annotated = companies.map((company) => {
+    const usable = collectUsableEmails(company);
+    const suppressed =
+      company.suppressions.length > 0 ||
+      usable.some((email) => {
+        const domain = email.split("@")[1];
+        return suppressedEmails.has(email) || Boolean(domain && suppressedDomains.has(domain));
+      });
+    return { ...company, suppressed };
+  });
+
+  const stats = summarizeRestaurantLeads(annotated);
+  const filtered =
+    preset === "top20" ? selectTop20Outreach(annotated) : annotated.filter((company) => matchesRestaurantPreset(company, preset));
+  const pageCount = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const safePage = Math.min(Math.max(1, page), pageCount);
+  return {
+    stats,
+    rows: filtered.slice((safePage - 1) * PAGE_SIZE, safePage * PAGE_SIZE),
+    total: filtered.length,
+    page: safePage,
+    pageSize: PAGE_SIZE,
+    pageCount,
+    filteredIds: filtered.map((row) => row.id),
+    allIds: annotated.map((row) => row.id),
+  };
 }
 
 export type { WebsiteStatus };
