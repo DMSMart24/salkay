@@ -16,6 +16,7 @@ import { isRestaurantPremiumTemplate } from "@/lib/admin/email/templates/restaur
 import { ActionMessage } from "@/components/admin/ActionMessage";
 import { mergeVariableHelp } from "@/lib/admin/merge";
 import { templateCategories } from "@/lib/admin/labels";
+import type { PreviewWebsiteMode } from "@/lib/admin/email/website-copy";
 import type { FormState } from "@/lib/admin/validation";
 
 type TemplateStudioProps = {
@@ -45,6 +46,7 @@ export function TemplateStudio({
   const [body, setBody] = useState(template.body);
   const [subject, setSubject] = useState(template.subject);
   const [companyId, setCompanyId] = useState(companies[0]?.id ?? "");
+  const [previewStatus, setPreviewStatus] = useState<PreviewWebsiteMode>("actual");
   const [mode, setMode] = useState<"desktop" | "mobile">("desktop");
   const [preview, previewAction, previewPending] = useActionState<TemplatePreviewState, FormData>(
     previewTemplateAction,
@@ -67,12 +69,13 @@ export function TemplateStudio({
     data.set("companyId", companyId);
     data.set("subject", subject);
     data.set("body", body);
+    data.set("previewStatus", previewStatus);
     startTransition(() => {
       previewAction(data);
     });
-    // Preview on company/template change only; Önizle uses the current editor values.
+    // Preview on company/template/status change only; Önizle uses the current editor values.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companyId, template.id]);
+  }, [companyId, template.id, previewStatus]);
 
   return (
     <div className="admin-detail-grid">
@@ -184,6 +187,23 @@ export function TemplateStudio({
               ))}
             </select>
           </label>
+          {sourceOfTruth === "code" ? (
+            <label>
+              Website durumu (önizleme)
+              <select
+                name="previewStatus"
+                value={previewStatus}
+                onChange={(event) => setPreviewStatus(event.target.value as PreviewWebsiteMode)}
+              >
+                <option value="actual">Kayıtlı durum</option>
+                <option value="verified">VERIFIED</option>
+                <option value="not_verified">NOT_VERIFIED</option>
+                <option value="no_website">NO_WEBSITE</option>
+              </select>
+            </label>
+          ) : (
+            <input type="hidden" name="previewStatus" value="actual" />
+          )}
           <button className="admin-btn" disabled={previewPending}>
             Önizle
           </button>
@@ -191,11 +211,13 @@ export function TemplateStudio({
         <ActionMessage state={preview} />
         {preview.companyName ? (
           <div className="admin-preview-meta">
-            <p><span>KAYNAK</span> {preview.sourceOfTruth === "code" ? "Kod renderer" : "Veritabanı"}</p>
+            <p><span>KAYNAK</span> {preview.sourceOfTruth === "code" ? "CODE" : "DATABASE"}</p>
             <p><span>COPY</span> {preview.copyKind ?? "—"}</p>
             <p><span>ALICI</span> {preview.recipient || "—"}</p>
             <p><span>FİRMA</span> {preview.companyName}</p>
             <p><span>KONU</span> {preview.subject}</p>
+            <p><span>PREHEADER</span> {preview.preheader || "—"}</p>
+            <p><span>CTA</span> {preview.ctaLabel || "—"}</p>
             <p><span>SKOR</span> {preview.score}</p>
             <div className="admin-preview-split">
               <div>

@@ -81,6 +81,9 @@ test("restaurant verified uses review copy, score, and code subject", () => {
   assert.equal(rendered.context.analysisIntro, CUSTOMER_ANALYSIS_INTRO.verified);
   assert.match(rendered.bodyHtml, /Web sitenizi sizin için kısaca inceledik/);
   assert.match(rendered.bodyHtml, /2,5/);
+  assert.match(rendered.bodyHtml, /Ücretsiz örneği görmek istiyorum/);
+  assert.match(rendered.bodyHtml, /Abonelikten çık/);
+  assert.match(rendered.bodyHtml, /Salve Cafe için kısa bir dijital değerlendirme/);
   assert.equal(leakScan(rendered.bodyHtml, rendered.bodyText).length, 0);
 });
 

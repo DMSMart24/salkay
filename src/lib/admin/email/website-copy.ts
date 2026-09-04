@@ -41,3 +41,40 @@ export function customerAnalysisIntro(input: {
 }) {
   return CUSTOMER_ANALYSIS_INTRO[customerWebsiteCopyKind(input)];
 }
+
+export type PreviewWebsiteMode = "actual" | "verified" | "not_verified" | "no_website";
+
+export function parsePreviewWebsiteMode(raw: string): PreviewWebsiteMode {
+  switch (raw) {
+    case "verified":
+    case "not_verified":
+    case "no_website":
+    case "actual":
+      return raw;
+    default:
+      return "actual";
+  }
+}
+
+export function applyPreviewWebsiteMode<
+  T extends { websiteStatus?: WebsiteStatus | null; websiteScore?: number | null },
+>(company: T, mode: PreviewWebsiteMode): T {
+  switch (mode) {
+    case "actual":
+      return company;
+    case "not_verified":
+      return { ...company, websiteStatus: "NOT_VERIFIED", websiteScore: null };
+    case "no_website":
+      return { ...company, websiteStatus: "NO_WEBSITE", websiteScore: null };
+    case "verified":
+      return {
+        ...company,
+        websiteStatus: isAnalysableWebsiteStatus(company.websiteStatus) ? company.websiteStatus : "WEAK",
+        websiteScore: typeof company.websiteScore === "number" ? company.websiteScore : 4.2,
+      };
+    default: {
+      const _never: never = mode;
+      return _never;
+    }
+  }
+}

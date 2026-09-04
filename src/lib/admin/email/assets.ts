@@ -40,8 +40,8 @@ export function salkayWhatsAppNumber() {
   digits = digits.replace(/\D/g, "");
   if (digits.length === 11 && digits.startsWith("0")) digits = `90${digits.slice(1)}`;
   if (digits.length === 10 && digits.startsWith("5")) digits = `90${digits}`;
-  if (digits.length < 10 || digits.length > 15) return "";
-  return digits;
+  if (digits.length >= 10 && digits.length <= 15) return digits;
+  return site.whatsappE164;
 }
 
 export function whatsAppCtaUrl(message: string) {
@@ -51,7 +51,7 @@ export function whatsAppCtaUrl(message: string) {
 }
 
 export function restaurantWhatsAppMessage(companyName: string) {
-  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Detaylı bilgi almak istiyorum.`;
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz öneriyi inceledim. Ücretsiz örneği görmek isterim.`;
 }
 
 export function restaurantCtaUrl(companyName: string) {
@@ -59,7 +59,7 @@ export function restaurantCtaUrl(companyName: string) {
 }
 
 export function barWhatsAppMessage(companyName: string) {
-  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Barımızın dijital görünümü ve rezervasyon süreci hakkında detaylı bilgi almak istiyorum.`;
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz öneriyi inceledim. Ücretsiz örneği görmek isterim.`;
 }
 
 export function barCtaUrl(companyName: string) {
@@ -67,7 +67,7 @@ export function barCtaUrl(companyName: string) {
 }
 
 export function constructionWhatsAppMessage(companyName: string) {
-  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. İnşaat projemizin dijital görünümü ve referans sunumu hakkında detaylı bilgi almak istiyorum.`;
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz öneriyi inceledim. Ücretsiz örneği görmek isterim.`;
 }
 
 export function constructionCtaUrl(companyName: string) {
@@ -75,7 +75,7 @@ export function constructionCtaUrl(companyName: string) {
 }
 
 export function architectureWhatsAppMessage(companyName: string) {
-  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Mimari portföyümüzün dijital sunumu ve proje görünürlüğü hakkında detaylı bilgi almak istiyorum.`;
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz öneriyi inceledim. Ücretsiz örneği görmek isterim.`;
 }
 
 export function architectureCtaUrl(companyName: string) {
@@ -83,7 +83,7 @@ export function architectureCtaUrl(companyName: string) {
 }
 
 export function realEstateWhatsAppMessage(companyName: string) {
-  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Gayrimenkul portföyümüzün dijital görünümü ve ilan süreci hakkında detaylı bilgi almak istiyorum.`;
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz öneriyi inceledim. Ücretsiz örneği görmek isterim.`;
 }
 
 export function realEstateCtaUrl(companyName: string) {
@@ -91,7 +91,7 @@ export function realEstateCtaUrl(companyName: string) {
 }
 
 export function hotelWhatsAppMessage(companyName: string) {
-  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Otelimizin dijital görünümü ve rezervasyon süreci hakkında detaylı bilgi almak istiyorum.`;
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz öneriyi inceledim. Ücretsiz örneği görmek isterim.`;
 }
 
 export function hotelCtaUrl(companyName: string) {
@@ -99,7 +99,7 @@ export function hotelCtaUrl(companyName: string) {
 }
 
 export function automotiveWhatsAppMessage(companyName: string) {
-  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz web sitesi analizini inceledim. Showroomumuzun dijital görünümü ve araç stok sunumu hakkında detaylı bilgi almak istiyorum.`;
+  return `Merhaba Salih Bey, ${companyName.trim()} için gönderdiğiniz öneriyi inceledim. Ücretsiz örneği görmek isterim.`;
 }
 
 export function automotiveCtaUrl(companyName: string) {

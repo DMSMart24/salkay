@@ -15,8 +15,10 @@ import {
 } from "@/lib/admin/email/templates/bar";
 import { ensureBarOutreachRecords } from "@/lib/admin/email/templates/ensure-bar";
 import { ensureIndustryTemplateRecord } from "@/lib/admin/email/templates/ensure-industries";
+import { outreachCopy } from "@/lib/admin/email/templates/outreach-copy";
 import { industrySpec } from "@/lib/admin/email/templates/premium-industry";
 import {
+  isCodeBackedPremiumKind,
   isPremiumIndustryKind,
   PREMIUM_INDUSTRY_KINDS,
   resolvePremiumEmailKind,
@@ -28,6 +30,8 @@ import {
   RESTAURANT_TEMPLATE_SUBJECT,
   restaurantPremiumSource,
 } from "@/lib/admin/email/templates/restaurant";
+import { applyPreviewWebsiteMode, parsePreviewWebsiteMode } from "@/lib/admin/email/website-copy";
+import { mergeTemplate } from "@/lib/admin/merge";
 import { getPrisma } from "@/lib/admin/prisma";
 import { requireAdmin } from "@/lib/admin/session";
 import { templateSchema, type FormState } from "@/lib/admin/validation";
@@ -45,6 +49,8 @@ export type TemplatePreviewState = FormState & {
   copyKind?: string;
   sourceOfTruth?: "code" | "database";
   editorAffectsSend?: boolean;
+  preheader?: string;
+  ctaLabel?: string;
   recipient?: string;
   companyName?: string;
   unresolved?: boolean;
@@ -277,12 +283,21 @@ export async function previewTemplateAction(
   const editorSubject = String(formData.get("subject") ?? "").trim() || template.subject;
   const editorBody = String(formData.get("body") ?? "").trim() || template.body;
   const sendable = resolveSendableTemplate(template);
+  const previewCompany = applyPreviewWebsiteMode(
+    company,
+    parsePreviewWebsiteMode(String(formData.get("previewStatus") ?? "actual")),
+  );
   const rendered = renderFromTemplate(
     sendable.editorAffectsSend
       ? { ...template, subject: editorSubject, body: editorBody }
       : template,
-    company,
+    previewCompany,
   );
+  const preheader = isCodeBackedPremiumKind(sendable.kind)
+    ? mergeTemplate(outreachCopy(sendable.kind).preheader, {
+        companyName: rendered.context.vars.companyName,
+      })
+    : "";
 
   return {
     success: "Önizleme hazır. Veritabanı değişmedi, e-posta gönderilmedi.",
@@ -298,6 +313,8 @@ export async function previewTemplateAction(
     copyKind: rendered.context.copyKind,
     sourceOfTruth: rendered.sendable.sourceOfTruth,
     editorAffectsSend: rendered.sendable.editorAffectsSend,
+    preheader,
+    ctaLabel: isCodeBackedPremiumKind(sendable.kind) ? outreachCopy(sendable.kind).ctaLabel : undefined,
     recipient: rendered.context.vars.companyEmail,
     companyName: company.companyName,
     unresolved: rendered.unresolved,
