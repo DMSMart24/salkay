@@ -140,10 +140,12 @@ export function canShowCustomerWebsiteScore(input: {
   websiteScore?: number | null;
   website?: string | null;
 }) {
-  if (input.websiteStatus === "NO_WEBSITE" || input.websiteStatus === "NOT_VERIFIED") {
-    return false;
-  }
-  if (input.websiteStatus === "UNKNOWN" && !input.website) {
+  if (
+    input.websiteStatus === "NO_WEBSITE" ||
+    input.websiteStatus === "NOT_VERIFIED" ||
+    input.websiteStatus === "UNKNOWN" ||
+    !input.websiteStatus
+  ) {
     return false;
   }
   return (

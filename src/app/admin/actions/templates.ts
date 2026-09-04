@@ -4,7 +4,10 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { recordActivity } from "@/lib/admin/activity";
 import { salkayPhone } from "@/lib/admin/email/assets";
-import { renderPersonalizedEmail } from "@/lib/admin/email/render";
+import { renderFromTemplate } from "@/lib/admin/email/render";
+import { isFollowUpStep, parseSequenceStep } from "@/lib/admin/email/sequence";
+import { followUpCopy } from "@/lib/admin/email/templates/follow-up-copy";
+import { resolveSendableTemplate } from "@/lib/admin/email/sendable";
 import {
   BAR_GROUP_NAME,
   BAR_TEMPLATE_CATEGORY,
@@ -14,8 +17,10 @@ import {
 } from "@/lib/admin/email/templates/bar";
 import { ensureBarOutreachRecords } from "@/lib/admin/email/templates/ensure-bar";
 import { ensureIndustryTemplateRecord } from "@/lib/admin/email/templates/ensure-industries";
+import { outreachCopy } from "@/lib/admin/email/templates/outreach-copy";
 import { industrySpec } from "@/lib/admin/email/templates/premium-industry";
 import {
+  isCodeBackedPremiumKind,
   isPremiumIndustryKind,
   PREMIUM_INDUSTRY_KINDS,
   resolvePremiumEmailKind,
@@ -27,6 +32,8 @@ import {
   RESTAURANT_TEMPLATE_SUBJECT,
   restaurantPremiumSource,
 } from "@/lib/admin/email/templates/restaurant";
+import { applyPreviewWebsiteMode, parsePreviewWebsiteMode } from "@/lib/admin/email/website-copy";
+import { mergeTemplate } from "@/lib/admin/merge";
 import { getPrisma } from "@/lib/admin/prisma";
 import { requireAdmin } from "@/lib/admin/session";
 import { templateSchema, type FormState } from "@/lib/admin/validation";
@@ -40,11 +47,18 @@ export type TemplatePreviewState = FormState & {
   internalIssues?: string[];
   customerIssues?: string[];
   issueReviewNeeded?: string[];
+  droppedIssues?: string[];
+  copyKind?: string;
+  sourceOfTruth?: "code" | "database";
+  editorAffectsSend?: boolean;
+  preheader?: string;
+  ctaLabel?: string;
   recipient?: string;
   companyName?: string;
   unresolved?: boolean;
   ctaConfigured?: boolean;
   phoneVisible?: boolean;
+  sequenceStep?: number;
 };
 
 function touchTemplates(id?: string) {
@@ -71,10 +85,13 @@ export async function updateTemplateAction(
     return { error: parsed.success ? "Şablon bulunamadı." : parsed.error.issues[0]?.message };
   }
 
+  const sendable = resolveSendableTemplate(parsed.data);
   await getPrisma().emailTemplate.update({
     where: { id },
     data: {
       ...parsed.data,
+      subject: sendable.subject || parsed.data.subject,
+      body: sendable.body || parsed.data.body,
       active: parsed.data.active ?? true,
     },
   });
@@ -132,16 +149,6 @@ export async function ensureRestaurantTemplateForm(formData: FormData) {
   });
   touchTemplates(created.id);
   redirect(`/admin/templates/${created.id}`);
-}
-
-function premiumTemplateSource(template: { name?: string | null; body?: string | null; category?: string | null }) {
-  const kind = resolvePremiumEmailKind({
-    name: template.name,
-    category: template.category,
-    body: template.body,
-  });
-  if (kind === "custom") return template.body ?? "";
-  return premiumHtmlSource(kind);
 }
 
 function parseIndustryKind(raw: string): PremiumIndustryKind | null {
@@ -276,20 +283,29 @@ export async function previewTemplateAction(
     return { error: "Şablon veya firma bulunamadı." };
   }
 
-  const subject = String(formData.get("subject") ?? "").trim() || template.subject;
+  const editorSubject = String(formData.get("subject") ?? "").trim() || template.subject;
   const editorBody = String(formData.get("body") ?? "").trim() || template.body;
-  const kind = resolvePremiumEmailKind({
-    name: template.name,
-    category: template.category,
-  });
-  const body = kind === "custom" ? editorBody : premiumTemplateSource(template);
-  const rendered = renderPersonalizedEmail({
-    subject,
-    body,
+  const sendable = resolveSendableTemplate(template);
+  const previewCompany = applyPreviewWebsiteMode(
     company,
-    templateName: template.name,
-    templateCategory: template.category,
-  });
+    parsePreviewWebsiteMode(String(formData.get("previewStatus") ?? "actual")),
+  );
+  const sequenceStep = parseSequenceStep(String(formData.get("sequenceStep") ?? "0"));
+  const rendered = renderFromTemplate(
+    sendable.editorAffectsSend
+      ? { ...template, subject: editorSubject, body: editorBody }
+      : template,
+    previewCompany,
+    { sequenceStep },
+  );
+  const followCopy = isFollowUpStep(sequenceStep) ? followUpCopy(sendable.kind, sequenceStep) : null;
+  const preheader = followCopy
+    ? followCopy.preheader
+    : isCodeBackedPremiumKind(sendable.kind)
+      ? mergeTemplate(outreachCopy(sendable.kind).preheader, {
+          companyName: rendered.context.vars.companyName,
+        })
+      : "";
 
   return {
     success: "Önizleme hazır. Veritabanı değişmedi, e-posta gönderilmedi.",
@@ -301,8 +317,19 @@ export async function previewTemplateAction(
     internalIssues: rendered.context.internalIssues,
     customerIssues: rendered.context.customerIssues,
     issueReviewNeeded: rendered.context.issueReviewNeeded,
+    droppedIssues: rendered.context.droppedIssues,
+    copyKind: rendered.context.copyKind,
+    sourceOfTruth: rendered.sendable.sourceOfTruth,
+    editorAffectsSend: rendered.sendable.editorAffectsSend,
+    preheader,
+    ctaLabel: followCopy
+      ? followCopy.ctaLabel
+      : isCodeBackedPremiumKind(sendable.kind)
+        ? outreachCopy(sendable.kind).ctaLabel
+        : undefined,
     recipient: rendered.context.vars.companyEmail,
     companyName: company.companyName,
+    sequenceStep,
     unresolved: rendered.unresolved,
     ctaConfigured: rendered.context.ctaConfigured,
     phoneVisible: Boolean(salkayPhone()),
@@ -324,13 +351,7 @@ export async function saveTemplateTestDraftForm(formData: FormData) {
   ]);
   if (!template || !company) return;
 
-  const rendered = renderPersonalizedEmail({
-    subject: template.subject,
-    body: premiumTemplateSource(template),
-    company,
-    templateName: template.name,
-    templateCategory: template.category,
-  });
+  const rendered = renderFromTemplate(template, company);
   const contact = company.contacts.find((row) => row.isPrimary) ?? company.contacts[0];
 
   await getPrisma().emailMessage.create({

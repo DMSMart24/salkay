@@ -6,6 +6,7 @@ import {
 } from "@/app/admin/actions/outreach";
 import { CompanyForm } from "@/components/admin/CompanyForm";
 import { ComposeEmail } from "@/components/admin/ComposeEmail";
+import { SequencePanel } from "@/components/admin/SequencePanel";
 import { NoteForm } from "@/components/admin/SimpleForms";
 import { LeadPriorityBadge, OutreachBadge, WebsiteBadge } from "@/components/admin/StatusBadge";
 import { formatDate, formatDateTime } from "@/lib/admin/format";
@@ -19,6 +20,13 @@ import {
 } from "@/lib/admin/qualification";
 import { getPrisma } from "@/lib/admin/prisma";
 import { getCompanyDetail } from "@/lib/admin/queries";
+import {
+  FOLLOW_UP_STOPPED_TAG,
+  inferredSequenceStep,
+  resolveCompanySequence,
+  sequenceFlagsFromCompany,
+  sequenceStepLabel,
+} from "@/lib/admin/email/sequence";
 
 export const dynamic = "force-dynamic";
 
@@ -46,6 +54,10 @@ export default async function CompanyDetailPage({
   ]);
 
   const primary = company.contacts.find((row) => row.isPrimary) ?? company.contacts[0];
+  const sequence = resolveCompanySequence({
+    company: sequenceFlagsFromCompany(company),
+    messages: company.emails,
+  });
 
   return (
     <div className="admin-page">
@@ -214,6 +226,12 @@ export default async function CompanyDetailPage({
           </p>
         </section>
 
+        <SequencePanel
+          companyId={company.id}
+          sequence={sequence}
+          stopped={company.tags.includes(FOLLOW_UP_STOPPED_TAG)}
+        />
+
         <section className="admin-panel">
           <h2>E-posta Geçmişi</h2>
           {company.emails.length === 0 ? (
@@ -223,6 +241,7 @@ export default async function CompanyDetailPage({
               <article key={message.id} className="admin-msg">
                 <p>
                   <strong>{directionLabels[message.direction]}</strong> · {emailStatusLabels[message.status]} ·{" "}
+                  {sequenceStepLabel(inferredSequenceStep(message))} ·{" "}
                   {formatDateTime(message.sentAt ?? message.receivedAt ?? message.createdAt)}
                 </p>
                 <p>{message.subject}</p>

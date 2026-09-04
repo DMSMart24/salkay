@@ -5,18 +5,21 @@ import { randomUUID } from "node:crypto";
 import { recordActivity } from "@/lib/admin/activity";
 import { OUTREACH_FROM_DISPLAY_NAME } from "@/lib/admin/email/from";
 import { getEmailFrom, getEmailProvider, getOutreachFrom } from "@/lib/admin/email/provider";
-import { renderPersonalizedEmail } from "@/lib/admin/email/render";
+import { renderFromTemplate } from "@/lib/admin/email/render";
+import { nextFollowUpAtAfterSend, parseSequenceStep } from "@/lib/admin/email/sequence";
 import { looksLikeHtmlEmail } from "@/lib/admin/email/html";
-import {
-  isCodeBackedPremiumKind,
-  resolvePremiumEmailKind,
-} from "@/lib/admin/email/templates/premium-kind";
-import { premiumHtmlSource, premiumSubject } from "@/lib/admin/email/templates/premium-source";
+import { resolveSendableTemplate } from "@/lib/admin/email/sendable";
+import { isCodeBackedPremiumKind } from "@/lib/admin/email/templates/premium-kind";
 import { normalizeEmail } from "@/lib/admin/normalize";
-import { isOutreachSendEnabled } from "@/lib/admin/outreach";
+import {
+  evaluateAddressSend,
+  evaluateTestRecipient,
+  isOutreachSendEnabled,
+  TEST_EMAIL_SUBJECT_PREFIX,
+} from "@/lib/admin/outreach";
 import { getPrisma } from "@/lib/admin/prisma";
 import { requireAdmin } from "@/lib/admin/session";
-import { companyIsCampaignEligible, isEmailSuppressed, suppressEmail } from "@/lib/admin/suppression";
+import { companyIsCampaignEligible, suppressEmail } from "@/lib/admin/suppression";
 import {
   assignMessageSchema,
   campaignSchema,
@@ -61,10 +64,6 @@ export async function composeEmailAction(
     return { error: parsed.error.issues[0]?.message ?? "E-posta geçersiz." };
   }
 
-  if (await isEmailSuppressed(parsed.data.to)) {
-    return { error: "Bu adres bastırılmış (do-not-contact / unsubscribe)." };
-  }
-
   const prisma = getPrisma();
   const company = await prisma.company.findUnique({
     where: { id: parsed.data.companyId },
@@ -73,8 +72,14 @@ export async function composeEmailAction(
   if (!company) {
     return { error: "Firma bulunamadı." };
   }
-  if (company.outreachStatus === "DO_NOT_CONTACT" || company.status === "DO_NOT_CONTACT") {
-    return { error: "Bu firma iletişim dışı. Gönderim engellendi." };
+  const addressGuard = await evaluateAddressSend({
+    archivedAt: company.archivedAt,
+    outreachStatus: company.outreachStatus,
+    status: company.status,
+    to: parsed.data.to,
+  });
+  if (!addressGuard.ok) {
+    return { error: `${addressGuard.reason}. Gönderim engellendi.` };
   }
 
   const contact = parsed.data.contactId
@@ -84,18 +89,16 @@ export async function composeEmailAction(
   const template = parsed.data.templateId
     ? await prisma.emailTemplate.findUnique({ where: { id: parsed.data.templateId } })
     : null;
-  const rendered = renderPersonalizedEmail({
-    subject: parsed.data.subject,
-    body: parsed.data.body,
-    company,
-    templateName: template?.name,
-    templateCategory: template?.category,
-  });
+  const sendableInput = template
+    ? resolveSendableTemplate(template).editorAffectsSend
+      ? { ...template, subject: parsed.data.subject, body: parsed.data.body }
+      : template
+    : { subject: parsed.data.subject, body: parsed.data.body };
+  const rendered = renderFromTemplate(sendableInput, company);
   const mergedSubject = rendered.subject;
   const mergedBody = rendered.bodyText;
-  const templateKind = resolvePremiumEmailKind(template ?? {});
   const mergedHtml =
-    looksLikeHtmlEmail(parsed.data.body) || isCodeBackedPremiumKind(templateKind)
+    looksLikeHtmlEmail(rendered.bodyHtml) || isCodeBackedPremiumKind(rendered.sendable.kind)
       ? rendered.bodyHtml
       : undefined;
 
@@ -149,6 +152,7 @@ export async function composeEmailAction(
   }
 
   await prisma.$transaction(async (tx) => {
+    const sentAt = new Date();
     await tx.emailMessage.create({
       data: {
         companyId: company.id,
@@ -162,7 +166,7 @@ export async function composeEmailAction(
         subject: mergedSubject,
         bodyText: mergedBody,
         bodyHtml: mergedHtml,
-        sentAt: new Date(),
+        sentAt,
         status: "SENT",
         templateId: parsed.data.templateId,
       },
@@ -171,9 +175,10 @@ export async function composeEmailAction(
     await tx.company.update({
       where: { id: company.id },
       data: {
-        lastContactedAt: new Date(),
+        lastContactedAt: sentAt,
         status: company.status === "NEW" ? "CONTACTED" : company.status,
         outreachStatus: "SENT",
+        nextFollowUpAt: nextFollowUpAtAfterSend(0, sentAt),
       },
     });
 
@@ -223,14 +228,13 @@ export async function sendTestEmailAction(
     return { error: "Şablon bulunamadı." };
   }
 
-  const kind = resolvePremiumEmailKind(template);
-  const rendered = renderPersonalizedEmail({
-    subject: isCodeBackedPremiumKind(kind) ? premiumSubject(kind) : template.subject,
-    body: isCodeBackedPremiumKind(kind) ? premiumHtmlSource(kind) : template.body,
-    company,
-    templateName: template.name,
-    templateCategory: template.category,
-  });
+  const testGuard = await evaluateTestRecipient({ company, testEmail });
+  if (!testGuard.ok) {
+    return { error: testGuard.reason };
+  }
+
+  const sequenceStep = parseSequenceStep(String(formData.get("sequenceStep") ?? "0"));
+  const rendered = renderFromTemplate(template, company, { sequenceStep });
   if (rendered.unresolved) {
     return { error: "Şablonda çözülmemiş merge alanı var. Test gönderilmedi." };
   }
@@ -241,8 +245,8 @@ export async function sendTestEmailAction(
   }
 
   const sent = await provider.sendEmail({
-    to: testEmail,
-    subject: rendered.subject,
+    to: testGuard.email,
+    subject: `${TEST_EMAIL_SUBJECT_PREFIX}${rendered.subject}`,
     bodyText: rendered.bodyText,
     bodyHtml: rendered.bodyHtml,
     fromName: OUTREACH_FROM_DISPLAY_NAME,
@@ -251,7 +255,7 @@ export async function sendTestEmailAction(
     return { error: sent.error };
   }
 
-  return { success: `Test e-postası gönderildi: ${testEmail}` };
+  return { success: `TEST e-postası gönderildi: ${testGuard.email}. Firma outreach durumu değişmedi.` };
 }
 
 export async function createTaskAction(

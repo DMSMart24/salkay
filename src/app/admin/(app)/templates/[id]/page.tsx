@@ -3,8 +3,8 @@ import { notFound } from "next/navigation";
 import { duplicateTemplateForm } from "@/app/admin/actions/templates";
 import { TemplateStudio } from "@/components/admin/TemplateStudio";
 import { formatDateTime } from "@/lib/admin/format";
+import { resolveSendableTemplate, sendableSourceLabel } from "@/lib/admin/email/sendable";
 import { resolvePremiumEmailKind } from "@/lib/admin/email/templates/premium-kind";
-import { premiumHtmlSource } from "@/lib/admin/email/templates/premium-source";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
@@ -77,7 +77,7 @@ export default async function TemplateDetailPage({
     name: template.name,
     category: template.category,
   });
-  const studioBody = kind === "custom" ? template.body : premiumHtmlSource(kind);
+  const sendable = resolveSendableTemplate(template);
 
   return (
     <div className="admin-page">
@@ -89,6 +89,7 @@ export default async function TemplateDetailPage({
             Kategori: {template.category} · Dil: {template.language === "tr" ? "Türkçe" : template.language} ·{" "}
             {template.active ? "Aktif" : "Kapalı"} · Son güncelleme {formatDateTime(template.updatedAt)}
           </p>
+          <p className="admin-help">{sendableSourceLabel(sendable)}</p>
         </div>
         <div className="admin-actions">
           <form action={duplicateTemplateForm}>
@@ -104,9 +105,13 @@ export default async function TemplateDetailPage({
         key={template.id}
         template={{
           ...template,
-          body: studioBody,
+          subject: sendable.subject,
+          body: sendable.body,
           updatedAt: template.updatedAt.toISOString(),
         }}
+        sourceOfTruth={sendable.sourceOfTruth}
+        editorAffectsSend={sendable.editorAffectsSend}
+        kindLabel={sendable.kind}
         companies={[...companies]
           .sort((left, right) => previewRank(left, kind) - previewRank(right, kind))
           .map(({ id, companyName }) => ({ id, companyName }))}

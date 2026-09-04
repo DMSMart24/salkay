@@ -18,7 +18,8 @@ import {
   resolvePremiumEmailKind,
   type PremiumIndustryKind,
 } from "@/lib/admin/email/templates/premium-kind";
-import { composePlaceholderForKind, premiumSubject } from "@/lib/admin/email/templates/premium-source";
+import { resolveSendableTemplate } from "@/lib/admin/email/sendable";
+import { composePlaceholderForKind } from "@/lib/admin/email/templates/premium-source";
 import { isRealEstateCompany } from "@/lib/admin/email/templates/real-estate";
 import {
   isRestaurantCompany,
@@ -124,17 +125,17 @@ export function ComposeEmail({
       city: city ?? undefined,
       industry: industry ?? undefined,
     };
-    const kind = template ? resolvePremiumEmailKind(template) : "custom";
-    if (template && isCodeBackedPremiumKind(kind)) {
+    if (!template) return { subject: "", body: "" };
+    const sendable = resolveSendableTemplate(template);
+    if (isCodeBackedPremiumKind(sendable.kind)) {
       return {
-        subject: mergeTemplate(premiumSubject(kind), vars),
-        body: composePlaceholderForKind(kind),
+        subject: mergeTemplate(sendable.subject, vars),
+        body: composePlaceholderForKind(sendable.kind),
       };
     }
-    if (!template) return { subject: "", body: "" };
     return {
-      subject: mergeTemplate(template.subject, vars),
-      body: mergeTemplate(template.body, vars),
+      subject: mergeTemplate(sendable.subject, vars),
+      body: mergeTemplate(sendable.body, vars),
     };
   }, [companyName, industry, initialTemplateId, primary?.firstName, templates, website, city]);
 
@@ -143,6 +144,11 @@ export function ComposeEmail({
   const [body, setBody] = useState(prefill.body);
   const [to, setTo] = useState(contacts.find((row) => row.email)?.email ?? "");
   const [testEmail, setTestEmail] = useState("");
+  const selectedTemplate = templates.find((row) => row.id === templateId);
+  const selectedSendable = selectedTemplate ? resolveSendableTemplate(selectedTemplate) : null;
+  const codeBackedSelected = Boolean(
+    selectedSendable && isCodeBackedPremiumKind(selectedSendable.kind),
+  );
 
   function applyTemplate(id: string) {
     const template = templates.find((row) => row.id === id);
@@ -158,14 +164,14 @@ export function ComposeEmail({
       city: city ?? undefined,
       industry: industry ?? undefined,
     };
-    const kind = resolvePremiumEmailKind(template);
-    if (isCodeBackedPremiumKind(kind)) {
-      setSubject(mergeTemplate(premiumSubject(kind), vars));
-      setBody(composePlaceholderForKind(kind));
+    const sendable = resolveSendableTemplate(template);
+    if (isCodeBackedPremiumKind(sendable.kind)) {
+      setSubject(mergeTemplate(sendable.subject, vars));
+      setBody(composePlaceholderForKind(sendable.kind));
       return;
     }
-    setSubject(mergeTemplate(template.subject, vars));
-    setBody(mergeTemplate(template.body, vars));
+    setSubject(mergeTemplate(sendable.subject, vars));
+    setBody(mergeTemplate(sendable.body, vars));
   }
 
   return (
@@ -236,13 +242,21 @@ export function ComposeEmail({
                   ))}
                 </select>
               </label>
+              {codeBackedSelected ? (
+                <p className="admin-help">
+                  Premium şablon: konu ve HTML kod renderer ile üretilir. Compose, Preview ve Bulk aynı içeriği kullanır.
+                </p>
+              ) : null}
               <label>
                 Subject
                 <input
                   name="subject"
                   required
                   value={subject}
-                  onChange={(e) => setSubject(e.target.value)}
+                  readOnly={codeBackedSelected}
+                  onChange={(e) => {
+                    if (!codeBackedSelected) setSubject(e.target.value);
+                  }}
                 />
               </label>
               <label>
@@ -252,7 +266,10 @@ export function ComposeEmail({
                   rows={8}
                   required
                   value={body}
-                  onChange={(e) => setBody(e.target.value)}
+                  readOnly={codeBackedSelected}
+                  onChange={(e) => {
+                    if (!codeBackedSelected) setBody(e.target.value);
+                  }}
                 />
               </label>
               {!outreachSendEnabled ? (
@@ -291,7 +308,8 @@ export function ComposeEmail({
                 />
               </label>
               <p className="admin-help">
-                Bu test yalnızca aşağıdaki adrese gönderilir. Firma alıcısına e-posta gönderilmez.
+                TEST olarak işaretlenir. Firma alıcısına ve Sperrliste adreslerine gitmez. Outreach
+                durumu değişmez.
               </p>
               <div className="admin-actions">
                 <button className="admin-btn" disabled={testPending || !templateId}>
