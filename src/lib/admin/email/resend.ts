@@ -36,6 +36,7 @@ export class ResendEmailProvider implements EmailProvider {
         subject: input.subject,
         text: input.bodyText,
         html: input.bodyHtml,
+        headers: input.headers && Object.keys(input.headers).length > 0 ? input.headers : undefined,
       }),
     });
 

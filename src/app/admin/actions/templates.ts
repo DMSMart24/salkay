@@ -5,6 +5,8 @@ import { redirect } from "next/navigation";
 import { recordActivity } from "@/lib/admin/activity";
 import { salkayPhone } from "@/lib/admin/email/assets";
 import { renderFromTemplate } from "@/lib/admin/email/render";
+import { isFollowUpStep, parseSequenceStep } from "@/lib/admin/email/sequence";
+import { followUpCopy } from "@/lib/admin/email/templates/follow-up-copy";
 import { resolveSendableTemplate } from "@/lib/admin/email/sendable";
 import {
   BAR_GROUP_NAME,
@@ -56,6 +58,7 @@ export type TemplatePreviewState = FormState & {
   unresolved?: boolean;
   ctaConfigured?: boolean;
   phoneVisible?: boolean;
+  sequenceStep?: number;
 };
 
 function touchTemplates(id?: string) {
@@ -287,17 +290,22 @@ export async function previewTemplateAction(
     company,
     parsePreviewWebsiteMode(String(formData.get("previewStatus") ?? "actual")),
   );
+  const sequenceStep = parseSequenceStep(String(formData.get("sequenceStep") ?? "0"));
   const rendered = renderFromTemplate(
     sendable.editorAffectsSend
       ? { ...template, subject: editorSubject, body: editorBody }
       : template,
     previewCompany,
+    { sequenceStep },
   );
-  const preheader = isCodeBackedPremiumKind(sendable.kind)
-    ? mergeTemplate(outreachCopy(sendable.kind).preheader, {
-        companyName: rendered.context.vars.companyName,
-      })
-    : "";
+  const followCopy = isFollowUpStep(sequenceStep) ? followUpCopy(sendable.kind, sequenceStep) : null;
+  const preheader = followCopy
+    ? followCopy.preheader
+    : isCodeBackedPremiumKind(sendable.kind)
+      ? mergeTemplate(outreachCopy(sendable.kind).preheader, {
+          companyName: rendered.context.vars.companyName,
+        })
+      : "";
 
   return {
     success: "Önizleme hazır. Veritabanı değişmedi, e-posta gönderilmedi.",
@@ -314,9 +322,14 @@ export async function previewTemplateAction(
     sourceOfTruth: rendered.sendable.sourceOfTruth,
     editorAffectsSend: rendered.sendable.editorAffectsSend,
     preheader,
-    ctaLabel: isCodeBackedPremiumKind(sendable.kind) ? outreachCopy(sendable.kind).ctaLabel : undefined,
+    ctaLabel: followCopy
+      ? followCopy.ctaLabel
+      : isCodeBackedPremiumKind(sendable.kind)
+        ? outreachCopy(sendable.kind).ctaLabel
+        : undefined,
     recipient: rendered.context.vars.companyEmail,
     companyName: company.companyName,
+    sequenceStep,
     unresolved: rendered.unresolved,
     ctaConfigured: rendered.context.ctaConfigured,
     phoneVisible: Boolean(salkayPhone()),

@@ -47,6 +47,7 @@ export function TemplateStudio({
   const [subject, setSubject] = useState(template.subject);
   const [companyId, setCompanyId] = useState(companies[0]?.id ?? "");
   const [previewStatus, setPreviewStatus] = useState<PreviewWebsiteMode>("actual");
+  const [sequenceStep, setSequenceStep] = useState("0");
   const [mode, setMode] = useState<"desktop" | "mobile">("desktop");
   const [preview, previewAction, previewPending] = useActionState<TemplatePreviewState, FormData>(
     previewTemplateAction,
@@ -70,12 +71,13 @@ export function TemplateStudio({
     data.set("subject", subject);
     data.set("body", body);
     data.set("previewStatus", previewStatus);
+    data.set("sequenceStep", sequenceStep);
     startTransition(() => {
       previewAction(data);
     });
-    // Preview on company/template/status change only; Önizle uses the current editor values.
+    // Preview on company/template/status/step change only; Önizle uses the current editor values.
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [companyId, template.id, previewStatus]);
+  }, [companyId, template.id, previewStatus, sequenceStep]);
 
   return (
     <div className="admin-detail-grid">
@@ -187,6 +189,18 @@ export function TemplateStudio({
               ))}
             </select>
           </label>
+          <label>
+            Sequence
+            <select
+              name="sequenceStep"
+              value={sequenceStep}
+              onChange={(event) => setSequenceStep(event.target.value)}
+            >
+              <option value="0">İlk e-posta</option>
+              <option value="1">Follow-up 1</option>
+              <option value="2">Follow-up 2</option>
+            </select>
+          </label>
           {sourceOfTruth === "code" ? (
             <label>
               Website durumu (önizleme)
@@ -215,6 +229,7 @@ export function TemplateStudio({
             <p><span>COPY</span> {preview.copyKind ?? "—"}</p>
             <p><span>ALICI</span> {preview.recipient || "—"}</p>
             <p><span>FİRMA</span> {preview.companyName}</p>
+            <p><span>SEQUENCE</span> {preview.sequenceStep === 1 ? "Follow-up 1" : preview.sequenceStep === 2 ? "Follow-up 2" : "İlk e-posta"}</p>
             <p><span>KONU</span> {preview.subject}</p>
             <p><span>PREHEADER</span> {preview.preheader || "—"}</p>
             <p><span>CTA</span> {preview.ctaLabel || "—"}</p>

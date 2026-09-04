@@ -65,6 +65,10 @@ export function assertBulkRateLimit(userId: string) {
   return null;
 }
 
+export function assertFollowUpRateLimit(userId: string) {
+  return assertBulkRateLimit(userId);
+}
+
 export function companyFilterWhere(input: CompanyFilterInput): Prisma.CompanyWhereInput {
   const where: Prisma.CompanyWhereInput = {
     archivedAt: input.archived ? { not: null } : null,

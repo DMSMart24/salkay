@@ -7,6 +7,7 @@ import { recordActivity } from "@/lib/admin/activity";
 import { OUTREACH_FROM_DISPLAY_NAME } from "@/lib/admin/email/from";
 import { getEmailFrom, getEmailProvider, getOutreachFrom } from "@/lib/admin/email/provider";
 import { renderFromTemplate } from "@/lib/admin/email/render";
+import { FOLLOW_UP_STOPPED_TAG, nextFollowUpAtAfterSend } from "@/lib/admin/email/sequence";
 import { normalizeEmail } from "@/lib/admin/normalize";
 import {
   assertBulkRateLimit,
@@ -377,7 +378,11 @@ export async function queueBulkSendAction(
           });
           await tx.company.update({
             where: { id: company.id },
-            data: { lastContactedAt: new Date(), outreachStatus: "SENT" },
+            data: {
+              lastContactedAt: new Date(),
+              outreachStatus: "SENT",
+              nextFollowUpAt: nextFollowUpAtAfterSend(0),
+            },
           });
         } else {
           await tx.emailMessage.update({
@@ -423,6 +428,32 @@ export async function markDoNotContactForm(formData: FormData) {
   data.set("companyId", String(formData.get("companyId") ?? ""));
   data.set("outreachStatus", "DO_NOT_CONTACT");
   await changeOutreachStatusForm(data);
+}
+
+export async function markCompanyRepliedForm(formData: FormData) {
+  const data = new FormData();
+  data.set("companyId", String(formData.get("companyId") ?? ""));
+  data.set("outreachStatus", "REPLIED");
+  await changeOutreachStatusForm(data);
+}
+
+export async function stopFollowUpSequenceForm(formData: FormData) {
+  await requireAdmin();
+  const companyId = String(formData.get("companyId") ?? "");
+  if (!companyId) return;
+  const company = await getPrisma().company.findUnique({
+    where: { id: companyId },
+    select: { tags: true },
+  });
+  if (!company) return;
+  const tags = company.tags.includes(FOLLOW_UP_STOPPED_TAG)
+    ? company.tags
+    : [...company.tags, FOLLOW_UP_STOPPED_TAG];
+  await getPrisma().company.update({
+    where: { id: companyId },
+    data: { tags, nextFollowUpAt: null },
+  });
+  touchOutreach([companyId]);
 }
 
 export async function publicUnsubscribeAction(

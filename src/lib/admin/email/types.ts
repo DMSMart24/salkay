@@ -6,6 +6,7 @@ export type EmailSendInput = {
   bodyHtml?: string;
   from?: string;
   fromName?: string;
+  headers?: Record<string, string>;
 };
 
 export type EmailSendResult =

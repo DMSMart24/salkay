@@ -20,8 +20,24 @@ import { isPremiumIndustryKind } from "@/lib/admin/email/templates/premium-kind"
 import { premiumHtmlSource } from "@/lib/admin/email/templates/premium-source";
 import { renderRealEstateEmail } from "@/lib/admin/email/templates/real-estate";
 import { renderRestaurantEmail, restaurantPremiumSource } from "@/lib/admin/email/templates/restaurant";
+import { renderFollowUpOutreach } from "@/lib/admin/email/templates/follow-up-outreach";
+import {
+  followUpSubject,
+  isFollowUpStep,
+  parseSequenceStep,
+  type SequenceStepNumber,
+} from "@/lib/admin/email/sequence";
 
-export function renderFromTemplate(template: SendableTemplateInput, company: CompanyEmailInput) {
+export type RenderFromTemplateOptions = {
+  sequenceStep?: SequenceStepNumber | string | null;
+  originalSubject?: string;
+};
+
+export function renderFromTemplate(
+  template: SendableTemplateInput,
+  company: CompanyEmailInput,
+  options?: RenderFromTemplateOptions,
+) {
   const sendable = resolveSendableTemplate(template);
   return {
     sendable,
@@ -31,6 +47,12 @@ export function renderFromTemplate(template: SendableTemplateInput, company: Com
       company,
       templateName: template.name ?? undefined,
       templateCategory: template.category ?? undefined,
+      sequenceStep: parseSequenceStep(
+        typeof options?.sequenceStep === "number"
+          ? String(options.sequenceStep)
+          : options?.sequenceStep,
+      ),
+      originalSubject: options?.originalSubject,
     }),
   };
 }
@@ -41,6 +63,8 @@ export function renderPersonalizedEmail(input: {
   company: CompanyEmailInput;
   templateName?: string;
   templateCategory?: string;
+  sequenceStep?: SequenceStepNumber;
+  originalSubject?: string;
 }) {
   const sendable: SendableTemplate = resolveSendableTemplate({
     name: input.templateName,
@@ -54,7 +78,22 @@ export function renderPersonalizedEmail(input: {
     : kind === "bar"
       ? buildBarEmailContext(input.company)
       : buildRestaurantEmailContext(input.company);
-  const subject = mergeTemplate(sendable.subject, context.vars);
+  const initialSubject = mergeTemplate(sendable.subject, context.vars);
+  const sequenceStep = input.sequenceStep ?? 0;
+  if (isFollowUpStep(sequenceStep)) {
+    const bodyHtml = renderFollowUpOutreach(kind, sequenceStep, context);
+    const subject = followUpSubject(input.originalSubject?.trim() || initialSubject);
+    const bodyText = looksLikeHtmlEmail(bodyHtml) ? htmlToPlainText(bodyHtml) : bodyHtml;
+    return {
+      subject,
+      bodyHtml,
+      bodyText,
+      context,
+      sequenceStep,
+      unresolved: hasUnresolvedMerge(subject) || hasUnresolvedMerge(bodyHtml),
+    };
+  }
+  const subject = initialSubject;
   let bodyHtml: string;
   switch (kind) {
     case "bar":
@@ -95,6 +134,7 @@ export function renderPersonalizedEmail(input: {
     bodyHtml,
     bodyText,
     context,
+    sequenceStep,
     unresolved: hasUnresolvedMerge(subject) || hasUnresolvedMerge(bodyHtml),
   };
 }

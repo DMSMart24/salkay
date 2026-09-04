@@ -6,6 +6,7 @@ import { recordActivity } from "@/lib/admin/activity";
 import { OUTREACH_FROM_DISPLAY_NAME } from "@/lib/admin/email/from";
 import { getEmailFrom, getEmailProvider, getOutreachFrom } from "@/lib/admin/email/provider";
 import { renderFromTemplate } from "@/lib/admin/email/render";
+import { nextFollowUpAtAfterSend, parseSequenceStep } from "@/lib/admin/email/sequence";
 import { looksLikeHtmlEmail } from "@/lib/admin/email/html";
 import { resolveSendableTemplate } from "@/lib/admin/email/sendable";
 import { isCodeBackedPremiumKind } from "@/lib/admin/email/templates/premium-kind";
@@ -151,6 +152,7 @@ export async function composeEmailAction(
   }
 
   await prisma.$transaction(async (tx) => {
+    const sentAt = new Date();
     await tx.emailMessage.create({
       data: {
         companyId: company.id,
@@ -164,7 +166,7 @@ export async function composeEmailAction(
         subject: mergedSubject,
         bodyText: mergedBody,
         bodyHtml: mergedHtml,
-        sentAt: new Date(),
+        sentAt,
         status: "SENT",
         templateId: parsed.data.templateId,
       },
@@ -173,9 +175,10 @@ export async function composeEmailAction(
     await tx.company.update({
       where: { id: company.id },
       data: {
-        lastContactedAt: new Date(),
+        lastContactedAt: sentAt,
         status: company.status === "NEW" ? "CONTACTED" : company.status,
         outreachStatus: "SENT",
+        nextFollowUpAt: nextFollowUpAtAfterSend(0, sentAt),
       },
     });
 
@@ -230,7 +233,8 @@ export async function sendTestEmailAction(
     return { error: testGuard.reason };
   }
 
-  const rendered = renderFromTemplate(template, company);
+  const sequenceStep = parseSequenceStep(String(formData.get("sequenceStep") ?? "0"));
+  const rendered = renderFromTemplate(template, company, { sequenceStep });
   if (rendered.unresolved) {
     return { error: "Şablonda çözülmemiş merge alanı var. Test gönderilmedi." };
   }

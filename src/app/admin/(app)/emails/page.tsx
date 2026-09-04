@@ -5,6 +5,7 @@ import { describeEmailProvider } from "@/lib/admin/email/provider";
 import { formatDateTime } from "@/lib/admin/format";
 import { emailStatusLabels } from "@/lib/admin/labels";
 import { isOutreachSendEnabled } from "@/lib/admin/outreach";
+import { inferredSequenceStep, sequenceStepLabel } from "@/lib/admin/email/sequence";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
@@ -141,6 +142,7 @@ export default async function EmailsPage({
               <tr>
                 <th>Firma</th>
                 <th>Konu</th>
+                <th>Sequence</th>
                 <th>Durum</th>
                 <th>Tarih</th>
               </tr>
@@ -156,6 +158,7 @@ export default async function EmailsPage({
                     )}
                   </td>
                   <td>{message.subject}</td>
+                  <td>{sequenceStepLabel(inferredSequenceStep(message))}</td>
                   <td>
                     {emailStatusLabels[message.status]}
                     {message.failureReason ? ` · ${message.failureReason}` : ""}
