@@ -156,7 +156,7 @@ export function TemplateForm() {
         </label>
         <label>
           Kategori
-          <select name="category" defaultValue="GENERAL">
+          <select name="category" defaultValue="GENEL">
             {templateCategories.map((category) => (
               <option key={category} value={category}>
                 {category}

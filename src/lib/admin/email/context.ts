@@ -23,11 +23,13 @@ import {
 } from "@/lib/admin/email/assets";
 import type { PremiumIndustryKind } from "@/lib/admin/email/templates/premium-kind";
 import { escapeHtml } from "@/lib/admin/email/html";
+import { sanitizeCustomerIssues, sanitizeRecommendedServices } from "@/lib/admin/email/claim-safety";
+import type { LocalizedText } from "@/lib/admin/email/localize";
 import {
-  localizeOutreachIssues,
-  localizeRecommendedServices,
-  type LocalizedText,
-} from "@/lib/admin/email/localize";
+  customerAnalysisIntro,
+  customerWebsiteCopyKind,
+  type CustomerWebsiteCopyKind,
+} from "@/lib/admin/email/website-copy";
 import { fullName } from "@/lib/admin/normalize";
 
 export type CompanyEmailInput = {
@@ -57,9 +59,11 @@ export type CompanyEmailContext = {
   customerIssues: string[];
   localizedIssues: LocalizedText[];
   issueReviewNeeded: string[];
+  droppedIssues: string[];
   recommendedServices: string[];
   hasScore: boolean;
   noWebsite: boolean;
+  copyKind: CustomerWebsiteCopyKind;
   scoreLabel: string;
   scoreBandLabel: string;
   analysisIntro: string;
@@ -174,22 +178,30 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     ? fullName(contact.firstName ?? "", contact.lastName ?? "")
     : "";
   const companyEmail = company.generalEmail || contact?.email || "";
+  const copyKind = customerWebsiteCopyKind(company);
+  const noWebsite = copyKind === "no_website";
   const internalIssues = cleanList(company.websiteIssues);
-  const localizedIssues = localizeOutreachIssues(internalIssues, "tr");
-  const customerIssues = localizedIssues.map((row) => row.customer).slice(0, 4);
-  const issueReviewNeeded = localizedIssues.filter((row) => !row.matched).map((row) => row.original);
+  const sanitizedIssues =
+    copyKind === "verified"
+      ? sanitizeCustomerIssues(internalIssues, "tr")
+      : { customer: [] as string[], dropped: internalIssues };
+  const customerIssues = sanitizedIssues.customer.slice(0, 4);
+  const localizedIssues = customerIssues.map((customer) => ({
+    original: customer,
+    customer,
+    matched: true,
+    sourceLanguage: "tr" as const,
+  }));
+  const issueReviewNeeded = sanitizedIssues.dropped;
   const recommendedInternal = cleanList(company.recommendedServices);
-  const recommendedServices = localizeRecommendedServices(recommendedInternal, "tr").map((row) => row.customer);
-  const noWebsite = company.websiteStatus === "NO_WEBSITE";
-  const hasScore = canShowCustomerWebsiteScore(company);
+  const recommendedServices = sanitizeRecommendedServices(recommendedInternal, "tr");
+  const hasScore = copyKind === "verified" && canShowCustomerWebsiteScore(company);
   const formattedScore = hasScore ? formatScore(company.websiteScore) : null;
   const scoreBandLabel =
     hasScore && typeof company.websiteScore === "number"
       ? websiteScoreBandLabels[websiteScoreBand(company.websiteScore)]
       : "";
-  const analysisIntro = noWebsite
-    ? "Markanızın Google ve sosyal medya dışındaki bağımsız dijital varlığını güçlendirecek modern bir web deneyimi için önemli bir fırsat görüyoruz."
-    : "Web sitenizi sizin için kısaca inceledik.";
+  const analysisIntro = customerAnalysisIntro(company);
   const scoreLabel = formattedScore ?? (noWebsite ? "Web sitesi bulunamadı" : "Analiz devam ediyor");
   const phone = salkayPhone();
   const ctaUrl = emailCtaUrl();
@@ -238,9 +250,11 @@ export function buildCompanyEmailContext(company: CompanyEmailInput): CompanyEma
     customerIssues,
     localizedIssues,
     issueReviewNeeded,
+    droppedIssues: sanitizedIssues.dropped,
     recommendedServices,
     hasScore,
     noWebsite,
+    copyKind,
     scoreLabel,
     scoreBandLabel,
     analysisIntro,

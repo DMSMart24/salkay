@@ -6,7 +6,7 @@ import type { OutreachStatus } from "@prisma/client";
 import { recordActivity } from "@/lib/admin/activity";
 import { OUTREACH_FROM_DISPLAY_NAME } from "@/lib/admin/email/from";
 import { getEmailFrom, getEmailProvider, getOutreachFrom } from "@/lib/admin/email/provider";
-import { renderPersonalizedEmail } from "@/lib/admin/email/render";
+import { renderFromTemplate } from "@/lib/admin/email/render";
 import { normalizeEmail } from "@/lib/admin/normalize";
 import {
   assertBulkRateLimit,
@@ -272,13 +272,7 @@ export async function previewBulkSendAction(
       skipped.push({ companyId: company.id, companyName: company.companyName, reason: eligibility.reason });
       continue;
     }
-    const rendered = renderPersonalizedEmail({
-      subject: template.subject,
-      body: template.body,
-      company,
-      templateName: template.name,
-      templateCategory: template.category,
-    });
+    const rendered = renderFromTemplate(template, company);
     recipients.push({
       companyId: company.id,
       companyName: company.companyName,

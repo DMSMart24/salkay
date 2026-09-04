@@ -29,10 +29,19 @@ type TemplateStudioProps = {
     active: boolean;
     updatedAt: string;
   };
+  sourceOfTruth: "code" | "database";
+  editorAffectsSend: boolean;
+  kindLabel: string;
   companies: Array<{ id: string; companyName: string }>;
 };
 
-export function TemplateStudio({ template, companies }: TemplateStudioProps) {
+export function TemplateStudio({
+  template,
+  sourceOfTruth,
+  editorAffectsSend,
+  kindLabel,
+  companies,
+}: TemplateStudioProps) {
   const [body, setBody] = useState(template.body);
   const [subject, setSubject] = useState(template.subject);
   const [companyId, setCompanyId] = useState(companies[0]?.id ?? "");
@@ -47,6 +56,7 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
   );
 
   function insertVariable(key: string) {
+    if (!editorAffectsSend) return;
     setBody((current) => `${current}{{${key}}}`);
   }
 
@@ -67,7 +77,15 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
   return (
     <div className="admin-detail-grid">
       <section className="admin-panel">
-        <h2>Düzenle</h2>
+        <h2>{editorAffectsSend ? "Düzenle" : "Şablon"}</h2>
+        <p className={editorAffectsSend ? "admin-help" : "admin-warning"}>
+          {editorAffectsSend
+            ? "Kaynak: Veritabanı. Editör içeriği Preview, Compose, Bulk ve gönderimde aynıdır."
+            : "Kaynak: Kod. Premium layout ve konu kod tarafından belirlenir. Aşağıdaki HTML gönderimi değiştirmez."}
+        </p>
+        <p className="admin-help">
+          {template.name} · {kindLabel} · {template.active ? "Aktif" : "Kapalı"} · {sourceOfTruth}
+        </p>
         <ActionMessage state={saveState} />
         <form action={saveAction} className="admin-form">
           <input type="hidden" name="templateId" value={template.id} />
@@ -92,29 +110,66 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
             </label>
           </div>
           <label>
-            Konu
-            <input name="subject" required value={subject} onChange={(event) => setSubject(event.target.value)} />
+            Konu {editorAffectsSend ? "" : "(gönderim konusu, salt okunur)"}
+            <input
+              name="subject"
+              required
+              value={subject}
+              readOnly={!editorAffectsSend}
+              onChange={(event) => {
+                if (editorAffectsSend) setSubject(event.target.value);
+              }}
+            />
           </label>
-          <p className="admin-help">Alternatif: {"{{companyName}} için birkaç dijital geliştirme önerisi"}</p>
-          <div className="admin-merge-help">
-            {mergeVariableHelp.map((item) => (
-              <button key={item.key} type="button" className="admin-btn ghost" onClick={() => insertVariable(item.key)}>
-                {`{{${item.key}}}`}
-              </button>
-            ))}
-          </div>
-          <label>
-            HTML içerik
-            <textarea name="body" rows={16} required value={body} onChange={(event) => setBody(event.target.value)} />
-          </label>
+          {editorAffectsSend ? (
+            <>
+              <div className="admin-merge-help">
+                {mergeVariableHelp.map((item) => (
+                  <button
+                    key={item.key}
+                    type="button"
+                    className="admin-btn ghost"
+                    onClick={() => insertVariable(item.key)}
+                  >
+                    {`{{${item.key}}}`}
+                  </button>
+                ))}
+              </div>
+              <label>
+                HTML içerik
+                <textarea
+                  name="body"
+                  rows={16}
+                  required
+                  value={body}
+                  onChange={(event) => setBody(event.target.value)}
+                />
+              </label>
+            </>
+          ) : (
+            <>
+              <input type="hidden" name="body" value={body} />
+              <p className="admin-help">
+                Kullanılan değişkenler: companyName, district, city, score, issue_1–4, ctaUrl,
+                unsubscribeUrl
+              </p>
+              <label>
+                Kod layout kaynağı (salt okunur, gönderim bu renderer ile üretilir)
+                <textarea name="layoutSource" rows={10} readOnly value={body} />
+              </label>
+            </>
+          )}
           <button className="admin-btn" disabled={savePending}>
-            Değişiklikleri kaydet
+            {editorAffectsSend ? "Değişiklikleri kaydet" : "Ad / kategori kaydet"}
           </button>
         </form>
       </section>
 
       <section className="admin-panel">
-        <h2>Önizleme</h2>
+        <h2>Gönderim önizlemesi</h2>
+        <p className="admin-help">
+          Desktop ve mobile aynı renderer kullanır (Preview = Compose = Bulk = Send).
+        </p>
         <form action={previewAction} className="admin-form">
           <input type="hidden" name="templateId" value={template.id} />
           <input type="hidden" name="subject" value={subject} />
@@ -136,6 +191,8 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
         <ActionMessage state={preview} />
         {preview.companyName ? (
           <div className="admin-preview-meta">
+            <p><span>KAYNAK</span> {preview.sourceOfTruth === "code" ? "Kod renderer" : "Veritabanı"}</p>
+            <p><span>COPY</span> {preview.copyKind ?? "—"}</p>
             <p><span>ALICI</span> {preview.recipient || "—"}</p>
             <p><span>FİRMA</span> {preview.companyName}</p>
             <p><span>KONU</span> {preview.subject}</p>
@@ -158,9 +215,9 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
                 </ul>
               </div>
             </div>
-            {preview.issueReviewNeeded?.length ? (
+            {preview.droppedIssues?.length ? (
               <p className="admin-warning">
-                Çeviri eşleşmesi yok, genel Türkçe kullanıldı: {preview.issueReviewNeeded.join(" · ")}
+                Claim-safety tarafından çıkarıldı: {preview.droppedIssues.join(" · ")}
               </p>
             ) : null}
             {preview.unresolved ? <p className="admin-error">Çözülmemiş merge etiketi var.</p> : null}
@@ -192,24 +249,24 @@ export function TemplateStudio({ template, companies }: TemplateStudioProps) {
         <form action={saveTemplateTestDraftForm} className="admin-form">
           <input type="hidden" name="templateId" value={template.id} />
           <input type="hidden" name="companyId" value={companyId} />
-          <button className="admin-btn ghost">Test E-postası (yalnızca taslak, gönderilmez)</button>
+          <button className="admin-btn ghost">Test taslağı (gönderilmez, outreach değişmez)</button>
         </form>
         {isRestaurantPremiumTemplate(template) ? (
           <form action={resetRestaurantTemplateForm}>
             <input type="hidden" name="templateId" value={template.id} />
-            <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
+            <button className="admin-btn ghost">Kod kaynağına sıfırla</button>
           </form>
         ) : null}
         {isBarPremiumTemplate(template) ? (
           <form action={resetBarTemplateForm}>
             <input type="hidden" name="templateId" value={template.id} />
-            <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
+            <button className="admin-btn ghost">Kod kaynağına sıfırla</button>
           </form>
         ) : null}
         {isPremiumIndustryKind(resolvePremiumEmailKind(template)) ? (
           <form action={resetIndustryTemplateForm}>
             <input type="hidden" name="templateId" value={template.id} />
-            <button className="admin-btn ghost">Varsayılan HTML’e sıfırla</button>
+            <button className="admin-btn ghost">Kod kaynağına sıfırla</button>
           </form>
         ) : null}
       </section>

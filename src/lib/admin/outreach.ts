@@ -120,10 +120,93 @@ export function primaryEmail(company: {
   return normalizeEmail(primary?.email || company.contacts?.find((contact) => contact.email)?.email || company.generalEmail);
 }
 
+export const TEST_EMAIL_SUBJECT_PREFIX = "[TEST] ";
+
+export function companyRecipientEmails(company: {
+  generalEmail?: string | null;
+  contacts?: Array<{ email?: string | null; emailNorm?: string | null }>;
+}) {
+  const emails = [
+    company.generalEmail,
+    ...(company.contacts ?? []).map((contact) => contact.emailNorm || contact.email),
+  ]
+    .map((value) => normalizeEmail(value))
+    .filter((value): value is string => Boolean(value && isValidEmail(value)));
+  return [...new Set(emails)];
+}
+
+export async function evaluateAddressSend(input: {
+  archivedAt?: Date | null;
+  outreachStatus: OutreachStatus;
+  status?: string | null;
+  to: string;
+}) {
+  if (input.archivedAt) {
+    return { ok: false as const, reason: "Arşivlenmiş" };
+  }
+  if (input.outreachStatus === "DO_NOT_CONTACT" || input.status === "DO_NOT_CONTACT") {
+    return { ok: false as const, reason: "İletişim dışı" };
+  }
+  const email = normalizeEmail(input.to);
+  if (!email || !isValidEmail(email)) {
+    return { ok: false as const, reason: "Geçerli e-posta yok" };
+  }
+  if (await isAddressSuppressed(email)) {
+    return { ok: false as const, reason: "Sperrliste" };
+  }
+  return { ok: true as const, email };
+}
+
+export async function evaluateTestRecipient(input: {
+  company: {
+    id: string;
+    generalEmail?: string | null;
+    contacts?: Array<{ email?: string | null; emailNorm?: string | null }>;
+  };
+  testEmail: string;
+}) {
+  const email = normalizeEmail(input.testEmail);
+  if (!email || !isValidEmail(email)) {
+    return { ok: false as const, reason: "Geçerli bir test e-posta adresi girin." };
+  }
+  if (await isAddressSuppressed(email)) {
+    return { ok: false as const, reason: "Bu adres bastırılmış (do-not-contact / unsubscribe)." };
+  }
+  if (companyRecipientEmails(input.company).includes(email)) {
+    return {
+      ok: false as const,
+      reason: "Test gönderimi firma alıcısına yapılamaz. İç test adresi kullanın.",
+    };
+  }
+
+  const blocked = await getPrisma().company.findFirst({
+    where: {
+      AND: [
+        {
+          OR: [{ outreachStatus: "DO_NOT_CONTACT" }, { status: "DO_NOT_CONTACT" }],
+        },
+        {
+          OR: [
+            { generalEmail: { equals: email, mode: "insensitive" } },
+            { contacts: { some: { emailNorm: email } } },
+          ],
+        },
+      ],
+    },
+    select: { id: true },
+  });
+  if (blocked) {
+    return { ok: false as const, reason: "Bu adres iletişim dışı bir firmaya ait." };
+  }
+
+  return { ok: true as const, email };
+}
+
 export async function evaluateSendEligibility(company: {
   id: string;
   archivedAt?: Date | null;
   outreachStatus: OutreachStatus;
+  status?: string | null;
   lastContactedAt?: Date | null;
   generalEmail?: string | null;
   contacts?: Array<{ email?: string | null; isPrimary?: boolean }>;
@@ -132,7 +215,7 @@ export async function evaluateSendEligibility(company: {
   if (company.archivedAt) {
     return { ok: false as const, reason: "Arşivlenmiş" };
   }
-  if (company.outreachStatus === "DO_NOT_CONTACT") {
+  if (company.outreachStatus === "DO_NOT_CONTACT" || company.status === "DO_NOT_CONTACT") {
     return { ok: false as const, reason: "İletişim kurma" };
   }
 

@@ -4,7 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { recordActivity } from "@/lib/admin/activity";
 import { salkayPhone } from "@/lib/admin/email/assets";
-import { renderPersonalizedEmail } from "@/lib/admin/email/render";
+import { renderFromTemplate } from "@/lib/admin/email/render";
+import { resolveSendableTemplate } from "@/lib/admin/email/sendable";
 import {
   BAR_GROUP_NAME,
   BAR_TEMPLATE_CATEGORY,
@@ -40,6 +41,10 @@ export type TemplatePreviewState = FormState & {
   internalIssues?: string[];
   customerIssues?: string[];
   issueReviewNeeded?: string[];
+  droppedIssues?: string[];
+  copyKind?: string;
+  sourceOfTruth?: "code" | "database";
+  editorAffectsSend?: boolean;
   recipient?: string;
   companyName?: string;
   unresolved?: boolean;
@@ -71,10 +76,13 @@ export async function updateTemplateAction(
     return { error: parsed.success ? "Şablon bulunamadı." : parsed.error.issues[0]?.message };
   }
 
+  const sendable = resolveSendableTemplate(parsed.data);
   await getPrisma().emailTemplate.update({
     where: { id },
     data: {
       ...parsed.data,
+      subject: sendable.subject || parsed.data.subject,
+      body: sendable.body || parsed.data.body,
       active: parsed.data.active ?? true,
     },
   });
@@ -132,16 +140,6 @@ export async function ensureRestaurantTemplateForm(formData: FormData) {
   });
   touchTemplates(created.id);
   redirect(`/admin/templates/${created.id}`);
-}
-
-function premiumTemplateSource(template: { name?: string | null; body?: string | null; category?: string | null }) {
-  const kind = resolvePremiumEmailKind({
-    name: template.name,
-    category: template.category,
-    body: template.body,
-  });
-  if (kind === "custom") return template.body ?? "";
-  return premiumHtmlSource(kind);
 }
 
 function parseIndustryKind(raw: string): PremiumIndustryKind | null {
@@ -276,20 +274,15 @@ export async function previewTemplateAction(
     return { error: "Şablon veya firma bulunamadı." };
   }
 
-  const subject = String(formData.get("subject") ?? "").trim() || template.subject;
+  const editorSubject = String(formData.get("subject") ?? "").trim() || template.subject;
   const editorBody = String(formData.get("body") ?? "").trim() || template.body;
-  const kind = resolvePremiumEmailKind({
-    name: template.name,
-    category: template.category,
-  });
-  const body = kind === "custom" ? editorBody : premiumTemplateSource(template);
-  const rendered = renderPersonalizedEmail({
-    subject,
-    body,
+  const sendable = resolveSendableTemplate(template);
+  const rendered = renderFromTemplate(
+    sendable.editorAffectsSend
+      ? { ...template, subject: editorSubject, body: editorBody }
+      : template,
     company,
-    templateName: template.name,
-    templateCategory: template.category,
-  });
+  );
 
   return {
     success: "Önizleme hazır. Veritabanı değişmedi, e-posta gönderilmedi.",
@@ -301,6 +294,10 @@ export async function previewTemplateAction(
     internalIssues: rendered.context.internalIssues,
     customerIssues: rendered.context.customerIssues,
     issueReviewNeeded: rendered.context.issueReviewNeeded,
+    droppedIssues: rendered.context.droppedIssues,
+    copyKind: rendered.context.copyKind,
+    sourceOfTruth: rendered.sendable.sourceOfTruth,
+    editorAffectsSend: rendered.sendable.editorAffectsSend,
     recipient: rendered.context.vars.companyEmail,
     companyName: company.companyName,
     unresolved: rendered.unresolved,
@@ -324,13 +321,7 @@ export async function saveTemplateTestDraftForm(formData: FormData) {
   ]);
   if (!template || !company) return;
 
-  const rendered = renderPersonalizedEmail({
-    subject: template.subject,
-    body: premiumTemplateSource(template),
-    company,
-    templateName: template.name,
-    templateCategory: template.category,
-  });
+  const rendered = renderFromTemplate(template, company);
   const contact = company.contacts.find((row) => row.isPrimary) ?? company.contacts[0];
 
   await getPrisma().emailMessage.create({

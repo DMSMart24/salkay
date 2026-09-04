@@ -10,6 +10,7 @@ import { INDUSTRY_SPECS } from "@/lib/admin/email/templates/premium-industry";
 import { PREMIUM_INDUSTRY_KINDS } from "@/lib/admin/email/templates/premium-kind";
 import { TemplateForm } from "@/components/admin/SimpleForms";
 import { templateCardPreview } from "@/lib/admin/email/html";
+import { resolveSendableTemplate } from "@/lib/admin/email/sendable";
 import { formatDate } from "@/lib/admin/format";
 import { getPrisma } from "@/lib/admin/prisma";
 
@@ -44,22 +45,26 @@ export default async function TemplatesPage() {
       </header>
       <TemplateForm />
       <div className="admin-template-grid">
-        {templates.map((template) => (
+        {templates.map((template) => {
+          const sendable = resolveSendableTemplate(template);
+          return (
           <article key={template.id} className="admin-panel">
             <p className="admin-kicker">{template.category}</p>
             <h3>{template.name}</h3>
-            <p>{template.subject}</p>
-            <p className="admin-help">{templateCardPreview(template.name, template.body)}</p>
+            <p>{sendable.subject}</p>
+            <p className="admin-help">{templateCardPreview(template.name, sendable.body)}</p>
             <p className="admin-help">
               Dil: {template.language === "tr" ? "Türkçe" : template.language} ·{" "}
-              {template.active ? "Aktif" : "Kapalı"} · Son güncelleme {formatDate(template.updatedAt)}
+              {template.active ? "Aktif" : "Kapalı"} ·{" "}
+              {sendable.sourceOfTruth === "code" ? "Kaynak: kod" : "Kaynak: veritabanı"} · Son güncelleme{" "}
+              {formatDate(template.updatedAt)}
             </p>
             <div className="admin-actions">
               <Link href={`/admin/templates/${template.id}`} className="admin-btn">
                 Önizle
               </Link>
               <Link href={`/admin/templates/${template.id}`} className="admin-btn ghost">
-                Düzenle
+                {sendable.editorAffectsSend ? "Düzenle" : "Görüntüle"}
               </Link>
               <form action={duplicateTemplateForm}>
                 <input type="hidden" name="templateId" value={template.id} />
@@ -74,7 +79,8 @@ export default async function TemplatesPage() {
               </form>
             </div>
           </article>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
