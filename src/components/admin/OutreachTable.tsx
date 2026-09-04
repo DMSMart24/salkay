@@ -12,6 +12,10 @@ import { LeadPriorityBadge, OutreachBadge, WebsiteBadge } from "@/components/adm
 import { formatDate } from "@/lib/admin/format";
 import { outreachStatusLabels } from "@/lib/admin/labels";
 import { formatScore, leadPriorityBand } from "@/lib/admin/qualification";
+import {
+  emailOutreachLane,
+  emailOutreachLaneLabels,
+} from "@/lib/admin/email-outreach";
 
 type Row = Company & {
   contacts: Contact[];
@@ -30,6 +34,7 @@ type OutreachTableProps = {
   filteredIds: string[];
   groups: Array<Pick<LeadGroup, "id" | "name">>;
   emailHref?: string;
+  showEmailLane?: boolean;
 };
 
 function lastOutbound(row: Row) {
@@ -40,7 +45,13 @@ function lastReply(row: Row) {
   return row.emails?.find((item) => item.direction === "INBOUND") ?? null;
 }
 
-export function OutreachTable({ rows, filteredIds, groups, emailHref = "/admin/emails" }: OutreachTableProps) {
+export function OutreachTable({
+  rows,
+  filteredIds,
+  groups,
+  emailHref = "/admin/emails",
+  showEmailLane = false,
+}: OutreachTableProps) {
   const [selected, setSelected] = useState<string[]>([]);
   const pageIds = rows.map((row) => row.id);
   const allPage = pageIds.length > 0 && pageIds.every((id) => selected.includes(id));
@@ -110,6 +121,7 @@ export function OutreachTable({ rows, filteredIds, groups, emailHref = "/admin/e
             <th>Lead Score</th>
             <th>Priority</th>
             <th>Kontakt</th>
+            {showEmailLane ? <th>E-Mail</th> : null}
             <th>Durum</th>
             <th>Son E-posta</th>
             <th>Yanıt</th>
@@ -169,8 +181,11 @@ export function OutreachTable({ rows, filteredIds, groups, emailHref = "/admin/e
                   )}
                 </td>
                 <td>
-                  {contact?.email || company.generalEmail || company.phone || "—"}
+                  {contact?.email || company.generalEmail || (showEmailLane ? "—" : company.phone) || "—"}
                 </td>
+                {showEmailLane ? (
+                  <td>{emailOutreachLaneLabels[emailOutreachLane(company)]}</td>
+                ) : null}
                 <td>
                   <OutreachBadge status={company.outreachStatus} />
                 </td>

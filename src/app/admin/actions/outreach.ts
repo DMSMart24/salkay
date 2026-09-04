@@ -229,12 +229,20 @@ async function loadBulkCandidates(formData: FormData) {
   const scoreMin = Number(formData.get("websiteScoreMin") || 0);
   const allowResend = formData.get("allowResend") === "on" || formData.get("allowResend") === "true";
 
+  const hasEmailClause = {
+    OR: [
+      { generalEmail: { not: null } },
+      { contacts: { some: { email: { not: null } } } },
+    ],
+  };
+
   const where = {
     archivedAt: null,
     ...(groupId ? { groupId } : {}),
     ...(mode === "selected" ? { id: { in: selectedIds } } : {}),
     ...(mode === "unsent" ? { outreachStatus: { in: ["NEW", "READY"] as OutreachStatus[] } } : {}),
     ...(mode === "score" && scoreMin ? { websiteScore: { gte: scoreMin } } : {}),
+    ...(mode === "selected" ? {} : hasEmailClause),
   };
 
   const companies = await prisma.company.findMany({

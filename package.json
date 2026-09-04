@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "typecheck": "tsc --noEmit",
-    "test": "tsx --test src/lib/admin/email/phase2-safety.test.ts src/lib/admin/email/phase3-premium.test.ts src/lib/admin/email/phase4-follow-up.test.ts",
+    "test": "tsx --test src/lib/admin/email/phase2-safety.test.ts src/lib/admin/email/phase3-premium.test.ts src/lib/admin/email/phase4-follow-up.test.ts src/lib/admin/email-outreach.test.ts",
     "postinstall": "prisma generate",
     "db:generate": "prisma generate",
     "db:migrate": "prisma migrate deploy",
