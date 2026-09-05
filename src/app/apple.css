@@ -285,7 +285,8 @@
 }
 
 .apple-field:focus-within .apple-field-label,
-.apple-field.is-active .apple-field-label {
+.apple-field.is-active .apple-field-label,
+.apple-field:has(.apple-field-control:not(:placeholder-shown)) .apple-field-label {
   top: 0.15rem;
   left: 0;
   font-size: 0.72rem;

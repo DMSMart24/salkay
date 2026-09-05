@@ -4,7 +4,6 @@ import {
   useEffect,
   useRef,
   useState,
-  type ChangeEvent,
   type FormEvent,
   type ReactNode,
 } from "react";
@@ -269,18 +268,21 @@ function FloatingField({
   defaultValue?: string;
   children?: ReactNode;
 }) {
-  const [value, setValue] = useState(defaultValue ?? "");
-  const active = value.trim().length > 0;
+  const [active, setActive] = useState(Boolean(defaultValue));
+
+  function syncActive(value: string) {
+    setActive(value.trim().length > 0);
+  }
 
   const shared = {
+    id: `apple-${name}`,
     name,
     required,
     className: cn("apple-field-control", as === "textarea" && "apple-field-area"),
-    value,
-    onChange: (
-      event: ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>,
-    ) => {
-      setValue(event.target.value);
+    defaultValue,
+    placeholder: " ",
+    onInput: (event: FormEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      syncActive(event.currentTarget.value);
     },
   };
 
@@ -291,13 +293,11 @@ function FloatingField({
         {label}
       </label>
       {as === "textarea" ? (
-        <textarea id={`apple-${name}`} rows={rows ?? 6} {...shared} />
+        <textarea rows={rows ?? 6} {...shared} />
       ) : as === "select" ? (
-        <select id={`apple-${name}`} {...shared}>
-          {children}
-        </select>
+        <select {...shared}>{children}</select>
       ) : (
-        <input id={`apple-${name}`} type={type} {...shared} />
+        <input type={type} {...shared} />
       )}
     </div>
   );

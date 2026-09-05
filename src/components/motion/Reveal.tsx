@@ -17,7 +17,7 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
     <motion.div
       className={className}
       variants={reduce ? fadeOnly : fadeUp}
-      initial="hidden"
+      initial={reduce ? "visible" : "hidden"}
       whileInView="visible"
       viewport={viewportOnce}
       transition={delay ? { delay: delay / 1000 } : undefined}
@@ -41,7 +41,7 @@ export function RevealGroup({ children, className, as = "div" }: RevealGroupProp
     <Component
       className={className}
       variants={reduce ? undefined : staggerContainer}
-      initial="hidden"
+      initial={reduce ? "visible" : "hidden"}
       whileInView="visible"
       viewport={viewportOnce}
     >

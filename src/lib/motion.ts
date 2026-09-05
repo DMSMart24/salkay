@@ -8,7 +8,7 @@ export const appleTransition: Transition = {
 };
 
 export const fadeUp: Variants = {
-  hidden: { opacity: 0, y: 24 },
+  hidden: { opacity: 1, y: 24 },
   visible: {
     opacity: 1,
     y: 0,
@@ -17,7 +17,7 @@ export const fadeUp: Variants = {
 };
 
 export const fadeOnly: Variants = {
-  hidden: { opacity: 0 },
+  hidden: { opacity: 1 },
   visible: {
     opacity: 1,
     transition: { duration: 0.4, ease: "easeOut" },
