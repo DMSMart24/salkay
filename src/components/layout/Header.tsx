@@ -138,6 +138,15 @@ export function Header() {
         </button>
       </Container>
 
+      {open ? (
+        <button
+          type="button"
+          className="site-header-backdrop min-[920px]:hidden"
+          aria-label={dictionary.nav.closeMenu}
+          onClick={() => setOpen(false)}
+        />
+      ) : null}
+
       <div
         id={menuId}
         hidden={!open}

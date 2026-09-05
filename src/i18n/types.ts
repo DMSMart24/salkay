@@ -56,7 +56,8 @@ export type Dictionary = {
       coreTitle: string;
       coreBody: string;
       coreCta: string;
-      items: Array<{ tag: string; title: string; body: string }>;
+      coreHref: string;
+      items: Array<{ tag: string; title: string; body: string; href: string; cta: string }>;
       wideTag: string;
       wideTitle: string;
       wideBody: string;

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { HeroVideo } from "@/components/home/HeroVideo";
+import { HeroStage } from "@/components/home/HeroStage";
 
 type HeroExperienceProps = {
   children: ReactNode;
@@ -7,15 +7,9 @@ type HeroExperienceProps = {
 
 export function HeroExperience({ children }: HeroExperienceProps) {
   return (
-    <section
-      data-salkay-hero
-      className="relative overflow-hidden bg-canvas text-fg"
-    >
-      <div className="hero-visual">
-        <HeroVideo />
-      </div>
-      <div className="hero-veil" aria-hidden />
+    <section data-salkay-hero className="hero-studio">
       {children}
+      <HeroStage />
     </section>
   );
 }
