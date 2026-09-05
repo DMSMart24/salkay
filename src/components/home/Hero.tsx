@@ -20,7 +20,7 @@ export function Hero() {
               <span className="hero-title-line">
                 <span className="hero-title-segment">{hero.titleBefore}</span>{" "}
                 <span className="hero-title-accent">{hero.titleAccent}</span>
-              </span>
+              </span>{" "}
               <span className="hero-title-line hero-title-line-soft">{hero.titleAfter}</span>
             </h1>
             <p className="hero-lead text-muted">{hero.lead}</p>
