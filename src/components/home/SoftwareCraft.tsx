@@ -1,5 +1,4 @@
 import { SoftwareDemo } from "@/components/home/SoftwareDemo";
-import { AutomationMark } from "@/components/illustrations/ServiceMarks";
 import { Reveal } from "@/components/motion/Reveal";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -38,7 +37,6 @@ export function SoftwareCraft() {
           </Button>
         </Reveal>
         <Reveal delay={80} className="atelier-soft-stage">
-          <AutomationMark />
           <SoftwareDemo label={software.demoLabel} steps={software.demoSteps} />
         </Reveal>
       </Container>
