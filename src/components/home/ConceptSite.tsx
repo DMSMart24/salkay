@@ -1,27 +1,31 @@
+import { DevicePair } from "@/components/motion/DevicePair";
+
 type ConceptSiteProps = {
   label: string;
   caption: string;
-  size?: "hero" | "section";
+  size?: "hero" | "section" | "wide";
 };
 
 export function ConceptSite({ label, caption, size = "hero" }: ConceptSiteProps) {
   return (
     <figure className={`concept-site concept-site-${size}`}>
-      <div className="concept-site-stage">
-        <div className="concept-desktop" aria-hidden>
-          <div className="concept-chrome">
-            <span />
-            <span />
-            <span />
-            <p>salkay.com/konsept</p>
+      <DevicePair>
+        <div className="concept-site-stage">
+          <div className="concept-desktop" aria-hidden>
+            <div className="concept-chrome">
+              <span />
+              <span />
+              <span />
+              <p>salkay.com/konsept</p>
+            </div>
+            <ConceptPage />
           </div>
-          <ConceptPage />
+          <div className="concept-phone" aria-hidden>
+            <div className="concept-phone-notch" />
+            <ConceptPage compact />
+          </div>
         </div>
-        <div className="concept-phone" aria-hidden>
-          <div className="concept-phone-notch" />
-          <ConceptPage compact />
-        </div>
-      </div>
+      </DevicePair>
       <figcaption className="concept-site-caption">
         <span className="concept-site-label">{label}</span>
         <span>{caption}</span>

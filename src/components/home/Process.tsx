@@ -6,22 +6,24 @@ export function Process() {
   const { process } = getDictionary().home;
 
   return (
-    <section id="surec" className="studio-process">
+    <section id="surec" className="atelier-process">
       <Container>
-        <Reveal className="studio-process-head">
+        <Reveal className="atelier-process-head">
           <p className="studio-eye">{process.eyebrow}</p>
           <h2 className="studio-title font-display">{process.title}</h2>
           <p className="studio-lead">{process.lead}</p>
         </Reveal>
-        <ol className="studio-process-list">
+        <ol className="atelier-spine">
           {process.steps.map((step, index) => (
             <li key={step.index}>
               <Reveal delay={index * 50}>
-                <article className="studio-process-step">
-                  <p className="studio-process-index">{step.index}</p>
-                  <h3 className="font-display">{step.title}</h3>
-                  <p>{step.body}</p>
-                  <p className="studio-process-out">{step.outcome}</p>
+                <article className="atelier-spine-step">
+                  <p className="atelier-spine-index">{step.index}</p>
+                  <div>
+                    <h3 className="font-display">{step.title}</h3>
+                    <p>{step.body}</p>
+                    <p className="atelier-spine-out">{step.outcome}</p>
+                  </div>
                 </article>
               </Reveal>
             </li>

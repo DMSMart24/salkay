@@ -98,6 +98,13 @@ export type Dictionary = {
         lead: string;
         items: Array<{ title: string; question: string; body: string }>;
       };
+      demo: {
+        eyebrow: string;
+        title: string;
+        lead: string;
+        label: string;
+        caption: string;
+      };
     };
     intro: {
       eyebrow: string;

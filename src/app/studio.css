@@ -1,4 +1,26 @@
-/* Studio public-site layer. Imported last from globals.css via concatenation. */
+/* SALKAY Atelier — public marketing system */
+
+:root {
+  --atelier-paper: #f3f1ec;
+  --atelier-white: #fbfaf7;
+  --atelier-ink: #0c1018;
+  --atelier-navy: #070b14;
+  --atelier-mute: #5c6472;
+  --atelier-blue: #1554f0;
+  --atelier-line: rgba(12, 16, 24, 0.08);
+  --atelier-radius: 1.15rem;
+  --atelier-radius-sm: 0.75rem;
+  --atelier-shadow: 0 22px 48px rgba(12, 16, 24, 0.08);
+  --atelier-ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --atelier-fast: 180ms;
+  --atelier-enter: 560ms;
+  --atelier-measure: 72rem;
+}
+
+body {
+  background: var(--atelier-paper);
+  color: var(--atelier-ink);
+}
 
 .site-header {
   --header-h: 4.25rem;
@@ -37,7 +59,7 @@
 }
 
 [data-salkay-hero] {
-  background: #f6f7fb;
+  background: var(--atelier-paper);
 }
 
 .hero-stage {
@@ -288,8 +310,8 @@
 .studio-title {
   margin: 0.85rem 0 0;
   max-width: 28rem;
-  color: var(--sl-heading);
-  font-size: clamp(1.7rem, 2.4vw + 1rem, 2.55rem);
+  color: var(--atelier-ink);
+  font-size: clamp(1.75rem, 2.6vw + 1rem, 2.7rem);
   line-height: 1.15;
   letter-spacing: -0.03em;
   text-wrap: balance;
@@ -592,6 +614,7 @@
 
 .studio-contact {
   padding-bottom: calc(5.2rem + 52px);
+  background: var(--atelier-paper);
 }
 
 .studio-contact-meta {
@@ -787,5 +810,346 @@
 
   to {
     transform: none;
+  }
+}
+
+.atelier-icon,
+.atelier-btn-icon {
+  display: inline-grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+
+.atelier-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  border: 1px solid var(--atelier-line);
+  border-radius: 0.8rem;
+  background: var(--atelier-white);
+  color: var(--atelier-ink);
+}
+
+.atelier-icon svg,
+.atelier-btn-icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.atelier-icon.is-on-dark {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: #111827;
+  color: #e8eef8;
+}
+
+.atelier-mark {
+  display: block;
+  width: 100%;
+  max-width: 11rem;
+  height: auto;
+  stroke: var(--atelier-ink);
+  stroke-width: 1.6;
+  fill: none;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.atelier-mark-on-dark {
+  stroke: #94a3b8;
+  max-width: 12rem;
+  margin-bottom: 1rem;
+}
+
+.atelier-demo,
+.atelier-web,
+.atelier-vis,
+.atelier-process,
+.atelier-section {
+  position: relative;
+  padding-block: 5rem;
+  background: var(--atelier-white);
+}
+
+.atelier-demo,
+.atelier-vis,
+.atelier-section-paper,
+.page-hero {
+  background: var(--atelier-paper);
+}
+
+.atelier-demo-head,
+.atelier-vis-head,
+.atelier-process-head {
+  max-width: 38rem;
+  margin-bottom: 2.2rem;
+}
+
+.atelier-web-shell {
+  display: grid;
+  gap: 2.6rem;
+}
+
+.atelier-web-points,
+.atelier-soft-items {
+  display: grid;
+  gap: 1.15rem;
+  margin: 1.7rem 0 1.8rem;
+  padding: 0;
+  list-style: none;
+}
+
+.atelier-web-points li,
+.atelier-soft-items li {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 0.9rem;
+  align-items: start;
+}
+
+.atelier-web-points strong,
+.atelier-soft-items strong,
+.atelier-path-item h3,
+.atelier-spine-step h3 {
+  display: block;
+  color: var(--atelier-ink);
+  font-size: 1.05rem;
+  letter-spacing: -0.02em;
+}
+
+.atelier-web-points span,
+.atelier-soft-items span,
+.atelier-path-item p,
+.atelier-spine-step p {
+  color: var(--atelier-mute);
+  line-height: 1.6;
+}
+
+.atelier-soft {
+  padding-block: 5rem;
+  color: #e8eef8;
+  background: var(--atelier-navy);
+  scroll-margin-top: 5.5rem;
+}
+
+.atelier-soft-shell {
+  display: grid;
+  gap: 2.6rem;
+}
+
+.atelier-soft .studio-eye {
+  color: #7dd3fc;
+}
+
+.atelier-soft .studio-title {
+  color: #fff;
+}
+
+.atelier-soft .studio-lead,
+.atelier-soft-items span,
+.atelier-soft-grid span {
+  color: #94a3b8;
+}
+
+.atelier-soft-items strong,
+.atelier-soft-grid strong {
+  color: #fff;
+}
+
+.atelier-soft-stage {
+  display: grid;
+  gap: 1rem;
+}
+
+.atelier-path,
+.atelier-spine {
+  display: grid;
+  gap: 1.4rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atelier-path-item,
+.atelier-spine-step {
+  padding: 0;
+  background: transparent;
+  border: 0;
+}
+
+.atelier-path-item {
+  display: grid;
+  gap: 0.55rem;
+  padding-bottom: 0.4rem;
+}
+
+.atelier-spine-step {
+  display: grid;
+  grid-template-columns: 3.2rem 1fr;
+  gap: 1rem;
+  padding-block: 0.35rem 1.1rem;
+  border-bottom: 1px solid var(--atelier-line);
+}
+
+.atelier-spine-index {
+  margin: 0;
+  color: var(--atelier-blue);
+  font-family: var(--font-mono), ui-monospace, monospace;
+  font-size: 0.78rem;
+  letter-spacing: 0.12em;
+}
+
+.atelier-spine-out {
+  margin: 0.7rem 0 0;
+  color: var(--atelier-ink) !important;
+  font-weight: 600;
+}
+
+.atelier-chips,
+.atelier-data-list,
+.atelier-soft-grid {
+  display: grid;
+  gap: 0.7rem;
+  margin: 1.6rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.atelier-chips {
+  grid-template-columns: repeat(auto-fit, minmax(7.5rem, 1fr));
+}
+
+.atelier-chips li {
+  min-height: 2.75rem;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--atelier-line);
+  border-radius: 999px;
+  background: var(--atelier-white);
+  color: var(--atelier-ink);
+  font-size: 0.9rem;
+}
+
+.atelier-soft-grid {
+  grid-template-columns: 1fr;
+  gap: 1.4rem;
+  margin-top: 2rem;
+}
+
+.atelier-soft-grid li {
+  display: grid;
+  gap: 0.45rem;
+}
+
+.atelier-statement-lines {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0 0 1rem;
+  font-size: clamp(1.5rem, 3vw, 2.2rem);
+  letter-spacing: -0.03em;
+  line-height: 1.2;
+}
+
+.atelier-hero-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.6rem;
+}
+
+.atelier-support {
+  max-width: 36rem;
+  margin: 1rem 0 1.5rem;
+  color: var(--atelier-mute);
+}
+
+.page-hero-title {
+  max-width: 16ch;
+  margin: 0.85rem 0 0;
+  font-size: clamp(2.1rem, 4.4vw, 3.5rem);
+  line-height: 1.08;
+  letter-spacing: -0.035em;
+  text-wrap: balance;
+}
+
+.device-pair.is-pairing .concept-phone {
+  animation: atelier-pair 4.6s var(--atelier-ease) both;
+}
+
+@keyframes atelier-pair {
+  from {
+    opacity: 0.55;
+    transform: translate3d(14px, 18px, 0);
+  }
+
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.sl-webpricing,
+.sl-about,
+.sl-contact,
+[data-salkay-solutions] {
+  background: var(--atelier-paper);
+}
+
+.sl-webpricing-hero,
+.sl-about,
+.sl-contact {
+  background: var(--atelier-paper) !important;
+}
+
+.sl-webpricing-level,
+.sl-webpricing-panel,
+.sl-contact-panel {
+  border-color: var(--atelier-line) !important;
+  box-shadow: none !important;
+}
+
+@media (min-width: 760px) {
+  .atelier-path {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 2rem;
+  }
+
+  .atelier-soft-grid,
+  .atelier-data-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1.6rem 2rem;
+  }
+
+  .atelier-spine {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1180px) {
+  .atelier-web-shell,
+  .atelier-soft-shell {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.05fr);
+    align-items: center;
+    gap: 4.5rem;
+  }
+
+  .atelier-spine {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 1.6rem;
+  }
+
+  .atelier-spine-step {
+    grid-template-columns: 1fr;
+    border-bottom: 0;
+    border-top: 1px solid var(--atelier-line);
+    padding-top: 1.1rem;
+  }
+
+  .atelier-soft-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .device-pair.is-pairing .concept-phone {
+    animation: none;
   }
 }

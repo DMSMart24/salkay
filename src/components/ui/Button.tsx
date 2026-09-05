@@ -33,7 +33,7 @@ export function Button({
     <Link
       href={href as Route}
       className={cn(
-        "inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[0.95rem] font-medium tracking-[-0.01em] transition-colors duration-200",
+        "inline-flex min-h-12 items-center justify-center gap-2 rounded-full px-6 text-[0.95rem] font-medium tracking-[-0.01em] transition-[transform,background-color,border-color,color] duration-200",
         styles[variant],
         className,
       )}

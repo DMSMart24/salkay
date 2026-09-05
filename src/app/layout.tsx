@@ -9,7 +9,7 @@ import "./studio.css";
 export const metadata: Metadata = rootMetadata;
 
 export const viewport: Viewport = {
-  themeColor: "#EEF2FA",
+  themeColor: "#F3F1EC",
   width: "device-width",
   initialScale: 1,
 };

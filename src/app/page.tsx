@@ -1,3 +1,4 @@
+import { CapabilityDemo } from "@/components/home/CapabilityDemo";
 import { HomeContact } from "@/components/home/HomeContact";
 import { Hero } from "@/components/home/Hero";
 import { Process } from "@/components/home/Process";
@@ -14,6 +15,7 @@ export default function HomePage() {
       <JsonLd data={websiteSchema()} />
       <JsonLd data={serviceSchema()} />
       <Hero />
+      <CapabilityDemo />
       <WebCraft />
       <SoftwareCraft />
       <Visibility />

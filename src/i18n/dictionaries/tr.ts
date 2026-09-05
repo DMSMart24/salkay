@@ -221,6 +221,13 @@ export const tr: Dictionary = {
           },
         ],
       },
+      demo: {
+        eyebrow: "Teslimat",
+        title: "Nasıl bir site teslim ederiz.",
+        lead: "Onaylı müşteri referansları henüz yayımlanmadı. Bunun yerine, teslim ettiğimiz işin yapısını aynı tasarımın masaüstü ve telefon halinde gösteriyoruz.",
+        label: "Performans gösterimi",
+        caption: "Gerçek bir müşteri projesi değildir. Markanıza özel bir kurumsal sitenin düzenini anlatır.",
+      },
     },
     intro: {
       eyebrow: "SALKAY",
