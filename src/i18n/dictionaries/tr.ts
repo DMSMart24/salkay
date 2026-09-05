@@ -1,4 +1,4 @@
-import { routes, sections } from "@/lib/routes";
+import { routes } from "@/lib/routes";
 import type { Dictionary } from "@/i18n/types";
 import { CONTACT_PROJECT_TYPES } from "@/lib/contact/types";
 
@@ -27,14 +27,11 @@ export const tr: Dictionary = {
     skip: "İçeriğe geç",
     openMenu: "Menüyü aç",
     closeMenu: "Menüyü kapat",
-    primaryCta: "Görüşme Planlayın",
+    primaryCta: "Projenizi Konuşalım",
     items: [
       { href: routes.services, label: "Hizmetler" },
-      { href: sections.packages, label: "Fiyatlar" },
-      { href: routes.solutions, label: "Çözümler" },
-      { href: sections.process, label: "Yaklaşımımız" },
-      { href: routes.about, label: "Hakkımızda" },
-      { href: routes.contact, label: "İletişim" },
+      { href: routes.projects, label: "Çalışmalar" },
+      { href: routes.about, label: "Yaklaşımımız" },
     ],
   },
   footer: {

@@ -1,5 +1,4 @@
 import { InquiryForm } from "@/components/contact/InquiryForm";
-import { Reveal } from "@/components/motion/Reveal";
 import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { siteMailto } from "@/lib/site";
@@ -10,7 +9,7 @@ export function HomeContact() {
   return (
     <section id="iletisim" className="home-contact">
       <Container className="grid gap-12 min-[920px]:grid-cols-2">
-        <Reveal>
+        <div>
           <p className="eyebrow text-cyan">{homeContact.eyebrow}</p>
           <h2 className="mt-4 font-display text-h2">{homeContact.title}</h2>
           <p className="mt-5 max-w-xl text-muted">{homeContact.body}</p>
@@ -20,10 +19,8 @@ export function HomeContact() {
               {homeContact.mailLabel}
             </a>
           </div>
-        </Reveal>
-        <Reveal delay={80}>
-          <InquiryForm compact tone="on-light" />
-        </Reveal>
+        </div>
+        <InquiryForm compact tone="on-light" variant="studio" />
       </Container>
     </section>
   );

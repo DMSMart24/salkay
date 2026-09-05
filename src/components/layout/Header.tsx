@@ -8,7 +8,7 @@ import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { cn } from "@/lib/cn";
-import { routes } from "@/lib/routes";
+import { routes, sections } from "@/lib/routes";
 
 function navPath(href: string) {
   return href.split("#")[0] || "/";
@@ -105,7 +105,7 @@ export function Header() {
         </nav>
 
         <div className="hidden min-[920px]:block">
-          <Button href={routes.contact} className="site-header-cta min-h-11 px-5">
+          <Button href={pathname === "/" ? sections.contact : routes.contact} className="site-header-cta min-h-11 px-5">
             {dictionary.nav.primaryCta}
           </Button>
         </div>
@@ -167,7 +167,7 @@ export function Header() {
             })}
           </nav>
           <div className="site-header-menu-cta">
-            <Button href={routes.contact} className="site-header-cta site-header-menu-cta-btn">
+            <Button href={pathname === "/" ? sections.contact : routes.contact} className="site-header-cta site-header-menu-cta-btn">
               {dictionary.nav.primaryCta}
               <span aria-hidden>→</span>
             </Button>
