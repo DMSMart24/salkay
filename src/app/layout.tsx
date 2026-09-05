@@ -5,11 +5,12 @@ import { rootMetadata } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import "./globals.css";
 import "./studio.css";
+import "./apple.css";
 
 export const metadata: Metadata = rootMetadata;
 
 export const viewport: Viewport = {
-  themeColor: "#F3F1EC",
+  themeColor: "#EEF2FA",
   width: "device-width",
   initialScale: 1,
 };

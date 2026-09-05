@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useId, useState } from "react";
+import { ArrowRight } from "lucide-react";
 import { HeaderLogo } from "@/components/brand/HeaderLogo";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -166,9 +167,12 @@ export function Header() {
                   }}
                 >
                   {item.label}
-                  <span aria-hidden className="site-header-menu-arrow">
-                    →
-                  </span>
+                  <ArrowRight
+                    size={16}
+                    strokeWidth={1.5}
+                    aria-hidden
+                    className="site-header-menu-arrow"
+                  />
                 </Link>
               );
             })}
@@ -176,7 +180,7 @@ export function Header() {
           <div className="site-header-menu-cta">
             <Button href={routes.contact} className="site-header-cta site-header-menu-cta-btn">
               {dictionary.nav.primaryCta}
-              <span aria-hidden>→</span>
+              <ArrowRight size={16} strokeWidth={1.5} aria-hidden />
             </Button>
             <p className="site-header-menu-note">{dictionary.home.hero.eyebrow}</p>
           </div>

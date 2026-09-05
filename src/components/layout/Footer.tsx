@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Route } from "next";
 import type { ReactNode } from "react";
+import { Mail, MapPin, Phone } from "lucide-react";
 import { Logo } from "@/components/brand/Logo";
 import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -14,13 +15,11 @@ export function Footer() {
 
   return (
     <footer className="site-footer">
-      <Container className="py-16 lg:py-20">
-        <div className="grid gap-12 md:grid-cols-2 lg:grid-cols-4">
+      <Container className="py-24 md:py-32">
+        <div className="grid gap-16 md:grid-cols-2 lg:grid-cols-4 lg:gap-20">
           <div className="max-w-sm">
             <Logo />
-            <p className="mt-6 text-[1.02rem] leading-7 text-muted">
-              {dictionary.footer.tagline}
-            </p>
+            <p className="mt-8 text-body leading-7 text-muted">{dictionary.footer.tagline}</p>
           </div>
 
           <FooterColumn title={dictionary.footer.services}>
@@ -54,30 +53,33 @@ export function Footer() {
           </FooterColumn>
 
           <FooterColumn title={dictionary.footer.contact}>
-            <a href={siteMailto()} className="text-muted hover:text-fg">
+            <span className="apple-footer-line text-muted">
+              <MapPin size={16} strokeWidth={1.5} aria-hidden />
+              {site.location}
+            </span>
+            <a href={siteMailto()} className="apple-footer-line text-muted hover:text-fg">
+              <Mail size={16} strokeWidth={1.5} aria-hidden />
               {site.email}
             </a>
             <a
               href={siteWhatsAppUrl()}
-              className="text-muted hover:text-fg"
+              className="apple-footer-line text-muted hover:text-fg"
               target="_blank"
               rel="noopener noreferrer"
             >
+              <Phone size={16} strokeWidth={1.5} aria-hidden />
               {site.whatsappDisplay}
-            </a>
-            <a href={site.url} className="text-muted hover:text-fg">
-              {site.domain}
             </a>
           </FooterColumn>
         </div>
 
-        <div className="mt-16 h-px bg-line" />
+        <div className="site-footer-rule mt-20" />
 
-        <div className="mt-6 flex flex-col gap-3 text-sm text-faint sm:flex-row sm:items-center sm:justify-between">
+        <div className="site-footer-copy mt-6 flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p>
             © {year} {site.name}. {dictionary.footer.rights}
           </p>
-          <p>{site.location}</p>
+          <p>{site.domain}</p>
         </div>
       </Container>
     </footer>
@@ -94,7 +96,7 @@ function FooterColumn({
   return (
     <div>
       <p className="eyebrow text-faint">{title}</p>
-      <div className="mt-4 flex flex-col gap-2.5 text-[0.95rem]">{children}</div>
+      <div className="mt-6 flex flex-col gap-3.5 text-[0.95rem]">{children}</div>
     </div>
   );
 }

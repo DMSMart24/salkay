@@ -1,4 +1,5 @@
 import Image from "next/image";
+import { ArrowUpRight, Mail, MapPin, Phone } from "lucide-react";
 import { InquiryForm } from "@/components/contact/InquiryForm";
 import { Reveal } from "@/components/motion/Reveal";
 import { getDictionary } from "@/i18n/get-dictionary";
@@ -8,11 +9,11 @@ import { site, siteMailto, siteWhatsAppUrl } from "@/lib/site";
 function contactChannel(kind: "email" | "whatsapp" | "web") {
   switch (kind) {
     case "email":
-      return { value: site.email, href: siteMailto(), external: false };
+      return { value: site.email, href: siteMailto(), external: false, icon: Mail };
     case "whatsapp":
-      return { value: site.whatsappDisplay, href: siteWhatsAppUrl(), external: true };
+      return { value: site.whatsappDisplay, href: siteWhatsAppUrl(), external: true, icon: Phone };
     case "web":
-      return { value: site.domain, href: site.url, external: true };
+      return { value: site.domain, href: site.url, external: true, icon: ArrowUpRight };
     default: {
       const _never: never = kind;
       return _never;
@@ -58,6 +59,7 @@ export function ContactStudio({ packageSlug }: { packageSlug?: string }) {
             <ul className="sl-contact-channels">
               {page.channels.map((channel, index) => {
                 const item = contactChannel(channel.value);
+                const ChannelIcon = item.icon;
                 return (
                   <li key={channel.label}>
                     <Reveal delay={80 + index * 40}>
@@ -68,9 +70,12 @@ export function ContactStudio({ packageSlug }: { packageSlug?: string }) {
                           ? { target: "_blank", rel: "noopener noreferrer" }
                           : {})}
                       >
-                        <span>{channel.label}</span>
+                        <span className="apple-footer-line">
+                          <ChannelIcon size={16} strokeWidth={1.5} aria-hidden />
+                          {channel.label}
+                        </span>
                         <strong>{item.value}</strong>
-                        <i aria-hidden>→</i>
+                        <ArrowUpRight size={16} strokeWidth={1.5} aria-hidden />
                       </a>
                     </Reveal>
                   </li>
@@ -83,7 +88,10 @@ export function ContactStudio({ packageSlug }: { packageSlug?: string }) {
               {page.availability}
             </p>
             <p className="sl-contact-meta">
-              <span>{page.location}</span>
+              <span className="apple-footer-line">
+                <MapPin size={16} strokeWidth={1.5} aria-hidden />
+                {page.location}
+              </span>
               <span>{page.role}</span>
             </p>
           </Reveal>

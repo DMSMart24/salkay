@@ -1,7 +1,7 @@
-import { CapabilityDemo } from "@/components/home/CapabilityDemo";
 import { HomeContact } from "@/components/home/HomeContact";
 import { Hero } from "@/components/home/Hero";
 import { Process } from "@/components/home/Process";
+import { ServicesBento } from "@/components/home/ServicesBento";
 import { SoftwareCraft } from "@/components/home/SoftwareCraft";
 import { Visibility } from "@/components/home/Visibility";
 import { WebCraft } from "@/components/home/WebCraft";
@@ -15,7 +15,7 @@ export default function HomePage() {
       <JsonLd data={websiteSchema()} />
       <JsonLd data={serviceSchema()} />
       <Hero />
-      <CapabilityDemo />
+      <ServicesBento />
       <WebCraft />
       <SoftwareCraft />
       <Visibility />

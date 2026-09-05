@@ -1,3 +1,5 @@
+import Link from "next/link";
+import { ArrowRight } from "lucide-react";
 import { HeroExperience } from "@/components/home/HeroExperience";
 import { Button } from "@/components/ui/Button";
 import { Container } from "@/components/ui/Container";
@@ -16,24 +18,25 @@ export function Hero() {
               <span className="hero-eyebrow-dot" aria-hidden />
               {hero.eyebrow}
             </p>
-            <h1 className="hero-title font-display font-bold text-fg">
+            <h1 className="hero-title font-display text-fg">
               <span className="hero-title-line">
                 <span className="hero-title-segment">{hero.titleBefore}</span>{" "}
                 <span className="hero-title-accent">{hero.titleAccent}</span>
               </span>{" "}
               <span className="hero-title-line hero-title-line-soft">{hero.titleAfter}</span>
             </h1>
-            <p className="hero-lead text-muted">{hero.lead}</p>
+            <p className="hero-lead">{hero.lead}</p>
           </div>
           <div className="hero-actions">
-            <Button href={sections.contact} className="hero-cta">
+            <Button href={sections.contact} className="hero-cta apple-btn">
               {hero.primaryCta}
             </Button>
-            <Button href={sections.webDesign} variant="ghost" className="hero-cta-secondary">
+            <Link href={sections.webDesign} className="hero-cta-secondary apple-text-link">
               {hero.secondaryCta}
-            </Button>
+              <ArrowRight size={16} strokeWidth={1.5} aria-hidden />
+            </Link>
           </div>
-          <p className="hero-meta font-mono text-faint uppercase">
+          <p className="hero-meta font-mono uppercase">
             <span className="hero-meta-group">
               <span>{hero.metaItems[0]}</span>
               <span aria-hidden className="hero-meta-dot">

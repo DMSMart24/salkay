@@ -1,18 +1,18 @@
 /* SALKAY Atelier — public marketing system */
 
 :root {
-  --atelier-paper: #f3f1ec;
-  --atelier-white: #fbfaf7;
-  --atelier-ink: #0c1018;
-  --atelier-navy: #070b14;
+  --atelier-paper: #eef2fa;
+  --atelier-white: #ffffff;
+  --atelier-ink: #0a0e1b;
+  --atelier-navy: #0a0e1b;
   --atelier-mute: #5c6472;
-  --atelier-blue: #1554f0;
-  --atelier-line: rgba(12, 16, 24, 0.08);
+  --atelier-blue: var(--c-blue);
+  --atelier-line: rgba(10, 14, 27, 0.08);
   --atelier-radius: 1.15rem;
   --atelier-radius-sm: 0.75rem;
-  --atelier-shadow: 0 22px 48px rgba(12, 16, 24, 0.08);
-  --atelier-ease: cubic-bezier(0.22, 1, 0.36, 1);
-  --atelier-fast: 180ms;
+  --atelier-shadow: 0 22px 48px rgba(10, 14, 27, 0.08);
+  --atelier-ease: cubic-bezier(0.16, 1, 0.3, 1);
+  --atelier-fast: 200ms;
   --atelier-enter: 560ms;
   --atelier-measure: 72rem;
 }
@@ -338,13 +338,13 @@ body {
 .studio-process,
 .studio-contact {
   position: relative;
-  padding-block: 4.5rem;
-  background: #fff;
+  padding-block: 6rem;
+  background: var(--atelier-paper);
 }
 
 .studio-vis,
 .studio-contact {
-  background: #f6f7fb;
+  background: var(--atelier-paper);
 }
 
 .studio-web-shell,
@@ -631,10 +631,10 @@ body {
 }
 
 .studio-contact-form {
-  padding: 1.2rem 1.15rem 1.3rem;
-  border: 1px solid #e4e9f2;
-  border-radius: 1.15rem;
-  background: #fff;
+  padding: 0.4rem 0 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
 }
 
 .page-hero {
@@ -865,8 +865,8 @@ body {
 .atelier-process,
 .atelier-section {
   position: relative;
-  padding-block: 5rem;
-  background: var(--atelier-white);
+  padding-block: 6rem;
+  background: var(--atelier-paper);
 }
 
 .atelier-demo,
@@ -924,7 +924,7 @@ body {
 }
 
 .atelier-soft {
-  padding-block: 5rem;
+  padding-block: 6rem;
   color: #e8eef8;
   background: var(--atelier-navy);
   scroll-margin-top: 5.5rem;
@@ -962,7 +962,7 @@ body {
 .atelier-path,
 .atelier-spine {
   display: grid;
-  gap: 1.4rem;
+  gap: 3.5rem;
   margin: 0;
   padding: 0;
   list-style: none;
@@ -983,18 +983,21 @@ body {
 
 .atelier-spine-step {
   display: grid;
-  grid-template-columns: 3.2rem 1fr;
+  grid-template-columns: 1fr;
   gap: 1rem;
-  padding-block: 0.35rem 1.1rem;
-  border-bottom: 1px solid var(--atelier-line);
+  padding-block: 0.35rem 0;
+  border-bottom: 0;
 }
 
 .atelier-spine-index {
   margin: 0;
-  color: var(--atelier-blue);
-  font-family: var(--font-mono), ui-monospace, monospace;
-  font-size: 0.78rem;
-  letter-spacing: 0.12em;
+  color: var(--atelier-ink);
+  font-family: inherit;
+  font-size: clamp(3.5rem, 8vw, 5.5rem);
+  font-weight: 600;
+  letter-spacing: -0.06em;
+  line-height: 0.9;
+  opacity: 0.1;
 }
 
 .atelier-spine-out {
@@ -1119,7 +1122,8 @@ body {
   }
 
   .atelier-spine {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: 1fr;
+    gap: 4.5rem;
   }
 }
 
@@ -1132,15 +1136,15 @@ body {
   }
 
   .atelier-spine {
-    grid-template-columns: repeat(4, minmax(0, 1fr));
-    gap: 1.6rem;
+    grid-template-columns: 1fr;
+    gap: 5.5rem;
   }
 
   .atelier-spine-step {
     grid-template-columns: 1fr;
     border-bottom: 0;
-    border-top: 1px solid var(--atelier-line);
-    padding-top: 1.1rem;
+    border-top: 0;
+    padding-top: 0;
   }
 
   .atelier-soft-grid {
@@ -1148,8 +1152,47 @@ body {
   }
 }
 
+@media (min-width: 768px) {
+  .atelier-demo,
+  .atelier-web,
+  .atelier-vis,
+  .atelier-process,
+  .atelier-section,
+  .atelier-soft,
+  .studio-web,
+  .studio-vis,
+  .studio-process,
+  .studio-contact {
+    padding-block: 8rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .atelier-demo,
+  .atelier-web,
+  .atelier-vis,
+  .atelier-process,
+  .atelier-section,
+  .atelier-soft,
+  .studio-web,
+  .studio-vis,
+  .studio-process,
+  .studio-contact {
+    padding-block: 10rem;
+  }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .device-pair.is-pairing .concept-phone {
     animation: none;
+  }
+
+  .apple-card,
+  .apple-btn,
+  .apple-text-link svg,
+  .sl-wa,
+  .sl-contact-submit {
+    transition: none !important;
+    transform: none !important;
   }
 }

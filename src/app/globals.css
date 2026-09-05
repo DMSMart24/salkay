@@ -90,18 +90,23 @@
   --font-display: var(--font-display);
   --font-sans: var(--font-sans);
   --font-mono: var(--font-mono);
-  --text-display: clamp(2.375rem, 6.4vw, 4rem);
-  --text-display--line-height: 0.98;
+  --text-display: clamp(2.5rem, 6vw, 5.5rem);
+  --text-display--line-height: 1.1;
   --text-display--letter-spacing: -0.04em;
-  --text-h1: clamp(2.1rem, 4.2vw, 3.6rem);
-  --text-h1--line-height: 1.04;
+  --text-h1: clamp(2rem, 4vw, 3.5rem);
+  --text-h1--line-height: 1.12;
   --text-h1--letter-spacing: -0.03em;
-  --text-h2: clamp(1.7rem, 3vw, 2.75rem);
-  --text-h2--line-height: 1.12;
-  --text-h2--letter-spacing: -0.028em;
+  --text-h2: clamp(1.5rem, 2.6vw, 2.25rem);
+  --text-h2--line-height: 1.2;
+  --text-h2--letter-spacing: -0.025em;
   --text-h3: clamp(1.15rem, 1.6vw, 1.45rem);
   --text-h3--line-height: 1.3;
   --text-h3--letter-spacing: -0.02em;
+  --text-body: 1.0625rem;
+  --text-body--line-height: 1.55;
+  --text-caption: 0.8125rem;
+  --text-caption--line-height: 1.5;
+  --ease-apple: cubic-bezier(0.16, 1, 0.3, 1);
   --shadow-lift: 0 20px 60px rgba(15, 23, 42, 0.12);
 }
 
@@ -117,9 +122,10 @@ body {
 }
 
 body {
-  font-family: var(--font-sans), "Segoe UI", sans-serif;
-  font-size: 1.02rem;
-  line-height: 1.7;
+  font-family: -apple-system, BlinkMacSystemFont, var(--font-sans), "Inter", "Helvetica Neue",
+    sans-serif;
+  font-size: var(--text-body);
+  line-height: 1.55;
   min-height: 100%;
   text-rendering: optimizeLegibility;
 }
@@ -182,24 +188,24 @@ button {
   display: inline-flex;
   align-items: center;
   gap: 0.55rem;
-  height: 52px;
-  padding: 0 1.1rem 0 0.85rem;
-  border: 1px solid rgba(56, 189, 248, 0.28);
+  height: 48px;
+  padding: 0 1rem 0 0.8rem;
+  border: 1px solid color-mix(in srgb, var(--c-blue) 16%, transparent);
   border-radius: 16px;
   background: var(--sl-bg-dark);
   color: #ffffff;
   text-decoration: none;
-  box-shadow: 0 10px 24px rgba(10, 14, 27, 0.2);
+  box-shadow: 0 6px 16px rgba(10, 14, 27, 0.14);
   transition:
-    transform 0.2s ease,
-    border-color 0.2s ease,
-    box-shadow 0.2s ease;
+    transform 400ms cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .sl-wa:hover {
-  transform: translateY(-2px);
-  border-color: rgba(21, 84, 240, 0.5);
-  box-shadow: 0 12px 26px rgba(10, 14, 27, 0.26);
+  transform: scale(1.04);
+  border-color: color-mix(in srgb, var(--c-blue) 16%, transparent);
+  box-shadow: 0 8px 20px rgba(10, 14, 27, 0.18);
 }
 
 .sl-wa:focus-visible {
@@ -432,7 +438,8 @@ header.site-header a.site-header-menu-cta-btn {
 
 
 .font-display {
-  font-family: var(--font-display), "Segoe UI", sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, var(--font-sans), "Inter", "Helvetica Neue",
+    sans-serif;
 }
 
 .eyebrow {
@@ -453,8 +460,8 @@ header.site-header a.site-header-menu-cta-btn {
 /* Keep media queries in sync with src/lib/hero-video.ts */
 [data-salkay-hero] {
   --hero-copy-max: 36rem;
-  --hero-title-size: clamp(2.15rem, 1.15rem + 3.6vw, 3.55rem);
-  --hero-lead-size: 1.08rem;
+  --hero-title-size: clamp(2.5rem, 6vw, 5.5rem);
+  --hero-lead-size: 1.05rem;
   display: flex;
   flex-direction: column;
   gap: 2rem;
@@ -549,9 +556,10 @@ header.site-header a.site-header-menu-cta-btn {
 
 .hero-title {
   display: grid;
-  gap: 0.18rem;
+  gap: 0.08rem;
   margin-top: 1.15rem;
   font-size: var(--hero-title-size);
+  font-weight: 600;
   line-height: 1.08;
   letter-spacing: -0.045em;
   color: var(--sl-heading);
@@ -571,11 +579,12 @@ header.site-header a.site-header-menu-cta-btn {
 }
 
 .hero-lead {
-  margin-top: 1.2rem;
-  max-width: 34rem;
+  margin-top: 1.35rem;
+  max-width: 60ch;
   font-size: var(--hero-lead-size);
-  line-height: 1.65;
-  color: var(--sl-text-on-light);
+  font-weight: 400;
+  line-height: 1.55;
+  color: color-mix(in srgb, var(--sl-heading) 70%, transparent);
 }
 
 .hero-actions {
@@ -590,24 +599,31 @@ header.site-header a.site-header-menu-cta-btn {
 }
 
 [data-salkay-hero] a.hero-cta {
-  background: var(--sl-blue);
+  background: var(--c-blue);
   color: #fff;
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--c-blue) 22%, transparent);
+  will-change: transform;
 }
 
 [data-salkay-hero] a.hero-cta:hover {
-  background: var(--sl-blue-hover);
+  background: var(--c-blue);
   color: #fff;
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--c-blue) 30%, transparent);
 }
 
 [data-salkay-hero] a.hero-cta-secondary {
-  background: #fff;
-  border-color: color-mix(in srgb, var(--sl-blue) 18%, #d5dbe6);
+  min-height: auto;
+  padding: 0;
+  border: 0;
+  background: transparent;
   color: var(--sl-heading);
+  box-shadow: none;
 }
 
 [data-salkay-hero] a.hero-cta-secondary:hover {
-  border-color: var(--sl-blue);
-  background: color-mix(in srgb, var(--sl-blue) 6%, #fff);
+  background: transparent;
+  border-color: transparent;
+  color: var(--sl-heading);
 }
 
 .hero-meta {
@@ -616,10 +632,11 @@ header.site-header a.site-header-menu-cta-btn {
   align-items: center;
   column-gap: 0.75rem;
   row-gap: 0.4rem;
-  margin-top: 1.45rem;
+  margin-top: 1.8rem;
   font-size: 0.68rem;
   letter-spacing: 0.14em;
-  color: var(--sl-text-on-light);
+  color: var(--sl-heading);
+  opacity: 0.4;
 }
 
 .hero-meta-group {
@@ -11404,12 +11421,17 @@ header.site-header a.site-header-menu-cta-btn {
   min-height: 3.25rem;
   padding: 0 1.2rem;
   border: 0;
-  border-radius: 13px;
-  background: var(--sl-blue);
+  border-radius: 999px;
+  background: var(--c-blue);
   color: #ffffff;
   font: inherit;
   font-weight: 600;
   cursor: pointer;
+  box-shadow: 0 10px 28px color-mix(in srgb, var(--c-blue) 22%, transparent);
+  transition:
+    transform 200ms ease-out,
+    box-shadow 400ms cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: transform;
 }
 
 .sl-contact-selected {
@@ -11463,7 +11485,8 @@ header.site-header a.site-header-menu-cta-btn {
 }
 
 .sl-contact-submit:hover {
-  background: var(--sl-blue-hover);
+  background: var(--c-blue);
+  box-shadow: 0 16px 40px color-mix(in srgb, var(--c-blue) 30%, transparent);
 }
 
 .sl-contact-submit:focus-visible {
