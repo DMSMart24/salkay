@@ -1,3 +1,5 @@
+/* Studio public-site layer. Imported last from globals.css via concatenation. */
+
 .site-header {
   --header-h: 4.25rem;
 }
@@ -74,6 +76,7 @@
   position: relative;
   isolation: isolate;
   min-height: 18rem;
+  overflow: clip;
   animation: concept-enter 720ms cubic-bezier(0.22, 1, 0.36, 1) both;
 }
 
@@ -116,8 +119,7 @@
   gap: 0.7rem;
   min-height: 16.5rem;
   padding: 0.85rem 0.9rem 1rem;
-  background:
-    linear-gradient(180deg, #f8f9fc 0%, #ffffff 42%);
+  background: linear-gradient(180deg, #f8f9fc 0%, #ffffff 42%);
 }
 
 .concept-page-bar {
@@ -330,6 +332,13 @@
   gap: 2.4rem;
 }
 
+.studio-web-shell > *,
+.studio-soft-shell > *,
+.studio-contact-shell > *,
+.studio-contact-form {
+  min-width: 0;
+}
+
 .studio-web-points,
 .studio-soft-items {
   display: grid;
@@ -363,9 +372,17 @@
 }
 
 .studio-soft {
-  padding-block: 4.75rem;
+  padding-block: 4.25rem;
   color: #e8eef8;
   background: #0a0e1b;
+  scroll-margin-top: 5.5rem;
+}
+
+#web-tasarim,
+#gorunurluk,
+#surec,
+#iletisim {
+  scroll-margin-top: 5.5rem;
 }
 
 .studio-soft .studio-eye {
@@ -684,7 +701,7 @@
   }
 }
 
-@media (min-width: 1024px) {
+@media (min-width: 1180px) {
   .studio-web-shell,
   .studio-soft-shell,
   .studio-contact-shell {
@@ -695,6 +712,10 @@
 
   .studio-process-list {
     grid-template-columns: repeat(4, minmax(0, 1fr));
+  }
+
+  .studio-vis-list {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .hero-stage-kay {
@@ -746,7 +767,8 @@
 @media (prefers-reduced-motion: reduce) {
   .concept-site-stage,
   .concept-phone,
-  .hero-stage-kay {
+  .hero-stage-kay,
+  .is-revealed {
     animation: none;
     opacity: 1;
     transform: none;
@@ -754,6 +776,16 @@
   }
 }
 
-.will-reveal {
-  transform: translateY(12px);
+.is-revealed {
+  animation: studio-rise 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@keyframes studio-rise {
+  from {
+    transform: translate3d(0, 10px, 0);
+  }
+
+  to {
+    transform: none;
+  }
 }

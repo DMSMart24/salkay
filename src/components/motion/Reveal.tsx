@@ -19,27 +19,27 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
 
     if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
       node.classList.add("is-revealed");
-      node.classList.remove("will-reveal");
       return;
     }
+
+    const reveal = () => {
+      node.classList.add("is-revealed");
+    };
 
     const rect = node.getBoundingClientRect();
     if (rect.top < window.innerHeight * 0.92) {
-      node.classList.add("is-revealed");
+      reveal();
       return;
     }
-
-    node.classList.add("will-reveal");
 
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
-          node.classList.add("is-revealed");
-          node.classList.remove("will-reveal");
+          reveal();
           observer.disconnect();
         }
       },
-      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
+      { threshold: 0.08 },
     );
 
     observer.observe(node);

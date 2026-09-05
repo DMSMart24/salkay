@@ -1,5 +1,4 @@
 @import "tailwindcss";
-@import "./studio.css";
 
 :root {
   --sl-bg-dark: #0a0e1b;
@@ -114,6 +113,7 @@ html,
 body {
   background: var(--c-bg);
   color: var(--c-text);
+  overflow-x: clip;
 }
 
 body {
@@ -6441,8 +6441,8 @@ header.site-header a.site-header-menu-cta-btn {
 }
 
 .will-reveal {
-  opacity: 0;
-  transform: translateY(22px);
+  opacity: 1;
+  transform: none;
 }
 
 .is-revealed {

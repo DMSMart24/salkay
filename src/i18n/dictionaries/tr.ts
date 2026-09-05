@@ -386,7 +386,7 @@ export const tr: Dictionary = {
       eyebrow: "Projeler",
       title: "Seçilmiş işler burada duracak.",
       lead: "Gerçek vaka çalışmaları eklendiğinde her kayıt; ihtiyaç, çözüm, tasarım, geliştirme, hizmetler ve — varsa — sonuçlarla okunacak.",
-      disclaimer: "Aşağıdakiler yer tutucu sunumlardır. Gerçek müşteri adı, yorum veya performans rakamı içermez.",
+      disclaimer: "Onaylı referans görselleri henüz yayımlanmadı. Bu sayfada gerçek müşteri adı, yorum veya performans rakamı yer almaz.",
       cta: "Proje yaklaşımını görün",
       items: [
         {

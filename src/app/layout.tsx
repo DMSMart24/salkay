@@ -4,6 +4,7 @@ import { fontDisplay, fontMono, fontSans } from "@/lib/fonts";
 import { rootMetadata } from "@/lib/metadata";
 import { site } from "@/lib/site";
 import "./globals.css";
+import "./studio.css";
 
 export const metadata: Metadata = rootMetadata;
 

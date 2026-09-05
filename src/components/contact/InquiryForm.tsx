@@ -171,16 +171,16 @@ export function InquiryForm({
       {selectedPackage ? (
         <input type="hidden" name="package" value={selectedPackage.slug} />
       ) : null}
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field label={form.name} name="name" required tone={tone} inputClass={fields} />
-        <Field label={form.email} name="email" type="email" required tone={tone} inputClass={fields} />
-        <Field label={form.company} name="company" tone={tone} inputClass={fields} />
+      <div className="grid min-w-0 gap-5 min-[720px]:grid-cols-2">
+        <Field label={form.name} name="name" required tone={tone} inputClass={`${fields} min-w-0`} />
+        <Field label={form.email} name="email" type="email" required tone={tone} inputClass={`${fields} min-w-0`} />
+        <Field label={form.company} name="company" tone={tone} inputClass={`${fields} min-w-0`} />
         {compact ? null : (
           <Field label={form.phone} name="phone" type="tel" tone={tone} inputClass={fields} />
         )}
       </div>
 
-      <label className="grid gap-2">
+      <label className="grid min-w-0 gap-2">
         <span className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}>
           {form.service}
         </span>
@@ -196,7 +196,7 @@ export function InquiryForm({
         </select>
       </label>
 
-      <label className="grid gap-2">
+      <label className="grid min-w-0 gap-2">
         <span className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}>
           {form.message} <span className={tone === "on-light" ? "text-[#64748B]" : "text-faint"}>*</span>
         </span>
@@ -328,7 +328,7 @@ function Field({
   inputClass: string;
 }) {
   return (
-    <label className="grid gap-2">
+    <label className="grid min-w-0 gap-2">
       <span
         className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}
       >
