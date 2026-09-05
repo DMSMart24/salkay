@@ -52,11 +52,11 @@ function Hero() {
             <span className="h-1.5 w-1.5 bg-cyan shadow-[0_0_12px_var(--c-cyan)]" />
             SALKAY — İstanbul dijital stüdyo
           </p>
-          <h1 className="hero-title font-display font-bold text-fg">
+          <h1 className="hero-title font-display font-bold">
             <span className="hero-title-segment">İyi tasarım.</span>{" "}
-            <span className="hero-title-accent text-blue">Güçlü bir dijital gelecek.</span>
+            <span className="hero-title-accent">Güçlü bir dijital gelecek.</span>
           </h1>
-          <p className="hero-lead text-muted">Markanıza özel web siteleri ve işinizi kolaylaştıran yazılımlar.</p>
+          <p className="hero-lead">Markanıza özel web siteleri ve işinizi kolaylaştıran yazılımlar.</p>
           <div className="hero-actions studio-hero-actions">
             <Link href={sections.contact} className="studio-btn studio-btn-primary hero-cta">
               Projenizi Konuşalım
