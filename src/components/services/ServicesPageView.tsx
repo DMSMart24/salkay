@@ -95,7 +95,7 @@ export function ServicesPageView() {
         </Container>
       </section>
 
-      <section className="svc-group svc-systems">
+      <section id="yazilim" className="svc-group svc-systems">
         <span className="svc-sys-field" aria-hidden />
         <Container className="svc-shell relative">
           <SystemsShowcase />
@@ -121,14 +121,14 @@ export function ServicesPageView() {
         </Container>
       </section>
 
-      <section className="svc-group svc-growth svc-theme-light">
+      <section id="buyume" className="svc-group svc-growth svc-theme-light">
         <span className="svc-grow-field" aria-hidden />
         <Container className="svc-shell relative">
           <GrowthShowcase />
         </Container>
       </section>
 
-      <section className="svc-group svc-data">
+      <section id="veri" className="svc-group svc-data">
         <span className="svc-dc-field" aria-hidden />
         <Container className="svc-shell relative">
           <DataShowcase />
