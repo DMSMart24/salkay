@@ -1,104 +1,69 @@
+"use client";
+
+import { useRef } from "react";
+import { Code2, Compass, PenTool, Rocket } from "lucide-react";
+import { motion, useReducedMotion, useScroll, useSpring } from "framer-motion";
 import { Reveal } from "@/components/motion/Reveal";
+import { IconWell } from "@/components/ui/IconWell";
 import { Container } from "@/components/ui/Container";
 import { getDictionary } from "@/i18n/get-dictionary";
+import type { LucideIcon } from "lucide-react";
 
-const stepIcons = ["target", "pen", "code", "chart"] as const;
-
-type StepIconName = (typeof stepIcons)[number];
-
-function StepIcon({ name }: { name: StepIconName }) {
-  switch (name) {
-    case "target":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden>
-          <circle cx="12" cy="12" r="7.2" />
-          <circle cx="12" cy="12" r="3.4" />
-          <circle cx="12" cy="12" r="0.8" />
-        </svg>
-      );
-    case "pen":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden>
-          <path d="M14.6 5.2 L18.8 9.4 L9.2 19 H5 V14.8 Z" />
-          <path d="M12.8 7 L17 11.2" />
-        </svg>
-      );
-    case "code":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden>
-          <path d="M9 7.4 L4.8 12 L9 16.6" />
-          <path d="M15 7.4 L19.2 12 L15 16.6" />
-        </svg>
-      );
-    case "chart":
-      return (
-        <svg viewBox="0 0 24 24" aria-hidden>
-          <path d="M5 18.2 H19" />
-          <path d="M7.6 14.2 V18.2" />
-          <path d="M12 10.2 V18.2" />
-          <path d="M16.4 6.6 V18.2" />
-        </svg>
-      );
-    default: {
-      const _never: never = name;
-      return _never;
-    }
-  }
-}
-
-function TitleWithCyanPeriod({ text }: { text: string }) {
-  const base = text.replace(/\.$/, "");
-
-  return (
-    <>
-      {base}
-      <i>.</i>
-    </>
-  );
-}
+const processIcons = [Compass, PenTool, Code2, Rocket] as const satisfies readonly LucideIcon[];
 
 export function Process() {
   const { process } = getDictionary().home;
+  const trackRef = useRef<HTMLDivElement>(null);
+  const reduce = useReducedMotion();
+  const { scrollYProgress } = useScroll({
+    target: trackRef,
+    offset: ["start 0.8", "end 0.35"],
+  });
+  const scaleY = useSpring(scrollYProgress, {
+    stiffness: 90,
+    damping: 28,
+    restDelta: 0.001,
+  });
 
   return (
-    <section id="surec" className="home-process">
-      <span className="home-process-haze" aria-hidden />
-      <span className="home-process-grid" aria-hidden />
-
-      <Container className="home-process-shell">
-        <Reveal className="home-process-head">
-          <p className="home-process-eye">
-            <span aria-hidden className="home-process-dot" />
-            {process.eyebrow}
-          </p>
-          <h2 className="home-process-title font-display">
-            <TitleWithCyanPeriod text={process.title} />
-          </h2>
-          <p className="home-process-lead">{process.lead}</p>
+    <section id="surec" className="atelier-process">
+      <Container>
+        <Reveal className="atelier-process-head">
+          <p className="studio-eye">{process.eyebrow}</p>
+          <h2 className="studio-title font-display">{process.title}</h2>
+          <p className="studio-lead">{process.lead}</p>
         </Reveal>
+        <div ref={trackRef} className="apple-process-track">
+          <span className="apple-process-rail" aria-hidden />
+          {reduce ? null : (
+            <motion.span
+              className="apple-process-progress"
+              style={{ scaleY }}
+              aria-hidden
+            />
+          )}
+          <ol className="atelier-spine">
+            {process.steps.map((step, index) => {
+              const Icon = processIcons[index] ?? Compass;
 
-        <ol className="home-process-list">
-          {process.steps.map((step, index) => (
-            <li key={step.index}>
-              <Reveal delay={index * 70}>
-                <article className="home-process-step">
-                  <span className="home-process-node">
-                    <b>{step.index}</b>
-                  </span>
-                  <div className="home-process-card">
-                    <div className="home-process-copy">
-                      <h3 className="home-process-name font-display">{step.title}</h3>
-                      <p>{step.body}</p>
-                    </div>
-                    <span className="home-process-icon">
-                      <StepIcon name={stepIcons[index] ?? "target"} />
-                    </span>
-                  </div>
-                </article>
-              </Reveal>
-            </li>
-          ))}
-        </ol>
+              return (
+                <li key={step.index}>
+                  <Reveal>
+                    <article className="apple-process-step">
+                      <IconWell icon={Icon} />
+                      <p className="atelier-spine-index">{step.index}</p>
+                      <div>
+                        <h3 className="font-display">{step.title}</h3>
+                        <p>{step.body}</p>
+                        <p className="atelier-spine-out">{step.outcome}</p>
+                      </div>
+                    </article>
+                  </Reveal>
+                </li>
+              );
+            })}
+          </ol>
+        </div>
       </Container>
     </section>
   );

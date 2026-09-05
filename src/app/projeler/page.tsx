@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Projects } from "@/components/home/Projects";
+import Link from "next/link";
 import { PageHero } from "@/components/page/PageHero";
 import { Container } from "@/components/ui/Container";
 import { JsonLd } from "@/components/seo/JsonLd";
@@ -16,6 +16,7 @@ export const metadata: Metadata = buildMetadata({
 
 export default function ProjectsPage() {
   const page = getDictionary().projectsPage;
+  const home = getDictionary().home.projects;
 
   return (
     <>
@@ -23,7 +24,7 @@ export default function ProjectsPage() {
         data={breadcrumbSchema([{ name: page.title, path: routes.projects }])}
       />
       <PageHero eyebrow="Arşiv" title={page.title} lead={page.lead} />
-      <Container className="pb-8">
+      <Container className="studio-archive">
         <p className="label text-faint">Vaka mimarisi</p>
         <ul className="mt-4 flex flex-wrap gap-2">
           {page.architecture.map((item) => (
@@ -35,8 +36,20 @@ export default function ProjectsPage() {
             </li>
           ))}
         </ul>
+        <p className="studio-archive-note mt-8">{home.disclaimer}</p>
+        <div className="studio-archive-empty">
+          <h2 className="font-display text-h3">Seçilmiş işler henüz yayımlanmadı.</h2>
+          <p>
+            Onaylı referans görselleri ve proje kayıtları eklendiğinde burada gerçek
+            işler duracak. Şimdilik hizmetleri ve çalışma biçimimizi inceleyebilirsiniz.
+          </p>
+          <p>
+            <Link href={routes.contact}>Projenizi konuşalım</Link>
+            {" · "}
+            <Link href={routes.webDesign}>Web tasarım paketleri</Link>
+          </p>
+        </div>
       </Container>
-      <Projects showIntro={false} />
     </>
   );
 }

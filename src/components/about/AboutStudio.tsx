@@ -1,6 +1,8 @@
 import Image from "next/image";
 import { Reveal } from "@/components/motion/Reveal";
+import { Button } from "@/components/ui/Button";
 import { getDictionary } from "@/i18n/get-dictionary";
+import { routes } from "@/lib/routes";
 
 function AccentLead({ text, accent }: { text: string; accent: string }) {
   const index = text.indexOf(accent);
@@ -18,10 +20,11 @@ function AccentLead({ text, accent }: { text: string; accent: string }) {
 }
 
 export function AboutStudio() {
-  const page = getDictionary().aboutPage;
+  const dictionary = getDictionary();
+  const page = dictionary.aboutPage;
 
   return (
-    <section className="sl-about" aria-labelledby="sl-about-title">
+    <section className="sl-about studio-public" aria-labelledby="sl-about-title">
       <span className="sl-about-grid" aria-hidden />
       <span className="sl-about-haze" aria-hidden />
       <Image
@@ -104,6 +107,9 @@ export function AboutStudio() {
             <span key={item}>{item}</span>
           ))}
         </p>
+        <div className="mt-8">
+          <Button href={routes.contact}>{dictionary.nav.primaryCta}</Button>
+        </div>
       </div>
     </section>
   );

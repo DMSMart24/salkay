@@ -41,6 +41,8 @@ export type Dictionary = {
       lead: string;
       primaryCta: string;
       secondaryCta: string;
+      visualLabel: string;
+      visualCaption: string;
       metaItems: [string, string, string, string];
       scrollCue: string;
     };
@@ -56,7 +58,8 @@ export type Dictionary = {
       coreTitle: string;
       coreBody: string;
       coreCta: string;
-      items: Array<{ tag: string; title: string; body: string }>;
+      coreHref: string;
+      items: Array<{ tag: string; title: string; body: string; href: string; cta: string }>;
       wideTag: string;
       wideTitle: string;
       wideBody: string;
@@ -68,6 +71,40 @@ export type Dictionary = {
       body: string;
       locationLabel: string;
       mailLabel: string;
+      whatsappCta: string;
+    };
+    craft: {
+      web: {
+        eyebrow: string;
+        title: string;
+        lead: string;
+        points: Array<{ title: string; body: string }>;
+        cta: string;
+        visualLabel: string;
+        visualCaption: string;
+      };
+      software: {
+        eyebrow: string;
+        title: string;
+        lead: string;
+        items: Array<{ title: string; body: string }>;
+        demoLabel: string;
+        demoSteps: Array<{ title: string; body: string }>;
+        cta: string;
+      };
+      visibility: {
+        eyebrow: string;
+        title: string;
+        lead: string;
+        items: Array<{ title: string; question: string; body: string }>;
+      };
+      demo: {
+        eyebrow: string;
+        title: string;
+        lead: string;
+        label: string;
+        caption: string;
+      };
     };
     intro: {
       eyebrow: string;
@@ -118,6 +155,7 @@ export type Dictionary = {
         index: string;
         title: string;
         body: string;
+        outcome: string;
       }>;
     };
     projects: {

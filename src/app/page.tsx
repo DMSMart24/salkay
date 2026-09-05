@@ -1,8 +1,10 @@
 import { HomeContact } from "@/components/home/HomeContact";
 import { Hero } from "@/components/home/Hero";
-import { Marquee } from "@/components/home/Marquee";
 import { Process } from "@/components/home/Process";
 import { ServicesBento } from "@/components/home/ServicesBento";
+import { SoftwareCraft } from "@/components/home/SoftwareCraft";
+import { Visibility } from "@/components/home/Visibility";
+import { WebCraft } from "@/components/home/WebCraft";
 import { JsonLd } from "@/components/seo/JsonLd";
 import { organizationSchema, serviceSchema, websiteSchema } from "@/lib/schema";
 
@@ -13,8 +15,10 @@ export default function HomePage() {
       <JsonLd data={websiteSchema()} />
       <JsonLd data={serviceSchema()} />
       <Hero />
-      <Marquee />
       <ServicesBento />
+      <WebCraft />
+      <SoftwareCraft />
+      <Visibility />
       <Process />
       <HomeContact />
     </>

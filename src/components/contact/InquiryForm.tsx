@@ -1,9 +1,27 @@
 "use client";
 
-import { useEffect, useRef, useState, type FormEvent } from "react";
+import {
+  useEffect,
+  useRef,
+  useState,
+  type FormEvent,
+  type ReactNode,
+} from "react";
+import { motion, useReducedMotion } from "framer-motion";
+import {
+  ArrowRight,
+  Building2,
+  Layers,
+  Mail,
+  MessageSquare,
+  Phone,
+  User,
+} from "lucide-react";
+import type { LucideIcon } from "lucide-react";
 import { getDictionary } from "@/i18n/get-dictionary";
 import { cn } from "@/lib/cn";
 import { resolveContactPackageSurface } from "@/lib/contact/package-surface";
+import { buttonMotion } from "@/lib/motion";
 import { siteWhatsAppUrl } from "@/lib/site";
 
 type InquiryFormProps = {
@@ -15,12 +33,6 @@ type InquiryFormProps = {
 
 type FormStatus = "idle" | "loading" | "success" | "error";
 
-const fieldClass =
-  "min-h-12 rounded-xl border border-line bg-surface px-4 text-fg placeholder:text-faint";
-
-const lightFieldClass =
-  "min-h-12 rounded-xl border border-[color:var(--sl-border-light)] bg-white px-4 text-[#0A0E1B] placeholder:text-[#64748B]";
-
 export function InquiryForm({
   compact = false,
   tone = "on-dark",
@@ -28,11 +40,12 @@ export function InquiryForm({
   packageSlug,
 }: InquiryFormProps) {
   const studio = variant === "studio";
-  const fields = tone === "on-light" ? lightFieldClass : fieldClass;
   const { form, messageHint, submitNote } = getDictionary().contactPage;
   const selectedPackage = resolveContactPackageSurface(packageSlug);
   const [status, setStatus] = useState<FormStatus>("idle");
+  const [formKey, setFormKey] = useState(0);
   const submittingRef = useRef(false);
+  const reduce = useReducedMotion();
   const messagePrefix = selectedPackage
     ? `İlgilendiğim paket: ${selectedPackage.displayName}`
     : "";
@@ -86,6 +99,7 @@ export function InquiryForm({
       }
 
       formElement.reset();
+      setFormKey((current) => current + 1);
       setStatus("success");
     } catch {
       setStatus("error");
@@ -106,121 +120,67 @@ export function InquiryForm({
     />
   );
 
-  if (studio) {
-    return (
-      <form onSubmit={handleSubmit} className="sl-contact-form" noValidate={false}>
-        <Honeypot />
-        {selectedPackage ? (
-          <input type="hidden" name="package" value={selectedPackage.slug} />
-        ) : null}
-        <div className="sl-contact-fields">
-          <StudioField label={form.name} name="name" required />
-          <StudioField label={form.email} name="email" type="email" required />
-          <StudioField label={form.company} name="company" />
-          <StudioField label={form.phone} name="phone" type="tel" />
-        </div>
-
-        <label className="sl-contact-field sl-contact-field-full">
-          <span className="sl-contact-label">{form.service}</span>
-          <select
-            name="service"
-            defaultValue={selectedPackage?.service ?? ""}
-            className="sl-contact-input"
-          >
-            <option value="" disabled>
-              {form.servicePlaceholder}
-            </option>
-            {form.services.map((service) => (
-              <option key={service} value={service}>
-                {service}
-              </option>
-            ))}
-          </select>
-        </label>
-
-        <label className="sl-contact-field sl-contact-field-full">
-          <span className="sl-contact-label">
-            {form.message} <i>*</i>
-          </span>
-          <textarea
-            name="message"
-            required
-            rows={7}
-            defaultValue={selectedPackage?.messagePrefill ?? ""}
-            className="sl-contact-input sl-contact-area"
-          />
-          <small className="sl-contact-hint">{messageHint}</small>
-        </label>
-
-        <div className="sl-contact-actions">
-          <button type="submit" className="sl-contact-submit" disabled={busy} aria-busy={busy}>
-            {busy ? form.sending : form.submit}
-            {busy ? null : <i aria-hidden>→</i>}
-          </button>
-          <p className="sl-contact-note">{submitNote}</p>
-        </div>
-
-        {statusNode}
-      </form>
-    );
-  }
-
   return (
-    <form onSubmit={handleSubmit} className="grid gap-5" noValidate={false}>
+    <form
+      onSubmit={handleSubmit}
+      key={formKey}
+      className={studio ? "sl-contact-form" : "grid gap-6"}
+      noValidate={false}
+    >
       <Honeypot />
       {selectedPackage ? (
         <input type="hidden" name="package" value={selectedPackage.slug} />
       ) : null}
-      <div className="grid gap-5 sm:grid-cols-2">
-        <Field label={form.name} name="name" required tone={tone} inputClass={fields} />
-        <Field label={form.email} name="email" type="email" required tone={tone} inputClass={fields} />
-        <Field label={form.company} name="company" tone={tone} inputClass={fields} />
+      <div className={studio ? "sl-contact-fields" : "grid min-w-0 gap-6 min-[720px]:grid-cols-2"}>
+        <FloatingField icon={User} label={form.name} name="name" required />
+        <FloatingField icon={Mail} label={form.email} name="email" type="email" required />
+        <FloatingField icon={Building2} label={form.company} name="company" />
         {compact ? null : (
-          <Field label={form.phone} name="phone" type="tel" tone={tone} inputClass={fields} />
+          <FloatingField icon={Phone} label={form.phone} name="phone" type="tel" />
         )}
       </div>
 
-      <label className="grid gap-2">
-        <span className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}>
-          {form.service}
-        </span>
-        <select name="service" defaultValue={selectedPackage?.service ?? ""} className={fields}>
-          <option value="" disabled>
-            {form.servicePlaceholder}
-          </option>
-          {form.services.map((service) => (
-            <option key={service} value={service}>
-              {service}
-            </option>
-          ))}
-        </select>
-      </label>
-
-      <label className="grid gap-2">
-        <span className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}>
-          {form.message} <span className={tone === "on-light" ? "text-[#64748B]" : "text-faint"}>*</span>
-        </span>
-        <textarea
-          name="message"
-          required
-          rows={6}
-          defaultValue={selectedPackage?.messagePrefill ?? ""}
-          className={`${fields} py-3`}
-        />
-      </label>
-
-      <button
-        type="submit"
-        disabled={busy}
-        aria-busy={busy}
-        className={cn(
-          "inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[0.95rem] font-medium",
-          "transition-colors disabled:cursor-not-allowed disabled:opacity-70",
-          "bg-blue text-fg hover:bg-salkay-bright",
-        )}
+      <FloatingField
+        icon={Layers}
+        label={form.service}
+        name="service"
+        as="select"
+        defaultValue={selectedPackage?.service ?? ""}
       >
-        {busy ? form.sending : form.submit}
-      </button>
+        <option value="" disabled>
+          {form.servicePlaceholder}
+        </option>
+        {form.services.map((service) => (
+          <option key={service} value={service}>
+            {service}
+          </option>
+        ))}
+      </FloatingField>
+
+      <FloatingField
+        icon={MessageSquare}
+        label={`${form.message} *`}
+        name="message"
+        as="textarea"
+        required
+        rows={7}
+        defaultValue={selectedPackage?.messagePrefill ?? ""}
+      />
+      {studio ? <small className="sl-contact-hint">{messageHint}</small> : null}
+
+      <div className={studio ? "sl-contact-actions" : "grid gap-3"}>
+        <motion.button
+          type="submit"
+          className={studio ? "sl-contact-submit apple-btn" : "apple-btn w-full"}
+          disabled={busy}
+          aria-busy={busy}
+          {...(reduce ? {} : buttonMotion)}
+        >
+          {busy ? form.sending : form.submit}
+          {busy ? null : <ArrowRight size={16} strokeWidth={1.5} aria-hidden />}
+        </motion.button>
+        {studio ? <p className="sl-contact-note">{submitNote}</p> : null}
+      </div>
 
       {statusNode}
     </form>
@@ -246,10 +206,7 @@ function FormStatusMessage({
 
   const className = studio
     ? cn("sl-contact-status", status === "success" && "is-ok", status === "error" && "is-err")
-    : cn(
-        "text-sm leading-6",
-        tone === "on-light" ? "text-[#64748B]" : "text-muted",
-      );
+    : cn("text-sm leading-6", tone === "on-light" ? "text-[#64748B]" : "text-muted");
 
   if (status === "success") {
     return (
@@ -290,57 +247,58 @@ function Honeypot() {
   );
 }
 
-function StudioField({
+function FloatingField({
+  icon: Icon,
   label,
   name,
   type = "text",
   required = false,
+  as = "input",
+  rows,
+  defaultValue,
+  children,
 }: {
+  icon: LucideIcon;
   label: string;
   name: string;
   type?: string;
   required?: boolean;
+  as?: "input" | "textarea" | "select";
+  rows?: number;
+  defaultValue?: string;
+  children?: ReactNode;
 }) {
-  return (
-    <label className="sl-contact-field">
-      <span className="sl-contact-label">
-        {label}
-        {required ? <i> *</i> : null}
-      </span>
-      <input name={name} type={type} required={required} className="sl-contact-input" />
-    </label>
-  );
-}
+  const [active, setActive] = useState(Boolean(defaultValue));
 
-function Field({
-  label,
-  name,
-  type = "text",
-  required = false,
-  tone = "on-dark",
-  inputClass,
-}: {
-  label: string;
-  name: string;
-  type?: string;
-  required?: boolean;
-  tone?: "on-dark" | "on-light";
-  inputClass: string;
-}) {
+  function syncActive(value: string) {
+    setActive(value.trim().length > 0);
+  }
+
+  const shared = {
+    id: `apple-${name}`,
+    name,
+    required,
+    className: cn("apple-field-control", as === "textarea" && "apple-field-area"),
+    defaultValue,
+    placeholder: " ",
+    onInput: (event: FormEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+      syncActive(event.currentTarget.value);
+    },
+  };
+
   return (
-    <label className="grid gap-2">
-      <span
-        className={cn("text-sm", tone === "on-light" ? "text-[#64748B]" : "text-muted")}
-      >
+    <div className={cn("apple-field", active && "is-active")}>
+      <Icon className="apple-field-icon" size={16} strokeWidth={1.5} aria-hidden />
+      <label className="apple-field-label" htmlFor={`apple-${name}`}>
         {label}
-        {required ? (
-          <span className={tone === "on-light" ? "text-[#64748B]" : "text-faint"}>
-            {" "}
-            *
-          </span>
-        ) : null}
-      </span>
-      <input name={name} type={type} required={required} className={inputClass} />
-    </label>
+      </label>
+      {as === "textarea" ? (
+        <textarea rows={rows ?? 6} {...shared} />
+      ) : as === "select" ? (
+        <select {...shared}>{children}</select>
+      ) : (
+        <input type={type} {...shared} />
+      )}
+    </div>
   );
 }

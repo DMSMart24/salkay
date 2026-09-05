@@ -22,10 +22,10 @@ export default function BlogPage() {
         data={breadcrumbSchema([{ name: page.title, path: routes.blog }])}
       />
       <PageHero eyebrow="İçgörüler" title={page.title} lead={page.emptyBody} />
-      <Container className="pb-24">
-        <div className="rounded-[1.4rem] border border-dashed border-line px-8 py-16">
+      <Container className="studio-archive">
+        <div className="studio-archive-empty">
           <h2 className="font-display text-h3">{page.emptyTitle}</h2>
-          <p className="mt-3 max-w-xl text-muted">{page.emptyBody}</p>
+          <p>{page.emptyBody}</p>
         </div>
       </Container>
     </>
