@@ -11,7 +11,7 @@ import { WebDesignScene } from "@/components/solutions/WebDesignScene";
 
 export function SolutionsPageView() {
   return (
-    <div data-salkay-solutions>
+    <div data-salkay-solutions className="studio-public">
       <SolutionsHero />
       <SolutionsIntro />
       <WebDesignScene />

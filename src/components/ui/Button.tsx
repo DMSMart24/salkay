@@ -15,12 +15,12 @@ type ButtonProps = {
 };
 
 const styles: Record<ButtonVariant, string> = {
-  primary: "bg-blue text-fg hover:bg-salkay-bright",
+  primary: "bg-blue text-white hover:bg-salkay-bright hover:text-white",
   secondary:
     "border border-line bg-transparent text-fg hover:border-blue hover:bg-blue/10",
-  accent: "bg-blue text-fg hover:bg-salkay-bright",
+  accent: "bg-blue text-white hover:bg-salkay-bright hover:text-white",
   ghost:
-    "border border-line bg-transparent text-fg hover:border-cyan hover:bg-cyan/8",
+    "border border-line bg-white text-fg hover:border-blue hover:bg-blue/6",
 };
 
 export function Button({

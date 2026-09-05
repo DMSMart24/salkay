@@ -216,7 +216,7 @@ export function InquiryForm({
         className={cn(
           "inline-flex min-h-12 items-center justify-center rounded-full px-6 text-[0.95rem] font-medium",
           "transition-colors disabled:cursor-not-allowed disabled:opacity-70",
-          "bg-blue text-fg hover:bg-salkay-bright",
+          "bg-blue text-white hover:bg-salkay-bright hover:text-white",
         )}
       >
         {busy ? form.sending : form.submit}

@@ -80,8 +80,8 @@ export function Header() {
   }, [open]);
 
   return (
-    <header className={cn("site-header", (scrolled || open) && "is-solid")}>
-      <Container className="flex h-[4.25rem] items-center justify-between gap-6 min-[920px]:h-[5.15rem]">
+    <header className={cn("site-header", (scrolled || open) && "is-solid", scrolled && "is-compact")}>
+      <Container className="site-header-bar">
         <HeaderLogo />
 
         <nav
@@ -139,10 +139,8 @@ export function Header() {
       </Container>
 
       {open ? (
-        <button
-          type="button"
+        <div
           className="site-header-backdrop min-[920px]:hidden"
-          aria-label={dictionary.nav.closeMenu}
           onClick={() => setOpen(false)}
         />
       ) : null}

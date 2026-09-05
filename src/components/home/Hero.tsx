@@ -29,7 +29,7 @@ export function Hero() {
             <Button href={sections.contact} className="hero-cta">
               {hero.primaryCta}
             </Button>
-            <Button href={sections.services} variant="ghost" className="hero-cta-secondary">
+            <Button href={sections.webDesign} variant="ghost" className="hero-cta-secondary">
               {hero.secondaryCta}
             </Button>
           </div>

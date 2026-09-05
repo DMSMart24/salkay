@@ -58,9 +58,11 @@ export const tr: Dictionary = {
       titleBefore: "Markanıza özel",
       titleAccent: "web tasarımı.",
       titleAfter: "İşinize özel yazılım.",
-      lead: "İstanbul merkezli SALKAY; web tasarımı, özel yazılım ve dijital büyüme çalışmalarını tek bir ekipte birleştirir.",
+      lead: "Web sitenizi, dijital araçlarınızı ve büyüme çalışmalarınızı tek bir ekipte tasarlıyor ve geliştiriyoruz.",
       primaryCta: "Projenizi Konuşalım",
-      secondaryCta: "Hizmetleri İnceleyin",
+      secondaryCta: "Web tasarımını görün",
+      visualLabel: "Konsept görünüm",
+      visualCaption: "Markanıza özel bir kurumsal sitenin masaüstü ve mobil hali. Gerçek bir müşteri projesi değildir.",
       metaItems: ["Web tasarım", "Yazılım", "SEO", "Dijital büyüme"],
       scrollCue: "Aşağı kaydırın",
     },
@@ -142,6 +144,83 @@ export const tr: Dictionary = {
       body: "Web tasarım, yazılım veya büyümeyle ilgili bir fikriniz mi var? Kısaca anlatın; ihtiyacınızı ve hedefinizi duymak başlangıç için yeterli.",
       locationLabel: "İstanbul, Türkiye",
       mailLabel: "info@salkay.com",
+      whatsappCta: "WhatsApp ile yazın",
+    },
+    craft: {
+      web: {
+        eyebrow: "Web tasarım",
+        title: "Müşterileriniz sizi kolayca tanısın. Size kolayca ulaşsın.",
+        lead: "Markanıza özel bir yüz, telefonunda da aynı netlikte çalışan bir yapı ve her sayfada görünür bir iletişim yolu. Site, sizi anlatır; ziyaretçiyi bekletmez.",
+        points: [
+          {
+            title: "Markanıza özel görünüm",
+            body: "Hazır şablon değil. Renk, tipografi ve sayfa düzeni sizin işinize göre kurulur.",
+          },
+          {
+            title: "Kolay mobil kullanım",
+            body: "Menü, metin ve düğmeler parmakla rahat kullanılır. Önemli bilgi kaybolmaz.",
+          },
+          {
+            title: "Net iletişim yolları",
+            body: "Form, telefon ve WhatsApp görünür durur. Ziyaretçi nasıl yazacağını aramaz.",
+          },
+          {
+            title: "Düzenli içerik",
+            body: "Hizmetler, hakkınızda ve iletişim ayrı, anlaşılır bloklarda durur.",
+          },
+        ],
+        cta: "Web tasarım paketlerini görün",
+        visualLabel: "Konsept görünüm",
+        visualCaption: "Aynı tasarımın masaüstü ve telefon hali.",
+      },
+      software: {
+        eyebrow: "Özel yazılım",
+        title: "Tekrarlayan işi tek bir yüzeyde toplayın.",
+        lead: "Bazı işletmelerin vitrinden fazlasına ihtiyacı vardır. Portallar, konfigüratörler ve otomasyon; talebi, belgeyi ve sonraki adımı aynı yerde tutar.",
+        items: [
+          {
+            title: "Müşteri portalı",
+            body: "Talepler ve belgeler bir yerde durur. Müşteri ve ekibiniz aynı kaydı görür.",
+          },
+          {
+            title: "Konfigüratör",
+            body: "Ürün veya hizmet seçilir, özet çıkar, talep hazırlanır. Karar netleşir.",
+          },
+          {
+            title: "Otomasyon",
+            body: "Tekrarlayan adımlar birbirine bağlanır. El ile kopyalanan iş azalır.",
+          },
+        ],
+        demoLabel: "Gösterim",
+        demoSteps: [
+          { title: "Seçim", body: "İhtiyaç duyulan hizmet veya ürün işaretlenir." },
+          { title: "Özet", body: "Seçimler tek bakışta toplanır, kapsam netleşir." },
+          { title: "Talep", body: "Hazır özet, görüşmeye taşınır." },
+        ],
+        cta: "Yazılım çözümlerini görün",
+      },
+      visibility: {
+        eyebrow: "Görünürlük ve büyüme",
+        title: "Sizi nasıl bulurlar, nasıl yazarlar, ne ölçülür.",
+        lead: "Site yayına alındığında iş bitmez. Arama, reklam ve ölçüm; doğru ziyaretçinin sizi bulması ve size ulaşması içindir.",
+        items: [
+          {
+            title: "SEO",
+            question: "Müşteriler sizi nasıl bulur?",
+            body: "Sayfa yapısı, teknik temel ve içerik; arama niyetine göre düzenlenir. Böylece sizi arayan kişi doğru sayfaya gelir.",
+          },
+          {
+            title: "Dijital reklam",
+            question: "Talepler nasıl oluşur?",
+            body: "Doğru aramaya doğru sayfayla çıkılır. Ziyaretçi hizmeti anlar ve formu veya WhatsApp’ı kullanır.",
+          },
+          {
+            title: "Analitik",
+            question: "Sonuçlar nasıl okunur?",
+            body: "Trafik kaynağı, sayfa davranışı ve form gönderimleri aynı yerden izlenir. Tahmin değil, görülen veri konuşur.",
+          },
+        ],
+      },
     },
     intro: {
       eyebrow: "SALKAY",
@@ -274,28 +353,32 @@ export const tr: Dictionary = {
     },
     process: {
       eyebrow: "Süreç",
-      title: "Fikirden canlı siteye.",
-      lead: "Fikriniz, planlı bir süreçle güçlü ve etkili dijital deneyime dönüşür.",
+      title: "Dört adım. Her adımın somut bir sonucu var.",
+      lead: "Önce işinizi anlarız, sonra tasarlarız, sonra kurarız. Yayın, işin bittiği yer değil; birlikte bakmaya devam ettiğimiz yerdir.",
       steps: [
         {
           index: "01",
-          title: "Keşif & Strateji",
-          body: "Markanızı, hedeflerinizi ve rakiplerinizi analiz ediyoruz.",
+          title: "Keşif",
+          body: "Hedefinizi, mevcut sitenizi ve kimin size yazması gerektiğini netleştiririz.",
+          outcome: "Kapsam, öncelikler ve ilk yol haritası.",
         },
         {
           index: "02",
-          title: "Tasarım & Marka Dünyası",
-          body: "Renk, tipografi ve arayüzü sizin hikayenize göre kuruyoruz.",
+          title: "Tasarım",
+          body: "Sayfa yapısını, metin hiyerarşisini ve görsel dili onaylanabilir hale getiririz.",
+          outcome: "Masaüstü ve mobil için net bir tasarım.",
         },
         {
           index: "03",
-          title: "Geliştirme & Etkileşim",
-          body: "Hızlı, duyarlı ve KAY gibi canlı detaylarla zenginleştirilmiş bir site kuruyoruz.",
+          title: "Geliştirme",
+          body: "Onaylanan tasarımı çalışan, hızlı ve bakımı mümkün bir yapıya çeviririz.",
+          outcome: "Canlıya hazır site veya yazılım.",
         },
         {
           index: "04",
-          title: "Büyüme & Optimizasyon",
-          body: "SEO, reklam ve analitiklerle yayından sonra da büyümeye devam ediyoruz.",
+          title: "Yayın & Destek",
+          body: "Yayına alır, ölçümü bağlar ve sonrasında güncelleme yolunu açık tutarız.",
+          outcome: "Çalışan sistem ve sürdürülebilir bakım.",
         },
       ],
     },

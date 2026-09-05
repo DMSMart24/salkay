@@ -23,16 +23,16 @@ export const futureRoutes = {
 } as const;
 
 export const sections = {
-  intro: "/#hizmetler",
-  capabilities: "/#hizmetler",
-  webDesign: "/#hizmetler",
-  services: "/#hizmetler",
+  intro: "/#web-tasarim",
+  capabilities: "/#yazilim",
+  webDesign: "/#web-tasarim",
+  services: "/#web-tasarim",
   process: "/#surec",
   kay: "/#kay",
   projects: "/projeler",
-  growth: `${routes.services}#buyume`,
+  growth: "/#gorunurluk",
   analytics: `${routes.services}#veri`,
-  software: routes.solutions,
+  software: "/#yazilim",
   contact: "/#iletisim",
   cta: "/#iletisim",
   packages: `${routes.webDesign}#paketler`,

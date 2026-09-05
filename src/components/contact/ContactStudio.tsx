@@ -25,7 +25,7 @@ export function ContactStudio({ packageSlug }: { packageSlug?: string }) {
   const selectedPackage = resolveContactPackageSurface(packageSlug);
 
   return (
-    <section className="sl-contact" aria-labelledby="sl-contact-title">
+    <section className="sl-contact studio-public" aria-labelledby="sl-contact-title">
       <span className="sl-contact-grid" aria-hidden />
       <span className="sl-contact-haze" aria-hidden />
       <Image

@@ -17,7 +17,7 @@ export function ServicesPageView() {
   const page = getDictionary().servicesPage;
 
   return (
-    <div className="svc-page">
+    <div className="svc-page studio-public">
       <section className="svc-hero">
         <ServicesHeroAtmosphere />
         <Container className="svc-shell relative">

@@ -9,7 +9,7 @@ import { siteWhatsAppUrl } from "@/lib/site";
 
 export function WebPricingPage() {
   return (
-    <div className="sl-webpricing">
+    <div className="sl-webpricing studio-public">
       <Hero />
       <ProjectLevels />
       <Care />

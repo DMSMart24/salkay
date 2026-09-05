@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useRef, type ReactNode } from "react";
-import { cn } from "@/lib/cn";
 
 type RevealProps = {
   children: ReactNode;
@@ -24,6 +23,14 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
       return;
     }
 
+    const rect = node.getBoundingClientRect();
+    if (rect.top < window.innerHeight * 0.92) {
+      node.classList.add("is-revealed");
+      return;
+    }
+
+    node.classList.add("will-reveal");
+
     const observer = new IntersectionObserver(
       ([entry]) => {
         if (entry?.isIntersecting) {
@@ -32,7 +39,7 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
           observer.disconnect();
         }
       },
-      { threshold: 0.15 },
+      { threshold: 0.12, rootMargin: "0px 0px -8% 0px" },
     );
 
     observer.observe(node);
@@ -40,11 +47,7 @@ export function Reveal({ children, className, delay = 0 }: RevealProps) {
   }, []);
 
   return (
-    <div
-      ref={ref}
-      className={cn("will-reveal", className)}
-      style={{ transitionDelay: `${delay}ms` }}
-    >
+    <div ref={ref} className={className} style={{ transitionDelay: `${delay}ms` }}>
       {children}
     </div>
   );
