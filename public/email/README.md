@@ -1,5 +1,9 @@
 # SALKAY email assets
 
+**5 Sep 2026:** Live restaurant / bar / industry mail on `main` is **compact outreach** (`compact-outreach.ts`). It uses the transparent logo only.
+
+Restaurant 9:16 / desktop-split heroes and the bar hero JPG are **historical leftovers** from the Aug 29 visual track and obsolete PR #3. Keep the files; do not put them back into HTML unless Salih asks. See `CURSOR_HANDOFF.md`.
+
 Official transparent logo (do not recreate):
 
 - `salkay-logo-transparent-source.png` — unmodified supplied source (1024×576).
