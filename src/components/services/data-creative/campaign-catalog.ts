@@ -1,0 +1,82 @@
+export const campaigns = [
+  {
+    id: "reel",
+    index: "01",
+    format: "INSTAGRAM REEL",
+    title: "Görünür Olun",
+    kicker: "Küçük adımlar, büyük değişim.",
+    body: "Doğru hikaye, doğru kitleyle buluştuğunda her şey değişir.",
+    hint: "Dikey video formatıyla maksimum etkileşim",
+    tags: ["Video", "Reels"],
+    tone: "is-reel",
+    status: "Yayında",
+    stats: [
+      { label: "Views", value: "1.8M" },
+      { label: "Engagement", value: "%6.4" },
+    ],
+    metrics: [
+      { label: "Görüntülenme", value: "124K" },
+      { label: "Etkileşim", value: "8.4K" },
+      { label: "Dönüşüm", value: "3.6%" },
+      { label: "Büyüme", value: "+%28" },
+    ],
+    meta: [
+      { label: "Kampanya Dönemi", value: "1 Mar 2024 – 30 Nis 2024" },
+      { label: "Hedef Kitle", value: "TR · 18–45" },
+      { label: "Kampanya Amacı", value: "Marka Bilinirliği & Satış" },
+    ],
+  },
+  {
+    id: "ads",
+    index: "02",
+    format: "GOOGLE ADS",
+    title: "Daha fazla müşteriye ulaşın",
+    kicker: "Daha ileri bir yarın.",
+    body: "Arama ve display reklamlarıyla doğru kitleyi, doğru anda yakalıyoruz.",
+    hint: "Arama ve display için net mesaj",
+    tags: ["Görsel", "Reklam"],
+    tone: "is-ads",
+    status: "Yayında",
+    stats: [
+      { label: "CTR", value: "%4.8" },
+      { label: "Conversion", value: "%3.2" },
+    ],
+    metrics: [
+      { label: "Görüntülenme", value: "86K" },
+      { label: "Etkileşim", value: "5.1K" },
+      { label: "Dönüşüm", value: "3.2%" },
+      { label: "Büyüme", value: "+%21" },
+    ],
+    meta: [
+      { label: "Kampanya Dönemi", value: "8 Nis 2024 – 6 May 2024" },
+      { label: "Hedef Kitle", value: "TR · 25–54" },
+      { label: "Kampanya Amacı", value: "Trafik & Dönüşüm" },
+    ],
+  },
+  {
+    id: "hero",
+    index: "03",
+    format: "WEBSITE HERO",
+    title: "Dijitalde daha güçlü",
+    kicker: "Fikri gerçeğe dönüştürür.",
+    body: "Markanızın dijital yüzünü net, hızlı ve dönüşüme hazır bir deneyime çeviriyoruz.",
+    hint: "Geniş kahraman alanı, net mesaj",
+    tags: ["Banner", "Web"],
+    tone: "is-hero",
+    status: "Aktif",
+    stats: [{ label: "Durum", value: "Aktif" }],
+    metrics: [
+      { label: "Görüntülenme", value: "54K" },
+      { label: "Etkileşim", value: "3.9K" },
+      { label: "Dönüşüm", value: "4.1%" },
+      { label: "Büyüme", value: "+%16" },
+    ],
+    meta: [
+      { label: "Kampanya Dönemi", value: "Sürekli" },
+      { label: "Hedef Kitle", value: "TR · Tüm ziyaretçiler" },
+      { label: "Kampanya Amacı", value: "Marka & Dönüşüm" },
+    ],
+  },
+] as const;
+
+export type Campaign = (typeof campaigns)[number];

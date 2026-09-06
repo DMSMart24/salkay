@@ -199,6 +199,7 @@ export const webDesignContent = {
   tech: {
     eyebrow: "Teknoloji Altyapısı",
     title: "Modern Teknoloji. Doğru Amaç İçin.",
+    tagline: "DAHA İYİ ÜRÜNLER · DAHA BÜYÜK ETKİ",
     items: [
       "Next.js",
       "React",

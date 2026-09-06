@@ -1,4 +1,4 @@
-import { CreativeVideoPlayer } from "@/components/services/data-creative/CreativeVideoPlayer";
+import { CreativeCampaignStudio } from "@/components/services/data-creative/CreativeCampaignStudio";
 import { ProductionSteps } from "@/components/services/data-creative/ProductionSteps";
 
 export function VideoCreativeShowcase() {
@@ -13,7 +13,7 @@ export function VideoCreativeShowcase() {
           anlatan video ve kreatif içerikler üretiyoruz.
         </span>
       </div>
-      <CreativeVideoPlayer />
+      <CreativeCampaignStudio />
       <ProductionSteps />
     </article>
   );
