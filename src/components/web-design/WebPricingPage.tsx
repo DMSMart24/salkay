@@ -57,13 +57,16 @@ function ProjectLevels() {
       aria-labelledby="sl-webpricing-intro-title"
     >
       <div className="sl-webpricing-shell">
-        <Reveal>
+        <header className="sl-webpricing-levels-intro">
           <p className="sl-webpricing-eye">{copy.intro.eyebrow}</p>
-          <h2 id="sl-webpricing-intro-title" className="sl-webpricing-title font-display">
-            İhtiyacınıza Göre Değil, <em>Hedefinize</em> Göre Başlayın.
+          <h2 id="sl-webpricing-intro-title" className="sl-webpricing-title">
+            <span>{copy.intro.titleBefore}</span>
+            <span>
+              <em>{copy.intro.titleAccent}</em> {copy.intro.titleAfter}
+            </span>
           </h2>
           <p className="sl-webpricing-lead sl-webpricing-lead-narrow">{copy.intro.body}</p>
-        </Reveal>
+        </header>
         <div className="sl-webpricing-level-grid">
           {copy.levels.map((level) => (
             <article
@@ -77,25 +80,21 @@ function ProjectLevels() {
               <span className="sl-webpricing-level-bg" aria-hidden>
                 {level.index}
               </span>
+              {level.badge ? (
+                <p className="sl-webpricing-level-badge">{level.badge}</p>
+              ) : (
+                <span className="sl-webpricing-level-badge-slot" aria-hidden />
+              )}
               <header className="sl-webpricing-level-head">
-                <p className="sl-webpricing-level-index">
-                  {level.index} / {level.name}
-                </p>
-                {level.badge ? (
-                  <p className="sl-webpricing-level-badge">
-                    <LevelStar />
-                    {level.badge}
-                  </p>
-                ) : null}
-                <h3 className="sl-webpricing-level-name font-display">{level.name}</h3>
+                <h3 className="sl-webpricing-level-name">{level.name}</h3>
                 <p className="sl-webpricing-level-desc">{level.descriptor}</p>
               </header>
               <p className="sl-webpricing-level-price">
                 <strong>{level.priceAmount}</strong>
                 <span>{level.priceUnit}</span>
               </p>
-              <p className="sl-webpricing-level-caption">{level.priceCaption}</p>
               <p className="sl-webpricing-level-body">{level.body}</p>
+              <span className="sl-webpricing-level-rule" aria-hidden />
               <ul className="sl-webpricing-level-features">
                 {level.features.map((feature) => (
                   <li key={feature}>
@@ -619,17 +618,6 @@ function LevelCheck() {
         strokeWidth="1.55"
         strokeLinecap="round"
         strokeLinejoin="round"
-      />
-    </svg>
-  );
-}
-
-function LevelStar() {
-  return (
-    <svg viewBox="0 0 12 12" width="9" height="9" aria-hidden>
-      <path
-        d="M6 1.1 7.15 4.2 10.5 4.4 8 6.55 8.75 9.85 6 8.2 3.25 9.85 4 6.55 1.5 4.4 4.85 4.2Z"
-        fill="currentColor"
       />
     </svg>
   );

@@ -39,8 +39,8 @@ export function resolveContactPackage(
     case "start":
       return {
         slug: value,
-        label: "START",
-        displayName: "START",
+        label: "ESSENTIAL",
+        displayName: "ESSENTIAL",
         service: "Web Tasarım",
       };
     case "business":

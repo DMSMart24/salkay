@@ -21,7 +21,7 @@ function priceLabelFor(slug: ContactPackageSlug): string {
     case "professional": {
       const level = copy.levels.find((item) => item.id === slug);
       return level
-        ? `${level.priceAmount} ${level.priceUnit} ${level.priceCaption}`
+        ? `${level.priceAmount} ${level.priceUnit}`
         : "";
     }
     case "signature":

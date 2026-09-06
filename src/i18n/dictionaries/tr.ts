@@ -1,4 +1,4 @@
-import { routes } from "@/lib/routes";
+import { routes, sections } from "@/lib/routes";
 import type { Dictionary } from "@/i18n/types";
 import { CONTACT_PROJECT_TYPES } from "@/lib/contact/types";
 
@@ -30,8 +30,7 @@ export const tr: Dictionary = {
     primaryCta: "Projenizi Konuşalım",
     items: [
       { href: routes.services, label: "Hizmetler" },
-      { href: routes.projects, label: "Çalışmalar" },
-      { href: routes.about, label: "Yaklaşımımız" },
+      { href: sections.packages, label: "Paketler" },
     ],
   },
   footer: {
@@ -410,7 +409,7 @@ export const tr: Dictionary = {
     description:
       "SALKAY hizmetleri: web tasarım, web geliştirme, özel yazılım, SEO, Google Ads, dijital pazarlama, analitik, yapay zekâ ve kreatif.",
     hero: {
-      eyebrow: "SALKAY · Hizmetler",
+      eyebrow: "SALKAY · HİZMETLER",
       titleLine: "Dijitalde ihtiyacınız olan",
       titleBefore: "her şey, ",
       titleAccent: "tek sistemde.",

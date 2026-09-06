@@ -2,7 +2,9 @@ export const routes = {
   home: "/",
   services: "/hizmetler",
   solutions: "/cozumler",
+  /** Archived from live navigation. Restore via `archivedNavItems` in nav-archive.ts. */
   projects: "/projeler",
+  /** Archived from live navigation. Restore via `archivedNavItems` in nav-archive.ts. */
   about: "/hakkimizda",
   blog: "/blog",
   contact: "/iletisim",

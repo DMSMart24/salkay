@@ -23,6 +23,19 @@ function isActiveNav(pathname: string, href: string) {
   return pathname === path;
 }
 
+function scrollToHash(hash: string) {
+  const node = document.getElementById(hash);
+  if (!node) {
+    return;
+  }
+
+  const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  node.scrollIntoView({
+    behavior: reduced ? "auto" : "smooth",
+    block: "start",
+  });
+}
+
 function scrollToNavHash(pathname: string, href: string) {
   const hash = href.split("#")[1];
   if (!hash || pathname !== navPath(href)) {
@@ -30,7 +43,7 @@ function scrollToNavHash(pathname: string, href: string) {
   }
 
   window.requestAnimationFrame(() => {
-    document.getElementById(hash)?.scrollIntoView();
+    scrollToHash(hash);
   });
 }
 
@@ -65,6 +78,19 @@ export function Header() {
   }, [open]);
 
   useEffect(() => {
+    const hash = window.location.hash.replace(/^#/, "");
+    if (!hash) {
+      return;
+    }
+
+    const frame = window.requestAnimationFrame(() => {
+      scrollToHash(hash);
+    });
+
+    return () => window.cancelAnimationFrame(frame);
+  }, [pathname]);
+
+  useEffect(() => {
     if (!open) {
       return;
     }
@@ -94,6 +120,7 @@ export function Header() {
               <Link
                 key={item.href}
                 href={item.href}
+                scroll={navPath(item.href) !== pathname}
                 aria-current={active ? "page" : undefined}
                 className={cn("site-header-link", active && "is-active")}
                 onClick={() => scrollToNavHash(pathname, item.href)}
@@ -151,6 +178,7 @@ export function Header() {
                 <Link
                   key={item.href}
                   href={item.href}
+                  scroll={navPath(item.href) !== pathname}
                   aria-current={active ? "page" : undefined}
                   className={cn("site-header-menu-link", active && "is-active")}
                   onClick={() => {
