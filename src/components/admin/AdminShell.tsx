@@ -59,7 +59,11 @@ export function AdminShell({ userName, userEmail, children }: AdminShellProps) {
             const active =
               item.href === "/admin"
                 ? pathname === "/admin"
-                : pathname.startsWith(item.href);
+                : item.href === "/admin/companies"
+                  ? pathname.startsWith("/admin/companies")
+                  : item.href === "/admin/restaurant-leads"
+                    ? pathname.startsWith("/admin/restaurant-leads")
+                    : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}

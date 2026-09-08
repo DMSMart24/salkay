@@ -9,6 +9,12 @@ import {
 } from "@/lib/admin/email-outreach";
 import { companyFilterWhere, DEFAULT_GROUPS, type CompanyFilterInput } from "@/lib/admin/outreach";
 import { getPrisma } from "@/lib/admin/prisma";
+import {
+  companiesRestaurantHref,
+  excludeLegacyRestaurantCompanies,
+  isRestaurantGroup,
+} from "@/lib/admin/restaurant-industry";
+import { getRestaurantLeadStats } from "@/lib/admin/restaurant-leads";
 
 export type CompanyListQuery = CompanyFilterInput & {
   priority?: CompanyPriority | "";
@@ -133,7 +139,7 @@ export async function listGroups() {
     orderBy: { name: "asc" },
     include: {
       companies: {
-        where: { archivedAt: null },
+        where: excludeLegacyRestaurantCompanies({ archivedAt: null }),
         select: {
           id: true,
           outreachStatus: true,
@@ -143,7 +149,29 @@ export async function listGroups() {
     },
   });
 
-  return groups.map((group) => summarizeGroup(group));
+  const restaurantStats = groups.some((group) => isRestaurantGroup(group))
+    ? await getRestaurantLeadStats()
+    : null;
+
+  return groups.map((group) => {
+    const summary = summarizeGroup(group);
+    if (!restaurantStats || !isRestaurantGroup(group)) {
+      return summary;
+    }
+    return {
+      ...summary,
+      total: restaurantStats.total,
+      notContacted: restaurantStats.notContacted,
+      sent: 0,
+      replied: 0,
+      failed: 0,
+      doNotContact: restaurantStats.qualifiedOut,
+      lastSend: null,
+      replyRate: 0,
+      openHref: companiesRestaurantHref(),
+      sourceLabel: "RestaurantLead",
+    };
+  });
 }
 
 export async function getGroupDetail(id: string) {
@@ -154,7 +182,7 @@ export async function getGroupDetail(id: string) {
 
 export async function getOutreachDashboard() {
   const prisma = getPrisma();
-  const where = { archivedAt: null };
+  const where = excludeLegacyRestaurantCompanies({ archivedAt: null });
   const [total, byOutreach, groups, recentReplies] = await Promise.all([
     prisma.company.count({ where }),
     prisma.company.groupBy({
@@ -245,11 +273,11 @@ export async function findCompanyDuplicates(input: {
 export async function listFilterOptions() {
   const [companies, groups] = await Promise.all([
     getPrisma().company.findMany({
-      where: { archivedAt: null },
+      where: excludeLegacyRestaurantCompanies({ archivedAt: null }),
       select: { industry: true, city: true, district: true, country: true, tags: true },
     }),
     getPrisma().leadGroup.findMany({
-      select: { id: true, name: true },
+      select: { id: true, name: true, industry: true },
       orderBy: { name: "asc" },
     }),
   ]);
@@ -303,6 +331,8 @@ export function summarizeGroup(group: {
     doNotContact,
     lastSend,
     replyRate,
+    openHref: undefined as string | undefined,
+    sourceLabel: undefined as string | undefined,
   };
 }
 

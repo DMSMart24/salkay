@@ -1,4 +1,5 @@
 import { createHmac, createHash, randomBytes, timingSafeEqual } from "node:crypto";
+import { readEnvValue } from "@/lib/admin/env";
 
 export function sha256(value: string) {
   return createHash("sha256").update(value).digest("hex");
@@ -9,7 +10,7 @@ export function randomToken() {
 }
 
 export function getAuthSecret() {
-  const secret = process.env.AUTH_SECRET;
+  const secret = readEnvValue("AUTH_SECRET");
   if (!secret || secret.length < 32) {
     return null;
   }

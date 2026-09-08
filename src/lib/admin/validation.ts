@@ -3,6 +3,11 @@ import {
   CompanyPriority,
   CompanyStatus,
   OutreachStatus,
+  RestaurantContactStatus,
+  RestaurantLeadPriority,
+  RestaurantRegion,
+  RestaurantSalesStatus,
+  RestaurantWebsiteStatus,
   SuppressionReason,
   TaskStatus,
   TaskType,
@@ -243,6 +248,76 @@ export const bulkOutreachSchema = z.object({
 export const moveToGroupSchema = z.object({
   companyIds: z.array(z.string().min(1)).min(1),
   groupId: z.string().min(1),
+});
+
+const optionalScore = z.preprocess(
+  (value) => (value === "" || value === null || value === undefined ? undefined : value),
+  z.coerce.number().min(0).max(10).optional(),
+);
+
+export const restaurantLeadSchema = z.object({
+  restaurantName: z.string().trim().min(2, "Restoran adı gerekli."),
+  district: z.string().trim().min(2, "İlçe gerekli."),
+  region: z.nativeEnum(RestaurantRegion).optional(),
+  neighborhood: optionalText,
+  address: optionalText,
+  website: z
+    .string()
+    .trim()
+    .optional()
+    .refine((value) => !value || /^https?:\/\/.+/i.test(value) || /^[\w.-]+\.[a-z]{2,}/i.test(value), {
+      message: "Geçerli bir website girin.",
+    }),
+  websiteDomain: optionalText,
+  websiteStatus: z.nativeEnum(RestaurantWebsiteStatus),
+  websiteScore: optionalScore,
+  leadScore: optionalScore,
+  priority: z.nativeEnum(RestaurantLeadPriority).default("PENDING"),
+  publicEmail: z
+    .string()
+    .trim()
+    .email("Geçerli bir e-posta girin.")
+    .optional()
+    .or(z.literal("")),
+  phone: optionalText,
+  whatsapp: optionalText,
+  instagram: optionalText,
+  googleMapsUrl: optionalText,
+  googleRating: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().min(0).max(5).optional(),
+  ),
+  googleReviewCount: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().int().min(0).optional(),
+  ),
+  category: optionalText,
+  problem1: optionalText,
+  problem2: optionalText,
+  problem3: optionalText,
+  websiteAnalysis: optionalText,
+  opportunities: optionalText,
+  salkayPitch: optionalText,
+  source: optionalText,
+  dateChecked: optionalText,
+  contactStatus: z.nativeEnum(RestaurantContactStatus),
+  outreachNotes: optionalText,
+});
+
+export const restaurantLeadStatusSchema = z.object({
+  id: z.string().min(1),
+  contactStatus: z.nativeEnum(RestaurantContactStatus),
+});
+
+export const restaurantLeadSalesSchema = z.object({
+  id: z.string().min(1),
+  salesStatus: z.nativeEnum(RestaurantSalesStatus),
+  lastContactAt: optionalText,
+  nextFollowUpAt: optionalText,
+  contactAttempts: z.preprocess(
+    (value) => (value === "" || value === null || value === undefined ? undefined : value),
+    z.coerce.number().int().min(0).optional(),
+  ),
 });
 
 export const bulkSendSchema = z.object({

@@ -9,6 +9,7 @@ import {
   type LeadPriorityBand,
   type OpportunityType,
 } from "@/lib/admin/qualification";
+import { excludeLegacyRestaurantCompanies } from "@/lib/admin/restaurant-industry";
 
 export const DEFAULT_BATCH_SIZE = 20;
 export const MAX_BATCH_SIZE = 50;
@@ -71,9 +72,9 @@ export function assertFollowUpRateLimit(userId: string) {
 }
 
 export function companyFilterWhere(input: CompanyFilterInput): Prisma.CompanyWhereInput {
-  const where: Prisma.CompanyWhereInput = {
+  const where: Prisma.CompanyWhereInput = excludeLegacyRestaurantCompanies({
     archivedAt: input.archived ? { not: null } : null,
-  };
+  });
 
   if (input.q) {
     where.OR = [

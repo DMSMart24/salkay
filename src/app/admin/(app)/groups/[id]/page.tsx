@@ -1,9 +1,10 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { redirect, notFound } from "next/navigation";
 import type { OutreachStatus } from "@prisma/client";
 import { GroupForm } from "@/components/admin/GroupForm";
 import { OutreachTable } from "@/components/admin/OutreachTable";
 import { listCompanies, listFilterOptions, getGroupDetail } from "@/lib/admin/queries";
+import { companiesRestaurantHref, isRestaurantGroup } from "@/lib/admin/restaurant-industry";
 
 export const dynamic = "force-dynamic";
 
@@ -33,6 +34,9 @@ export default async function GroupDetailPage({
   const query = await searchParams;
   const group = await getGroupDetail(id);
   if (!group) notFound();
+  if (isRestaurantGroup(group)) {
+    redirect(companiesRestaurantHref());
+  }
 
   const outreachStatus = (query.outreachStatus || "") as OutreachStatus | "";
   const [{ rows, total, page, pageCount, filteredIds }, options] = await Promise.all([

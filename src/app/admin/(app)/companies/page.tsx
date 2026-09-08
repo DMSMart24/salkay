@@ -1,9 +1,16 @@
 import Link from "next/link";
 import type { OutreachStatus, WebsiteStatus } from "@prisma/client";
 import { OutreachTable } from "@/components/admin/OutreachTable";
+import { RestaurantLeadsWorkspace } from "@/components/admin/RestaurantLeadsWorkspace";
 import { outreachStatusLabels, websiteStatusLabels } from "@/lib/admin/labels";
 import { leadPriorityLabels, type LeadPriorityBand } from "@/lib/admin/qualification";
 import { listCompanies, listFilterOptions } from "@/lib/admin/queries";
+import {
+  canonicalIndustryOptions,
+  industryLabel,
+  isRestaurantGroup,
+  isRestaurantIndustry,
+} from "@/lib/admin/restaurant-industry";
 
 export const dynamic = "force-dynamic";
 
@@ -20,6 +27,14 @@ type Search = {
   email?: string;
   sort?: string;
   page?: string;
+  view?: string;
+  priority?: string;
+  contactStatus?: string;
+  region?: string;
+  emailSegment?: string;
+  website?: string;
+  phone?: string;
+  whatsapp?: string;
 };
 
 export default async function CompaniesPage({
@@ -28,6 +43,20 @@ export default async function CompaniesPage({
   searchParams: Promise<Search>;
 }) {
   const params = await searchParams;
+  const options = await listFilterOptions();
+  const selectedGroup = options.groups.find((group) => group.id === params.group);
+  const restaurantMode =
+    isRestaurantIndustry(params.industry) || isRestaurantGroup(selectedGroup);
+
+  if (restaurantMode) {
+    return (
+      <RestaurantLeadsWorkspace
+        params={params}
+        industries={options.industries}
+      />
+    );
+  }
+
   const filters = {
     q: params.q,
     industry: params.industry,
@@ -42,18 +71,16 @@ export default async function CompaniesPage({
     sort: params.sort,
     page: Number(params.page || "1"),
   };
-  const [{ rows, page, pageCount, total, filteredIds }, options] = await Promise.all([
-    listCompanies(filters),
-    listFilterOptions(),
-  ]);
+  const { rows, page, pageCount, total, filteredIds } = await listCompanies(filters);
+  const industryOptions = canonicalIndustryOptions(options.industries);
 
   return (
     <div className="admin-page">
       <header className="admin-page-head">
         <div>
-          <p className="admin-kicker">Firmen</p>
+          <p className="admin-kicker">Firmalar</p>
           <h1>Firmalar</h1>
-          <p className="admin-help">{total} kayıt</p>
+          <p className="admin-help">{total} kayıt · Restoranlar ayrı kategoride</p>
         </div>
         <div className="admin-actions">
           <Link href="/admin/companies/import" className="admin-btn">
@@ -69,8 +96,10 @@ export default async function CompaniesPage({
         <input name="q" defaultValue={params.q} placeholder="Ara" />
         <select name="industry" defaultValue={params.industry ?? ""}>
           <option value="">Sektör</option>
-          {options.industries.map((item) => (
-            <option key={item}>{item}</option>
+          {industryOptions.map((item) => (
+            <option key={item} value={item}>
+              {industryLabel(item)}
+            </option>
           ))}
         </select>
         <select name="group" defaultValue={params.group ?? ""}>

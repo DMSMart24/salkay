@@ -2,6 +2,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["three"],
+  serverExternalPackages: ["xlsx"],
   images: {
     qualities: [75, 90],
   },

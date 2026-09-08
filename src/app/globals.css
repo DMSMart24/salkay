@@ -14823,16 +14823,41 @@ header.site-header a.svc-hero-cta,
 
 .admin-badge-web-improvable {
   background: color-mix(in srgb, #d5aa62 20%, transparent);
+  color: #f3e0b8;
 }
 
-.admin-badge-web-weak,
-.admin-badge-web-very_weak,
+.admin-badge-web-weak {
+  background: color-mix(in srgb, #f97316 22%, transparent);
+  color: #fdba74;
+}
+
+.admin-badge-web-very_weak {
+  background: color-mix(in srgb, #ef4444 22%, transparent);
+  color: #fecaca;
+}
+
 .admin-badge-web-average {
   background: color-mix(in srgb, #d5aa62 14%, transparent);
 }
 
-.admin-badge-web-no_website,
-.admin-badge-web-not_verified,
+.admin-badge-web-no_website {
+  background: color-mix(in srgb, #f43f5e 22%, transparent);
+  color: #fecdd3;
+}
+
+.admin-badge-web-not_verified {
+  background: color-mix(in srgb, #f59e0b 28%, transparent);
+  color: #fde68a;
+  border: 1px solid color-mix(in srgb, #f59e0b 45%, transparent);
+  font-weight: 600;
+}
+
+.admin-rl-final-top20 th:first-child,
+.admin-rl-final-top20 td:first-child {
+  width: 3.5rem;
+  text-align: center;
+}
+
 .admin-badge-web-unknown {
   background: color-mix(in srgb, #16c7ff 10%, transparent);
 }
@@ -14865,6 +14890,312 @@ header.site-header a.svc-hero-cta,
   letter-spacing: 0.08em;
   font-size: 0.68rem;
   color: var(--c-text-dim);
+}
+
+.admin-rl-table {
+  min-width: 96rem;
+}
+
+.admin-rl-email-trust {
+  margin-top: 0.25rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.04em;
+}
+
+.admin-rl-email-trust-verified {
+  background: color-mix(in srgb, #2f9e44 18%, transparent);
+}
+
+.admin-rl-email-trust-unverified {
+  background: color-mix(in srgb, #f59f00 18%, transparent);
+}
+
+.admin-rl-email-trust-missing {
+  background: color-mix(in srgb, #8ea0b8 16%, transparent);
+}
+
+.admin-rl-email-trust-historical {
+  background: color-mix(in srgb, #868e96 18%, transparent);
+}
+
+.admin-rl-priority,
+.admin-rl-score,
+.admin-rl-contact {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+}
+
+.admin-rl-priority-high {
+  background: color-mix(in srgb, #ef4444 34%, transparent);
+  color: #fecaca;
+  box-shadow: 0 0 0 1px color-mix(in srgb, #ef4444 50%, transparent);
+}
+
+.admin-rl-priority-medium {
+  background: color-mix(in srgb, #f59e0b 22%, transparent);
+  color: #fdba74;
+}
+
+.admin-rl-priority-low {
+  background: color-mix(in srgb, #94a3b8 18%, transparent);
+  color: #cbd5e1;
+}
+
+.admin-rl-priority-qualified_out {
+  background: color-mix(in srgb, #64748b 14%, #14532d 10%);
+  color: #94a3b8;
+}
+
+.admin-rl-priority-pending {
+  background: color-mix(in srgb, #64748b 16%, transparent);
+  color: #cbd5e1;
+}
+
+.admin-rl-score {
+  flex-direction: column;
+  align-items: flex-start;
+  min-width: 4.5rem;
+}
+
+.admin-rl-score small {
+  font-size: 0.62rem;
+  font-weight: 500;
+  color: var(--c-text-dim);
+}
+
+.admin-rl-score-elite {
+  background: color-mix(in srgb, #d5aa62 24%, transparent);
+}
+
+.admin-rl-score-strong {
+  background: color-mix(in srgb, #16c7ff 16%, transparent);
+}
+
+.admin-rl-score-mid {
+  background: color-mix(in srgb, #64748b 16%, transparent);
+}
+
+.admin-rl-score-low {
+  background: color-mix(in srgb, #334155 28%, transparent);
+  color: var(--c-text-dim);
+}
+
+.admin-rl-contact-ready_to_contact,
+.admin-rl-contact-interested,
+.admin-rl-contact-meeting,
+.admin-rl-contact-won {
+  background: color-mix(in srgb, #2ee59d 18%, transparent);
+}
+
+.admin-rl-contact-lost {
+  background: color-mix(in srgb, #ff5a5a 22%, transparent);
+}
+
+.admin-btn-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+
+.admin-btn-link.danger {
+  color: #ff8b8b;
+}
+
+.admin-rl-filters {
+  margin: 0.35rem 0 1rem;
+}
+
+.admin-rl-region-tabs {
+  margin: 0.15rem 0 0.65rem;
+}
+
+.admin-rl-region-anadolu {
+  color: #d7c7a1;
+}
+
+.admin-rl-region-avrupa {
+  color: #9fd6c4;
+}
+
+.admin-rl-import-stats {
+  margin-bottom: 1rem;
+}
+
+.admin-rl-noweb-table {
+  min-width: 96rem;
+}
+
+.admin-rl-pitch {
+  max-width: 16rem;
+  font-size: 0.82rem;
+  line-height: 1.35;
+}
+
+.admin-rl-draft-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin: 0.75rem 0 1rem;
+}
+
+.admin-rl-draft-field {
+  display: grid;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem;
+}
+
+.admin-rl-draft-field input,
+.admin-rl-draft-field textarea {
+  width: 100%;
+  font: inherit;
+}
+
+.admin-rl-email-previews {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-rl-html-preview {
+  display: block;
+  width: 100%;
+  min-height: 36rem;
+  border: 1px solid color-mix(in srgb, #d5aa62 28%, transparent);
+  border-radius: 8px;
+  background: #07111f;
+}
+
+.admin-rl-sales-banner {
+  margin: 0 0 1rem;
+  padding: 0.75rem 0.9rem;
+  border: 1px solid color-mix(in srgb, #d5aa62 35%, transparent);
+  border-radius: 8px;
+}
+
+.admin-card-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.admin-card-link.is-active {
+  border-color: color-mix(in srgb, #d5aa62 55%, transparent);
+}
+
+.admin-rl-quick-sales {
+  flex-wrap: wrap;
+  gap: 0.45rem;
+}
+
+.admin-rl-quick-sales a strong {
+  margin-left: 0.3rem;
+  font-size: 0.78rem;
+}
+
+.admin-rl-draft-links {
+  margin: 0 0 0.85rem;
+}
+
+.admin-rl-contact-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  align-items: center;
+}
+
+.admin-rl-action {
+  padding: 0.28rem 0.55rem;
+  font-size: 0.75rem;
+}
+
+.admin-rl-first-contact {
+  margin: 0 0 1rem;
+}
+
+.admin-rl-first-contact-head {
+  margin-bottom: 0.85rem;
+}
+
+.admin-rl-first-contact-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16.5rem, 1fr));
+  gap: 0.85rem;
+}
+
+.admin-rl-first-card {
+  display: grid;
+  gap: 0.45rem;
+  padding: 0.85rem;
+  border: 1px solid var(--c-border);
+  border-radius: 0.75rem;
+  background: color-mix(in srgb, #d5aa62 6%, #10131a);
+}
+
+.admin-rl-first-card-top {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.5rem;
+  align-items: flex-start;
+}
+
+.admin-rl-problem-mini,
+.admin-rl-problem-list {
+  margin: 0;
+  padding-left: 1.1rem;
+  display: grid;
+  gap: 0.25rem;
+  font-size: 0.82rem;
+}
+
+.admin-rl-sales {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.18rem 0.55rem;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+
+.admin-rl-sales-new,
+.admin-rl-sales-ready_to_contact {
+  background: color-mix(in srgb, #64748b 16%, transparent);
+  color: #cbd5e1;
+}
+
+.admin-rl-sales-contacted,
+.admin-rl-sales-replied {
+  background: color-mix(in srgb, #38bdf8 18%, transparent);
+  color: #bae6fd;
+}
+
+.admin-rl-sales-interested,
+.admin-rl-sales-meeting,
+.admin-rl-sales-proposal {
+  background: color-mix(in srgb, #d5aa62 22%, transparent);
+  color: #f3e0b8;
+}
+
+.admin-rl-sales-won {
+  background: color-mix(in srgb, #2ee59d 18%, transparent);
+  color: #bbf7d0;
+}
+
+.admin-rl-sales-lost,
+.admin-rl-sales-do_not_contact {
+  background: color-mix(in srgb, #ff5a5a 20%, transparent);
+  color: #fecaca;
+}
+
+.admin-rl-contact-bar {
+  margin-bottom: 1rem;
 }
 
 .admin-analysis-list {

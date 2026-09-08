@@ -59,7 +59,7 @@ export default async function AdminDashboardPage() {
               <article key={group.id} className="admin-group-card">
                 <p className="admin-kicker">{group.industry || "Grup"}</p>
                 <h3>{group.name}</h3>
-                <p>{group.total} Firma</p>
+                <p>{group.sourceLabel === "RestaurantLead" ? `${group.total} Restoran` : `${group.total} Firma`}</p>
                 <ul className="admin-list">
                   <li>
                     <span>{group.notContacted} Henüz gönderilmedi</span>
@@ -73,8 +73,8 @@ export default async function AdminDashboardPage() {
                 </ul>
                 <p>Yanıt oranı: %{group.replyRate}</p>
                 <p className="admin-help">Son gönderim: {formatDate(group.lastSend)}</p>
-                <Link href={`/admin/groups/${group.id}`} className="admin-btn">
-                  Grubu Aç
+                <Link href={group.openHref ?? `/admin/groups/${group.id}`} className="admin-btn">
+                  {group.openHref ? "Restoranları Aç" : "Grubu Aç"}
                 </Link>
               </article>
             ))}

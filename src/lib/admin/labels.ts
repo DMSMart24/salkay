@@ -6,6 +6,11 @@ import type {
   EmailDirection,
   EmailMessageStatus,
   OutreachStatus,
+  RestaurantContactStatus,
+  RestaurantLeadPriority,
+  RestaurantRegion,
+  RestaurantSalesStatus,
+  RestaurantWebsiteStatus,
   SuppressionReason,
   TaskStatus,
   TaskType,
@@ -111,6 +116,86 @@ export const outreachStatusLabels: Record<OutreachStatus, string> = {
   FAILED: "Başarısız",
   DO_NOT_CONTACT: "İletişim kurma",
 };
+
+export const restaurantWebsiteStatusLabels: Record<RestaurantWebsiteStatus, string> = {
+  NO_WEBSITE: "Web sitesi yok",
+  VERY_WEAK: "Çok zayıf",
+  WEAK: "Zayıf",
+  IMPROVABLE: "Geliştirilebilir",
+  GOOD: "İyi",
+  VERY_GOOD: "Çok iyi",
+  NOT_VERIFIED: "Doğrulanmadı",
+};
+
+export const restaurantLeadPriorityLabels: Record<RestaurantLeadPriority, string> = {
+  HIGH: "Yüksek",
+  MEDIUM: "Orta",
+  LOW: "Düşük",
+  QUALIFIED_OUT: "Kapsam dışı",
+  PENDING: "Araştırma bekliyor",
+};
+
+export const restaurantRegionLabels: Record<RestaurantRegion, string> = {
+  ANADOLU: "Anadolu Yakası",
+  AVRUPA: "Avrupa Yakası",
+};
+
+export const restaurantContactStatusLabels: Record<RestaurantContactStatus, string> = {
+  NOT_CONTACTED: "İletişime geçilmedi",
+  READY_TO_CONTACT: "İletişime hazır",
+  CONTACTED: "İletişime geçildi",
+  REPLIED: "Yanıtlandı",
+  FOLLOW_UP: "Takip",
+  INTERESTED: "İlgileniyor",
+  MEETING: "Toplantı",
+  WON: "Kazanıldı",
+  LOST: "Kaybedildi",
+};
+
+export const restaurantContactStatusOrder: RestaurantContactStatus[] = [
+  "NOT_CONTACTED",
+  "READY_TO_CONTACT",
+  "CONTACTED",
+  "REPLIED",
+  "FOLLOW_UP",
+  "INTERESTED",
+  "MEETING",
+  "WON",
+  "LOST",
+];
+
+export const restaurantSalesStatusLabels: Record<RestaurantSalesStatus, string> = {
+  NEW: "Yeni",
+  READY_TO_CONTACT: "İletişime hazır",
+  CONTACTED: "İletişime geçildi",
+  REPLIED: "Yanıtlandı",
+  INTERESTED: "İlgileniyor",
+  MEETING: "Görüşme",
+  PROPOSAL: "Teklif",
+  WON: "Kazanıldı",
+  LOST: "Kaybedildi",
+  DO_NOT_CONTACT: "İletişim kurulmasın",
+};
+
+export const restaurantSalesStatusOrder: RestaurantSalesStatus[] = [
+  "NEW",
+  "READY_TO_CONTACT",
+  "CONTACTED",
+  "REPLIED",
+  "INTERESTED",
+  "MEETING",
+  "PROPOSAL",
+  "WON",
+  "LOST",
+  "DO_NOT_CONTACT",
+];
+
+export const restaurantSalesPriorityFilter: RestaurantLeadPriority[] = [
+  "HIGH",
+  "MEDIUM",
+  "PENDING",
+  "QUALIFIED_OUT",
+];
 
 export const websiteStatusLabels: Record<WebsiteStatus, string> = {
   GOOD: "İyi",

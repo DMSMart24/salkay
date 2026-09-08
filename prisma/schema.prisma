@@ -124,6 +124,54 @@ enum ActivityType {
   EMAIL_QUEUED
 }
 
+enum RestaurantWebsiteStatus {
+  NO_WEBSITE
+  VERY_WEAK
+  WEAK
+  IMPROVABLE
+  GOOD
+  VERY_GOOD
+  NOT_VERIFIED
+}
+
+enum RestaurantLeadPriority {
+  HIGH
+  MEDIUM
+  LOW
+  QUALIFIED_OUT
+  PENDING
+}
+
+enum RestaurantContactStatus {
+  NOT_CONTACTED
+  READY_TO_CONTACT
+  CONTACTED
+  REPLIED
+  FOLLOW_UP
+  INTERESTED
+  MEETING
+  WON
+  LOST
+}
+
+enum RestaurantRegion {
+  ANADOLU
+  AVRUPA
+}
+
+enum RestaurantSalesStatus {
+  NEW
+  READY_TO_CONTACT
+  CONTACTED
+  REPLIED
+  INTERESTED
+  MEETING
+  PROPOSAL
+  WON
+  LOST
+  DO_NOT_CONTACT
+}
+
 model User {
   id           String     @id @default(cuid())
   email        String     @unique
@@ -419,4 +467,60 @@ model Suppression {
   @@unique([emailNorm])
   @@index([reason])
   @@index([domain])
+}
+
+model RestaurantLead {
+  id                String                    @id @default(cuid())
+  restaurantName    String
+  nameNorm          String
+  district          String
+  districtNorm      String
+  region            RestaurantRegion            @default(ANADOLU)
+  neighborhood      String?
+  address           String?
+  website           String?
+  websiteDomain     String?
+  websiteStatus     RestaurantWebsiteStatus     @default(NOT_VERIFIED)
+  websiteScore      Float?
+  leadScore         Float?
+  priority          RestaurantLeadPriority   @default(PENDING)
+  publicEmail       String?
+  phone             String?
+  whatsapp          String?
+  instagram         String?
+  googleMapsUrl     String?
+  googleRating      Float?
+  googleReviewCount Int?
+  category          String?
+  problem1          String?
+  problem2          String?
+  problem3          String?
+  websiteAnalysis   String?
+  opportunities     String?
+  salkayPitch       String?
+  source            String?
+  dateChecked       DateTime?
+  contactStatus     RestaurantContactStatus  @default(NOT_CONTACTED)
+  salesStatus       RestaurantSalesStatus    @default(NEW)
+  lastContactAt     DateTime?
+  nextFollowUpAt    DateTime?
+  contactAttempts   Int                      @default(0)
+  outreachNotes     String?
+  isFinalTop20      Boolean                   @default(false)
+  finalRank         Int?
+  createdAt         DateTime                  @default(now())
+  updatedAt         DateTime                  @updatedAt
+
+  @@unique([nameNorm, districtNorm])
+  @@unique([finalRank])
+  @@index([district])
+  @@index([region])
+  @@index([priority])
+  @@index([websiteStatus])
+  @@index([contactStatus])
+  @@index([salesStatus])
+  @@index([leadScore])
+  @@index([isFinalTop20])
+  @@index([updatedAt])
+  @@index([publicEmail])
 }
