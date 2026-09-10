@@ -165,20 +165,16 @@ export async function addRestaurantLeadNoteAction(_prev: FormState, formData: Fo
   return { success: "Not eklendi. Research/draft alanları değişmedi." };
 }
 
-export async function refreshRestaurantLeadFollowUpsAction(): Promise<FormState> {
+export async function refreshRestaurantLeadFollowUpsAction() {
   await requireAdmin();
-  const due = await refreshRestaurantLeadFollowUpDue();
+  await refreshRestaurantLeadFollowUpDue();
   revalidatePath("/admin/restaurant-leads/outreach");
-  return { success: `${due.markedDue} lead follow-up DUE olarak işaretlendi. Gönderim yok.` };
 }
 
-export async function prepareRestaurantLeadFollowUpDraftsAction(): Promise<FormState> {
+export async function prepareRestaurantLeadFollowUpDraftsAction() {
   await requireAdmin();
-  const result = await prepareDueRestaurantLeadFollowUpDrafts();
+  await prepareDueRestaurantLeadFollowUpDrafts();
   revalidatePath("/admin/restaurant-leads/outreach");
-  return {
-    success: `${result.preparedCount} follow-up taslağı hazırlandı. ${result.excludedCount} hariç. Resend çağrılmadı.`,
-  };
 }
 
 export async function sendRestaurantLeadFollowUpAction(_prev: FormState, formData: FormData): Promise<FormState> {
