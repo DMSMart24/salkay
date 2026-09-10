@@ -18158,3 +18158,94 @@ header.site-header a.svc-hero-cta,
     animation: none;
   }
 }
+
+.admin-rl-bulk {
+  display: grid;
+  gap: 1rem;
+}
+
+.admin-rl-mode {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--c-border);
+  border-radius: 0.75rem;
+}
+
+.admin-rl-mode p {
+  margin: 0.2rem 0 0;
+  color: var(--c-text-dim);
+}
+
+.admin-rl-mode.is-test {
+  background: rgba(80, 140, 180, 0.12);
+}
+
+.admin-rl-mode.is-live {
+  background: rgba(180, 60, 60, 0.16);
+  border-color: #9a3a3a;
+}
+
+.admin-rl-bulk-filters {
+  align-items: end;
+}
+
+.admin-rl-send {
+  background: #9a2a2a;
+  border-color: #c04a4a;
+  color: #fff;
+}
+
+.admin-btn-link {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.admin-table tr.is-excluded {
+  opacity: 0.62;
+}
+
+.admin-rl-mail-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 40;
+  display: grid;
+  place-items: center;
+  padding: 1.5rem;
+  background: rgba(0, 0, 0, 0.62);
+}
+
+.admin-rl-mail-modal .admin-panel {
+  width: min(720px, 100%);
+  max-height: 85vh;
+  overflow: auto;
+}
+
+.admin-rl-mail-modal pre {
+  white-space: pre-wrap;
+}
+
+.admin-rl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  align-items: end;
+}
+
+.admin-rl-excludes ul {
+  columns: 2;
+}
+
+.admin-rl-progress {
+  font-weight: 600;
+}
+
+.admin-rl-progress.is-blocked {
+  color: #9a3a3a;
+}

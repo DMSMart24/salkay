@@ -1,11 +1,17 @@
 import Link from "next/link";
 import { BulkSendWizard } from "@/components/admin/BulkSendWizard";
 import { ComposeEmail } from "@/components/admin/ComposeEmail";
+import { RestaurantLeadBulkWizard } from "@/components/admin/RestaurantLeadBulkWizard";
 import { describeEmailProvider } from "@/lib/admin/email/provider";
 import { formatDateTime } from "@/lib/admin/format";
 import { emailStatusLabels } from "@/lib/admin/labels";
 import { isOutreachSendEnabled } from "@/lib/admin/outreach";
 import { inferredSequenceStep, sequenceStepLabel } from "@/lib/admin/email/sequence";
+import {
+  getRestaurantLeadBulkWorkspace,
+  parseRestaurantLeadBulkFilters,
+  parseRestaurantLeadBulkSource,
+} from "@/lib/admin/restaurant-lead-bulk";
 import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
@@ -15,6 +21,13 @@ type Search = {
   ids?: string | string[];
   groupId?: string;
   companyId?: string;
+  source?: string;
+  status?: string;
+  region?: string;
+  tier?: string;
+  website?: string;
+  pitch?: string;
+  wave?: string;
 };
 
 export default async function EmailsPage({
@@ -24,9 +37,12 @@ export default async function EmailsPage({
 }) {
   const params = await searchParams;
   const tab = params.tab ?? (params.ids || params.groupId ? "bulk" : "single");
+  const source = parseRestaurantLeadBulkSource(params.source ?? (params.groupId ? "crm" : "leads"));
+  const leadFilters = parseRestaurantLeadBulkFilters(params);
   const selectedIds = (Array.isArray(params.ids) ? params.ids : params.ids ? [params.ids] : []).filter(Boolean);
   const prisma = getPrisma();
   const provider = describeEmailProvider();
+  const leadWorkspace = tab === "bulk" && source === "leads" ? await getRestaurantLeadBulkWorkspace(leadFilters) : null;
 
   const [groups, templates, companies, messages] = await Promise.all([
     prisma.leadGroup.findMany({ select: { id: true, name: true }, orderBy: { name: "asc" } }),
@@ -86,7 +102,15 @@ export default async function EmailsPage({
 
       <nav className="admin-tabs">
         {tabs.map(([value, label]) => (
-          <Link key={value} href={`/admin/emails?tab=${value}`} className={tab === value ? "is-active" : undefined}>
+          <Link
+            key={value}
+            href={
+              value === "bulk"
+                ? "/admin/emails?tab=bulk&source=leads&status=READY_FOR_REVIEW"
+                : `/admin/emails?tab=${value}`
+            }
+            className={tab === value ? "is-active" : undefined}
+          >
             {label}
           </Link>
         ))}
@@ -126,6 +150,45 @@ export default async function EmailsPage({
       ) : null}
 
       {tab === "bulk" ? (
+        <section className="admin-panel">
+          <h2>TOPLU GÖNDERİM</h2>
+          <p className="admin-kicker">Kaynak</p>
+          <nav className="admin-tabs">
+            <Link
+              href="/admin/emails?tab=bulk&source=leads&status=READY_FOR_REVIEW"
+              className={source === "leads" ? "is-active" : undefined}
+            >
+              Restaurant Leads
+            </Link>
+            <Link href="/admin/emails?tab=bulk&source=crm" className={source === "crm" ? "is-active" : undefined}>
+              CRM Firmaları
+            </Link>
+          </nav>
+        </section>
+      ) : null}
+
+      {tab === "bulk" && source === "leads" && leadWorkspace ? (
+        <RestaurantLeadBulkWizard
+          counters={leadWorkspace.counters}
+          rows={leadWorkspace.rows}
+          defaultSelectedIds={leadWorkspace.defaultSelectedIds}
+          sendEligibleIds={leadWorkspace.sendEligibleIds}
+          eligibleCount={leadWorkspace.eligibleCount}
+          excludedCount={leadWorkspace.excludedCount}
+          previouslySent={leadWorkspace.previouslySent}
+          excludeBuckets={leadWorkspace.excludeBuckets}
+          filters={{
+            status: leadFilters.status,
+            region: leadFilters.region,
+            tier: leadFilters.tier,
+            website: leadFilters.website,
+            pitch: leadFilters.pitch,
+            firstWave: leadFilters.firstWave,
+          }}
+        />
+      ) : null}
+
+      {tab === "bulk" && source === "crm" ? (
         <BulkSendWizard
           groups={groups}
           templates={templates}

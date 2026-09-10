@@ -124,6 +124,25 @@ enum ActivityType {
   EMAIL_QUEUED
 }
 
+enum RestaurantLeadOutreachMode {
+  TEST
+  LIVE
+}
+
+enum RestaurantLeadOutreachBatchStatus {
+  PREPARED
+  BLOCKED
+  COMPLETED
+  PARTIAL
+  ABORTED
+}
+
+enum RestaurantLeadSendStatus {
+  PREPARED
+  SENT
+  FAILED
+}
+
 enum RestaurantWebsiteStatus {
   NO_WEBSITE
   VERY_WEAK
@@ -576,6 +595,7 @@ model RestaurantLead {
   operatingStatus       RestaurantOperatingStatus @default(UNCLEAR)
   createdAt         DateTime                  @default(now())
   updatedAt         DateTime                  @updatedAt
+  sendHistory           RestaurantLeadSendHistory[]
 
   @@unique([nameNorm, districtNorm])
   @@unique([finalRank])
@@ -589,4 +609,42 @@ model RestaurantLead {
   @@index([isFinalTop20])
   @@index([updatedAt])
   @@index([publicEmail])
+}
+
+model RestaurantLeadOutreachBatch {
+  id             String                            @id @default(cuid())
+  mode           RestaurantLeadOutreachMode
+  status         RestaurantLeadOutreachBatchStatus @default(PREPARED)
+  leadIds        String[]
+  snapshotJson   String
+  checksJson     String
+  chunkSize      Int                               @default(10)
+  processedCount Int                               @default(0)
+  successCount   Int                               @default(0)
+  failedCount    Int                               @default(0)
+  createdById    String
+  createdAt      DateTime                          @default(now())
+  sends          RestaurantLeadSendHistory[]
+
+  @@index([createdAt])
+}
+
+model RestaurantLeadSendHistory {
+  id                String                   @id @default(cuid())
+  restaurantLeadId  String
+  batchId           String?
+  toAddress         String
+  subject           String
+  bodyText          String
+  provider          String?
+  providerMessageId String?
+  status            RestaurantLeadSendStatus @default(PREPARED)
+  sentAt            DateTime?
+  errorMessage      String?
+  createdAt         DateTime                 @default(now())
+  restaurantLead    RestaurantLead           @relation(fields: [restaurantLeadId], references: [id], onDelete: Cascade)
+  batch             RestaurantLeadOutreachBatch? @relation(fields: [batchId], references: [id], onDelete: SetNull)
+
+  @@index([restaurantLeadId, status])
+  @@index([status])
 }
