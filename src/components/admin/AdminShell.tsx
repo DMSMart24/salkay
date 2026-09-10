@@ -10,6 +10,8 @@ const NAV = [
   { href: "/admin", label: "Dashboard" },
   { href: "/admin/companies", label: "Firmen" },
   { href: "/admin/restaurant-leads", label: "Restaurant-Leads" },
+  { href: "/admin/restaurant-leads/outreach", label: "Takip" },
+  { href: "/admin/restaurant-leads/outreach/bounce-recovery", label: "Bounce" },
   { href: "/admin/groups", label: "Gruppen" },
   { href: "/admin/emails", label: "E-Mails" },
   { href: "/admin/templates", label: "Vorlagen" },
@@ -59,11 +61,7 @@ export function AdminShell({ userName, userEmail, children }: AdminShellProps) {
             const active =
               item.href === "/admin"
                 ? pathname === "/admin"
-                : item.href === "/admin/companies"
-                  ? pathname.startsWith("/admin/companies")
-                  : item.href === "/admin/restaurant-leads"
-                    ? pathname.startsWith("/admin/restaurant-leads")
-                    : pathname.startsWith(item.href);
+                : pathname.startsWith(item.href);
             return (
               <Link
                 key={item.href}

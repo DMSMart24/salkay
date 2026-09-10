@@ -103,6 +103,7 @@ export async function prepareDueRestaurantLeadFollowUpDrafts() {
       possibleDuplicate: lead.possibleDuplicate,
       operatingStatus: lead.operatingStatus,
       salesStatus: lead.salesStatus,
+      emailSuppressed: lead.emailSuppressed,
     });
     if (!initial || !eligibility.ok) {
       excluded.push({

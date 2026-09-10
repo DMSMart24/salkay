@@ -77,6 +77,9 @@ export default async function RestaurantLeadOutreachPage({
           <Link href="/admin/emails?tab=bulk&source=leads" className="admin-btn ghost">
             E-posta merkezi
           </Link>
+          <Link href="/admin/restaurant-leads/outreach/bounce-recovery" className="admin-btn">
+            Bounce recovery
+          </Link>
         </div>
       </header>
 

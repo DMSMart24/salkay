@@ -19,6 +19,7 @@ async function touchLeadPaths(leadId: string) {
   revalidatePath("/admin/restaurant-leads/outreach");
   revalidatePath(`/admin/restaurant-leads/${leadId}`);
   revalidatePath("/admin/emails");
+  revalidatePath("/admin/restaurant-leads/outreach/bounce-recovery");
 }
 
 export async function markRestaurantLeadReplyAction(_prev: FormState, formData: FormData): Promise<FormState> {
@@ -175,6 +176,82 @@ export async function prepareRestaurantLeadFollowUpDraftsAction() {
   await requireAdmin();
   await prepareDueRestaurantLeadFollowUpDrafts();
   revalidatePath("/admin/restaurant-leads/outreach");
+}
+
+export async function approveRestaurantLeadReplacementEmailAction(formData: FormData) {
+  await requireAdmin();
+  const leadId = leadIdFrom(formData);
+  if (!leadId) return;
+  const prisma = getPrisma();
+  const lead = await prisma.restaurantLead.findUnique({ where: { id: leadId } });
+  if (!lead?.approvedReplacementEmail) return;
+  await prisma.restaurantLead.update({
+    where: { id: leadId },
+    data: {
+      replacementEmailStatus: "APPROVED",
+      publicEmail: lead.publicEmail,
+      followUpStatus: "STOPPED",
+    },
+  });
+  await appendRestaurantLeadTimeline({
+    restaurantLeadId: leadId,
+    kind: "NOTE",
+    at: new Date(),
+    source: "BOUNCE_RECOVERY_STATES",
+    label: `Yedek e-posta onaylandı: ${lead.approvedReplacementEmail} (gönderim yok)`,
+    metadata: JSON.stringify({
+      bouncedEmailPreserved: lead.publicEmail,
+      approvedReplacementEmail: lead.approvedReplacementEmail,
+      sent: false,
+    }),
+  });
+  await touchLeadPaths(leadId);
+}
+
+export async function markRestaurantLeadManualContactAction(formData: FormData) {
+  await requireAdmin();
+  const leadId = leadIdFrom(formData);
+  if (!leadId) return;
+  const prisma = getPrisma();
+  await prisma.restaurantLead.update({
+    where: { id: leadId },
+    data: {
+      bounceRecoveryAction: "MANUAL_CONTACT",
+      followUpStatus: "STOPPED",
+      nextFollowUpAt: null,
+    },
+  });
+  await appendRestaurantLeadTimeline({
+    restaurantLeadId: leadId,
+    kind: "NOTE",
+    at: new Date(),
+    source: "BOUNCE_RECOVERY_STATES",
+    label: "Manuel iletişim seçildi. E-posta gönderilmedi.",
+  });
+  await touchLeadPaths(leadId);
+}
+
+export async function markRestaurantLeadReviewLaterAction(formData: FormData) {
+  await requireAdmin();
+  const leadId = leadIdFrom(formData);
+  if (!leadId) return;
+  const prisma = getPrisma();
+  await prisma.restaurantLead.update({
+    where: { id: leadId },
+    data: {
+      retryStatus: "HUMAN_REVIEW_REQUIRED",
+      followUpStatus: "STOPPED",
+      nextFollowUpAt: null,
+    },
+  });
+  await appendRestaurantLeadTimeline({
+    restaurantLeadId: leadId,
+    kind: "NOTE",
+    at: new Date(),
+    source: "BOUNCE_RECOVERY_STATES",
+    label: "Daha sonra tekrar değerlendirilecek. Otomatik retry yok.",
+  });
+  await touchLeadPaths(leadId);
 }
 
 export async function sendRestaurantLeadFollowUpAction(_prev: FormState, formData: FormData): Promise<FormState> {

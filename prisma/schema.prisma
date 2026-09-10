@@ -170,6 +170,25 @@ enum RestaurantLeadFollowUpStatus {
   STOPPED
 }
 
+enum RestaurantLeadReplacementEmailStatus {
+  NONE
+  NEEDS_HUMAN_APPROVAL
+  APPROVED
+  REJECTED
+}
+
+enum RestaurantLeadRetryStatus {
+  NONE
+  HUMAN_REVIEW_REQUIRED
+}
+
+enum RestaurantLeadBounceRecoveryAction {
+  USE_NEW_EMAIL
+  MANUAL_CONTACT
+  KEEP_SUPPRESSED
+  RETRY_LATER_TRANSIENT
+}
+
 enum RestaurantLeadTimelineKind {
   INITIAL_PREPARED
   INITIAL_SENT
@@ -647,6 +666,13 @@ model RestaurantLead {
   repliedAt             DateTime?
   lastInboundAt         DateTime?
   followUpCount         Int                          @default(0)
+  emailSuppressed              Boolean                              @default(false)
+  emailSuppressedReason        String?
+  approvedReplacementEmail     String?
+  replacementEmailStatus       RestaurantLeadReplacementEmailStatus @default(NONE)
+  retryStatus                  RestaurantLeadRetryStatus            @default(NONE)
+  bounceRecoveryAction         RestaurantLeadBounceRecoveryAction?
+  hasOfficialContactForm       Boolean                              @default(false)
   createdAt         DateTime                  @default(now())
   updatedAt         DateTime                  @updatedAt
   sendHistory           RestaurantLeadSendHistory[]

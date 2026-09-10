@@ -319,6 +319,7 @@ export function evaluateRestaurantLeadSendEligibility(lead: RestaurantLead, prev
   if (lead.deliveryStatus === "BOUNCED" || lead.deliveryStatus === "COMPLAINED") {
     reasons.push(`deliveryStatus ${lead.deliveryStatus}`);
   }
+  if (lead.emailSuppressed) reasons.push("emailSuppressed = true");
 
   const facts = restaurantLeadFactSafety(lead);
   if (!facts.ok && facts.reason) reasons.push(facts.reason);

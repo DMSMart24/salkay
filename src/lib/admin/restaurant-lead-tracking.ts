@@ -131,12 +131,14 @@ export function evaluateFollowUpDraftEligibility(input: {
   possibleDuplicate: boolean;
   operatingStatus: string;
   salesStatus: RestaurantSalesStatus;
+  emailSuppressed?: boolean;
 }) {
   const reasons: string[] = [];
   if (input.initialSendStatus !== "SENT") reasons.push("initial send is not SENT");
   if (input.deliveryStatus === "BOUNCED") reasons.push("deliveryStatus = BOUNCED");
   if (input.deliveryStatus === "COMPLAINED") reasons.push("deliveryStatus = COMPLAINED");
   if (input.deliveryStatus === "DELAYED") reasons.push("deliveryStatus = DELAYED");
+  if (input.emailSuppressed) reasons.push("emailSuppressed = true");
   if (input.replyStatus !== "NO_REPLY") reasons.push("replyStatus is not NO_REPLY");
   if (input.followUpStatus !== "DUE") reasons.push("followUpStatus is not DUE");
   if (!input.emailVerified) reasons.push("emailVerified = false");
