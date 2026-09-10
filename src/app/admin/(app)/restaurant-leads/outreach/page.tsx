@@ -17,6 +17,7 @@ const FILTERS = [
   { value: "SENT", label: "SENT" },
   { value: "DELIVERED", label: "DELIVERED" },
   { value: "PENDING", label: "PENDING" },
+  { value: "DELAYED", label: "DELAYED" },
   { value: "BOUNCED", label: "BOUNCED" },
   { value: "COMPLAINED", label: "COMPLAINED" },
   { value: "REPLIED", label: "REPLIED" },
@@ -47,6 +48,7 @@ export default async function RestaurantLeadOutreachPage({
     { label: "Gönderildi", value: counters.sent, filter: "SENT" },
     { label: "Teslim Edildi", value: counters.delivered, filter: "DELIVERED" },
     { label: "Pending", value: counters.pending, filter: "PENDING" },
+    { label: "Delayed", value: counters.delayed, filter: "DELAYED" },
     { label: "Bounce", value: counters.bounced, filter: "BOUNCED" },
     { label: "Şikayet", value: counters.complained, filter: "COMPLAINED" },
     { label: "Yanıt Geldi", value: counters.replied, filter: "REPLIED" },
@@ -83,6 +85,7 @@ export default async function RestaurantLeadOutreachPage({
         <p>Initial Sent: {counters.sent}</p>
         <p>Delivered: {counters.delivered}</p>
         <p>Pending: {counters.pending}</p>
+        <p>Delayed: {counters.delayed}</p>
         <p>Bounced: {counters.bounced}</p>
         <p>Complained: {counters.complained}</p>
         <p>Replies: {counters.replied}</p>

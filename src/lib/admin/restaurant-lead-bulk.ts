@@ -316,6 +316,9 @@ export function evaluateRestaurantLeadSendEligibility(lead: RestaurantLead, prev
   }
   if (lead.possibleDuplicate) reasons.push("Olası kopya");
   if (previouslySent) reasons.push("Daha önce gönderildi");
+  if (lead.deliveryStatus === "BOUNCED" || lead.deliveryStatus === "COMPLAINED") {
+    reasons.push(`deliveryStatus ${lead.deliveryStatus}`);
+  }
 
   const facts = restaurantLeadFactSafety(lead);
   if (!facts.ok && facts.reason) reasons.push(facts.reason);

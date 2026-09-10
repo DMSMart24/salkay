@@ -17,6 +17,7 @@ export type RestaurantLeadOutreachFilter =
   | "SENT"
   | "DELIVERED"
   | "PENDING"
+  | "DELAYED"
   | "BOUNCED"
   | "COMPLAINED"
   | "REPLIED"
@@ -30,6 +31,7 @@ export type RestaurantLeadPostSendCounters = {
   sent: number;
   delivered: number;
   pending: number;
+  delayed: number;
   bounced: number;
   complained: number;
   failed: number;
@@ -47,6 +49,7 @@ export function parseRestaurantLeadOutreachFilter(value?: string | null): Restau
     "SENT",
     "DELIVERED",
     "PENDING",
+    "DELAYED",
     "BOUNCED",
     "COMPLAINED",
     "REPLIED",
@@ -100,6 +103,8 @@ export function mapResendEventToDelivery(eventType: string): RestaurantLeadDeliv
   switch (eventType) {
     case "email.delivered":
       return "DELIVERED";
+    case "email.delivery_delayed":
+      return "DELAYED";
     case "email.bounced":
       return "BOUNCED";
     case "email.complained":
@@ -131,6 +136,7 @@ export function evaluateFollowUpDraftEligibility(input: {
   if (input.initialSendStatus !== "SENT") reasons.push("initial send is not SENT");
   if (input.deliveryStatus === "BOUNCED") reasons.push("deliveryStatus = BOUNCED");
   if (input.deliveryStatus === "COMPLAINED") reasons.push("deliveryStatus = COMPLAINED");
+  if (input.deliveryStatus === "DELAYED") reasons.push("deliveryStatus = DELAYED");
   if (input.replyStatus !== "NO_REPLY") reasons.push("replyStatus is not NO_REPLY");
   if (input.followUpStatus !== "DUE") reasons.push("followUpStatus is not DUE");
   if (!input.emailVerified) reasons.push("emailVerified = false");
@@ -146,6 +152,7 @@ export function emptyPostSendCounters(): RestaurantLeadPostSendCounters {
     sent: 0,
     delivered: 0,
     pending: 0,
+    delayed: 0,
     bounced: 0,
     complained: 0,
     failed: 0,
@@ -173,6 +180,7 @@ export function countPostSendState(
   for (const row of rows) {
     if (row.deliveryStatus === "DELIVERED") counters.delivered += 1;
     if (row.deliveryStatus === "PENDING") counters.pending += 1;
+    if (row.deliveryStatus === "DELAYED") counters.delayed += 1;
     if (row.deliveryStatus === "BOUNCED") counters.bounced += 1;
     if (row.deliveryStatus === "COMPLAINED") counters.complained += 1;
     if (row.deliveryStatus === "FAILED") counters.failed += 1;
@@ -276,7 +284,9 @@ export async function refreshRestaurantLeadFollowUpDue(now = new Date()) {
   for (const lead of leads) {
     const initial = lead.sendHistory[0];
     if (!initial?.sentAt) continue;
-    if (lead.deliveryStatus === "BOUNCED" || lead.deliveryStatus === "COMPLAINED") continue;
+    if (lead.deliveryStatus === "BOUNCED" || lead.deliveryStatus === "COMPLAINED" || lead.deliveryStatus === "DELAYED") {
+      continue;
+    }
     if (lead.operatingStatus !== "ACTIVE") continue;
     if (lead.possibleDuplicate) continue;
     if (lead.followUpCount !== 0) continue;
@@ -356,6 +366,8 @@ export async function getRestaurantLeadOutreachWorkspace(input: {
         return lead.deliveryStatus === "DELIVERED";
       case "PENDING":
         return lead.deliveryStatus === "PENDING";
+      case "DELAYED":
+        return lead.deliveryStatus === "DELAYED";
       case "BOUNCED":
         return lead.deliveryStatus === "BOUNCED";
       case "COMPLAINED":

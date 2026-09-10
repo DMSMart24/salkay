@@ -145,6 +145,7 @@ enum RestaurantLeadSendStatus {
 
 enum RestaurantLeadDeliveryStatus {
   PENDING
+  DELAYED
   DELIVERED
   BOUNCED
   COMPLAINED
@@ -173,6 +174,7 @@ enum RestaurantLeadTimelineKind {
   INITIAL_PREPARED
   INITIAL_SENT
   DELIVERED
+  DELAYED
   BOUNCED
   COMPLAINED
   REPLY
@@ -702,6 +704,9 @@ model RestaurantLeadSendHistory {
   bouncedAt         DateTime?
   complainedAt      DateTime?
   errorMessage      String?
+  providerLastEvent String?
+  providerStatusSyncedAt DateTime?
+  providerStatusSource   String?
   createdAt         DateTime                     @default(now())
   restaurantLead    RestaurantLead               @relation(fields: [restaurantLeadId], references: [id], onDelete: Cascade)
   batch             RestaurantLeadOutreachBatch? @relation(fields: [batchId], references: [id], onDelete: SetNull)

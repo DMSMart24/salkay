@@ -1,6 +1,7 @@
 import { createHmac, timingSafeEqual } from "node:crypto";
 import { Prisma, type RestaurantLeadDeliveryStatus } from "@prisma/client";
 import { getPrisma } from "@/lib/admin/prisma";
+import { canReplaceDeliveryStatus } from "@/lib/admin/restaurant-lead-reconciliation";
 import { appendRestaurantLeadTimeline, mapResendEventToDelivery, resendEventId } from "@/lib/admin/restaurant-lead-tracking";
 
 type ResendWebhookPayload = {
@@ -72,6 +73,7 @@ export function parseResendWebhookPayload(payload: string): ResendWebhookPayload
 
 function timelineForDelivery(status: RestaurantLeadDeliveryStatus) {
   if (status === "DELIVERED") return { kind: "DELIVERED" as const, label: "Teslim edildi" };
+  if (status === "DELAYED") return { kind: "DELAYED" as const, label: "Teslimat gecikti" };
   if (status === "BOUNCED") return { kind: "BOUNCED" as const, label: "Bounce" };
   if (status === "COMPLAINED") return { kind: "COMPLAINED" as const, label: "Şikayet" };
   return null;
@@ -120,6 +122,10 @@ export async function processResendWebhookEvent(input: {
   });
   if (!send) {
     return { ok: true as const, duplicate: false, unmatched: true, eventType, providerMessageId };
+  }
+
+  if (!canReplaceDeliveryStatus(send.deliveryStatus, deliveryStatus)) {
+    return { ok: true as const, duplicate: false, ignored: true, eventType, providerMessageId, reason: "weaker_than_current" };
   }
 
   const at = body.created_at ? new Date(body.created_at) : new Date();
