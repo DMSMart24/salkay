@@ -173,6 +173,8 @@ type ResendWebhookRecord = {
   endpoint?: string;
   events?: string[];
   signing_secret?: string;
+  status?: string;
+  created_at?: string;
 };
 
 function resendApiKey() {
@@ -264,5 +266,178 @@ export async function describeWebhookConfig() {
     WEBHOOK_ID_STORED: Boolean(stored?.resendWebhookId),
     EVENTS: RESEND_DELIVERY_EVENTS,
     SIGNATURE_VALIDATION: Boolean(getResendWebhookSecret() || stored?.signingSecret),
+  };
+}
+
+function normalizeWebhookSecret(secret?: string | null) {
+  const value = secret?.trim() || "";
+  return value.startsWith("whsec_") ? value.slice(6) : value;
+}
+
+function webhookSecretsMatch(left?: string | null, right?: string | null) {
+  const a = Buffer.from(normalizeWebhookSecret(left));
+  const b = Buffer.from(normalizeWebhookSecret(right));
+  if (!a.length || !b.length || a.length !== b.length) return false;
+  return timingSafeEqual(a, b);
+}
+
+function secretMatchLabel(input: {
+  env?: string | null;
+  db?: string | null;
+  resend?: string | null;
+}) {
+  if (input.env && input.resend) return webhookSecretsMatch(input.env, input.resend) ? "YES" : "NO";
+  if (input.db && input.resend) return webhookSecretsMatch(input.db, input.resend) ? "YES" : "NO";
+  return "UNABLE_TO_VERIFY";
+}
+
+export async function diagnoseProductionResendWebhook(input: { token: string; repair?: boolean }) {
+  const prisma = getPrisma();
+  const stored = await prisma.restaurantLeadWebhookConfig.findUnique({
+    where: { id: "resend-production" },
+  });
+  if (!stored?.activationToken || stored.activationToken !== input.token) {
+    return { ok: false as const, error: "unauthorized" };
+  }
+
+  await prisma.restaurantLeadWebhookConfig.update({
+    where: { id: "resend-production" },
+    data: { activationToken: null },
+  });
+
+  const listed = await resendJson<{ data?: Array<ResendWebhookRecord & { status?: string; created_at?: string }> }>(
+    "/webhooks",
+  );
+  const webhooks = (listed.data ?? []).map((row) => ({
+    id: row.id ?? null,
+    endpoint: row.endpoint ?? null,
+    status: row.status ?? null,
+    events: row.events ?? [],
+    created_at: row.created_at ?? null,
+    urlExact: row.endpoint === PRODUCTION_WEBHOOK_ENDPOINT,
+  }));
+  const active =
+    webhooks.find((row) => row.id && row.id === stored.resendWebhookId) ||
+    webhooks.find((row) => row.urlExact) ||
+    webhooks[0] ||
+    null;
+
+  let retrieved: (ResendWebhookRecord & { status?: string; created_at?: string }) | null = null;
+  if (active?.id) {
+    retrieved = await resendJson<ResendWebhookRecord & { status?: string; created_at?: string }>(`/webhooks/${active.id}`);
+  }
+
+  const events: Array<{ id?: string; type?: string; created_at?: string; status?: string }> = [];
+  if (active?.id) {
+    let after: string | undefined;
+    for (let page = 0; page < 10; page += 1) {
+      const path = after
+        ? `/webhooks/${active.id}/events?limit=100&after=${encodeURIComponent(after)}`
+        : `/webhooks/${active.id}/events?limit=100`;
+      const pageData = await resendJson<{ data?: typeof events; has_more?: boolean }>(path);
+      const rows = pageData.data ?? [];
+      events.push(...rows);
+      if (!pageData.has_more || !rows.length) break;
+      after = rows[rows.length - 1]?.id;
+      if (!after) break;
+    }
+  }
+
+  const sends = await prisma.restaurantLeadSendHistory.findMany({
+    where: { batchId: "cmtvoi4d60000ju04ip91olvv", status: "SENT" },
+    select: { providerMessageId: true, deliveryStatus: true },
+  });
+  const lastEventCounts: Record<string, number> = {};
+  let emailLookupErrors = 0;
+  for (const send of sends) {
+    if (!send.providerMessageId) continue;
+    try {
+      const email = await resendJson<{ last_event?: string }>(`/emails/${send.providerMessageId}`);
+      const key = email.last_event || "unknown";
+      lastEventCounts[key] = (lastEventCounts[key] ?? 0) + 1;
+    } catch {
+      emailLookupErrors += 1;
+    }
+  }
+
+  const envSecret = getResendWebhookSecret();
+  const dbSecret = stored.signingSecret;
+  const resendSecret = retrieved?.signing_secret ?? null;
+  const eventsOnWebhook = retrieved?.events ?? active?.events ?? [];
+  const webhookUrl = retrieved?.endpoint ?? active?.endpoint ?? null;
+  const webhookStatus = retrieved?.status ?? active?.status ?? null;
+
+  let repaired = false;
+  const repairs: string[] = [];
+  if (input.repair && active?.id) {
+    const needsEnable = webhookStatus && webhookStatus !== "enabled";
+    const needsUrl = webhookUrl !== PRODUCTION_WEBHOOK_ENDPOINT;
+    const needsEvents = RESEND_DELIVERY_EVENTS.some((event) => !eventsOnWebhook.includes(event));
+    if (needsEnable || needsUrl || needsEvents) {
+      await resendJson(`/webhooks/${active.id}`, {
+        method: "PATCH",
+        body: JSON.stringify({
+          endpoint: PRODUCTION_WEBHOOK_ENDPOINT,
+          events: [...RESEND_DELIVERY_EVENTS],
+          status: "enabled",
+        }),
+      });
+      repaired = true;
+      if (needsEnable) repairs.push("enabled webhook");
+      if (needsUrl) repairs.push("corrected endpoint URL");
+      if (needsEvents) repairs.push("subscribed delivery events");
+    }
+    if (resendSecret && !webhookSecretsMatch(dbSecret, resendSecret)) {
+      await prisma.restaurantLeadWebhookConfig.update({
+        where: { id: "resend-production" },
+        data: { signingSecret: resendSecret, endpoint: PRODUCTION_WEBHOOK_ENDPOINT, resendWebhookId: active.id },
+      });
+      repaired = true;
+      repairs.push("refreshed stored signing secret from active webhook");
+    }
+  }
+
+  const attemptStatus = events.reduce(
+    (acc, row) => {
+      const key = row.status || "unknown";
+      acc[key] = (acc[key] ?? 0) + 1;
+      return acc;
+    },
+    {} as Record<string, number>,
+  );
+
+  return {
+    ok: true as const,
+    WEBHOOK_EXISTS: Boolean(active?.id),
+    WEBHOOK_ENABLED: (retrieved?.status ?? active?.status) === "enabled",
+    WEBHOOK_URL: webhookUrl,
+    WEBHOOK_ID_MATCHES_STORED: Boolean(active?.id && active.id === stored.resendWebhookId),
+    WEBHOOK_COUNT: webhooks.length,
+    DELIVERED_SUBSCRIBED: eventsOnWebhook.includes("email.delivered"),
+    BOUNCED_SUBSCRIBED: eventsOnWebhook.includes("email.bounced"),
+    COMPLAINED_SUBSCRIBED: eventsOnWebhook.includes("email.complained"),
+    EVENTS_GENERATED_BY_RESEND: events.length,
+    EVENT_STATUS_COUNTS: attemptStatus,
+    EVENT_TYPES: events.reduce(
+      (acc, row) => {
+        const key = row.type || "unknown";
+        acc[key] = (acc[key] ?? 0) + 1;
+        return acc;
+      },
+      {} as Record<string, number>,
+    ),
+    FIRST_WAVE_EMAIL_LOOKUPS: sends.length,
+    FIRST_WAVE_LAST_EVENT_COUNTS: lastEventCounts,
+    FIRST_WAVE_EMAIL_LOOKUP_ERRORS: emailLookupErrors,
+    WEBHOOK_SECRET_ENV_PRESENT: Boolean(envSecret),
+    WEBHOOK_SECRET_DB_PRESENT: Boolean(dbSecret),
+    WEBHOOK_SECRET_RESEND_PRESENT: Boolean(resendSecret),
+    WEBHOOK_SECRET_ENV_MATCHES_DB: webhookSecretsMatch(envSecret, dbSecret),
+    WEBHOOK_SECRET_ENV_MATCHES_RESEND: webhookSecretsMatch(envSecret, resendSecret),
+    WEBHOOK_SECRET_DB_MATCHES_RESEND: webhookSecretsMatch(dbSecret, resendSecret),
+    WEBHOOK_SECRET_MATCH: secretMatchLabel({ env: envSecret, db: dbSecret, resend: resendSecret }),
+    REPAIRED: repaired,
+    REPAIRS: repairs,
+    webhooks,
   };
 }
