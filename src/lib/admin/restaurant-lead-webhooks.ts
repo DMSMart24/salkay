@@ -11,8 +11,17 @@ type ResendWebhookPayload = {
     from?: string;
     to?: string[];
     subject?: string;
+    bounce?: { type?: string; message?: string };
+    bounce_type?: string;
   };
 };
+
+export function resendBounceKind(payload: ResendWebhookPayload) {
+  const raw = payload.data?.bounce?.type || payload.data?.bounce_type || "";
+  if (/hard|permanent/i.test(raw)) return "HARD";
+  if (/soft|transient|temporary/i.test(raw)) return "SOFT";
+  return raw || null;
+}
 
 export const RESEND_DELIVERY_EVENTS = ["email.delivered", "email.bounced", "email.complained"] as const;
 export const PRODUCTION_WEBHOOK_ENDPOINT = "https://www.salkay.com/api/webhooks/resend";
@@ -114,6 +123,7 @@ export async function processResendWebhookEvent(input: {
   }
 
   const at = body.created_at ? new Date(body.created_at) : new Date();
+  const bounceKind = deliveryStatus === "BOUNCED" ? resendBounceKind(body) : null;
   await prisma.restaurantLeadSendHistory.update({
     where: { id: send.id },
     data: {
@@ -121,6 +131,10 @@ export async function processResendWebhookEvent(input: {
       deliveredAt: deliveryStatus === "DELIVERED" ? at : send.deliveredAt,
       bouncedAt: deliveryStatus === "BOUNCED" ? at : send.bouncedAt,
       complainedAt: deliveryStatus === "COMPLAINED" ? at : send.complainedAt,
+      errorMessage:
+        deliveryStatus === "BOUNCED"
+          ? [bounceKind ? `bounce:${bounceKind}` : "bounce", body.data?.bounce?.message].filter(Boolean).join(" · ")
+          : send.errorMessage,
     },
   });
 
@@ -134,6 +148,7 @@ export async function processResendWebhookEvent(input: {
       complainedAt: deliveryStatus === "COMPLAINED" ? at : undefined,
       followUpStatus: stopFollowUp ? "STOPPED" : undefined,
       nextFollowUpAt: stopFollowUp ? null : undefined,
+      salesStatus: deliveryStatus === "COMPLAINED" ? "DO_NOT_CONTACT" : undefined,
     },
   });
 

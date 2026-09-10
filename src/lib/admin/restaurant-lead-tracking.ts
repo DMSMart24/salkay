@@ -16,7 +16,9 @@ export const ISTANBUL_TIME_ZONE = "Europe/Istanbul";
 export type RestaurantLeadOutreachFilter =
   | "SENT"
   | "DELIVERED"
+  | "PENDING"
   | "BOUNCED"
+  | "COMPLAINED"
   | "REPLIED"
   | "POSITIVE"
   | "NEGATIVE"
@@ -27,21 +29,26 @@ export type RestaurantLeadOutreachFilter =
 export type RestaurantLeadPostSendCounters = {
   sent: number;
   delivered: number;
+  pending: number;
   bounced: number;
   complained: number;
+  failed: number;
   replied: number;
   positive: number;
   negative: number;
   noReply: number;
   followUpDue: number;
   followUpDraftReady: number;
+  pendingOver24h: number;
 };
 
 export function parseRestaurantLeadOutreachFilter(value?: string | null): RestaurantLeadOutreachFilter | "ALL" {
   const allowed: RestaurantLeadOutreachFilter[] = [
     "SENT",
     "DELIVERED",
+    "PENDING",
     "BOUNCED",
+    "COMPLAINED",
     "REPLIED",
     "POSITIVE",
     "NEGATIVE",
@@ -50,6 +57,15 @@ export function parseRestaurantLeadOutreachFilter(value?: string | null): Restau
     "FOLLOW_UP_DRAFT_READY",
   ];
   return allowed.includes(value as RestaurantLeadOutreachFilter) ? (value as RestaurantLeadOutreachFilter) : "ALL";
+}
+
+export function isPendingDelivery(status: RestaurantLeadDeliveryStatus) {
+  return status === "PENDING";
+}
+
+export function isStalePendingDelivery(sentAt?: Date | null, now = new Date()) {
+  if (!sentAt) return false;
+  return now.getTime() - sentAt.getTime() >= 24 * 60 * 60 * 1000;
 }
 
 export function istanbulWeekday(date: Date) {
@@ -129,30 +145,44 @@ export function emptyPostSendCounters(): RestaurantLeadPostSendCounters {
   return {
     sent: 0,
     delivered: 0,
+    pending: 0,
     bounced: 0,
     complained: 0,
+    failed: 0,
     replied: 0,
     positive: 0,
     negative: 0,
     noReply: 0,
     followUpDue: 0,
     followUpDraftReady: 0,
+    pendingOver24h: 0,
   };
 }
 
-export function countPostSendState(rows: Array<Pick<RestaurantLead, "deliveryStatus" | "replyStatus" | "followUpStatus">> , sentCount: number): RestaurantLeadPostSendCounters {
+export function countPostSendState(
+  rows: Array<
+    Pick<RestaurantLead, "deliveryStatus" | "replyStatus" | "followUpStatus"> & {
+      sentAt?: Date | null;
+    }
+  >,
+  sentCount: number,
+  now = new Date(),
+): RestaurantLeadPostSendCounters {
   const counters = emptyPostSendCounters();
   counters.sent = sentCount;
   for (const row of rows) {
     if (row.deliveryStatus === "DELIVERED") counters.delivered += 1;
+    if (row.deliveryStatus === "PENDING") counters.pending += 1;
     if (row.deliveryStatus === "BOUNCED") counters.bounced += 1;
     if (row.deliveryStatus === "COMPLAINED") counters.complained += 1;
+    if (row.deliveryStatus === "FAILED") counters.failed += 1;
     if (row.replyStatus !== "NO_REPLY") counters.replied += 1;
     if (row.replyStatus === "POSITIVE") counters.positive += 1;
     if (row.replyStatus === "NEGATIVE") counters.negative += 1;
     if (row.replyStatus === "NO_REPLY") counters.noReply += 1;
     if (row.followUpStatus === "DUE") counters.followUpDue += 1;
     if (row.followUpStatus === "DRAFT_READY") counters.followUpDraftReady += 1;
+    if (row.deliveryStatus === "PENDING" && isStalePendingDelivery(row.sentAt, now)) counters.pendingOver24h += 1;
   }
   return counters;
 }
@@ -286,11 +316,12 @@ export async function getFirstWaveReport(batchId = FIRST_WAVE_BULK_SEND_ID) {
     where: { batchId, status: "SENT" },
     include: { restaurantLead: true },
   });
-  const leadIds = [...new Set(sends.map((row) => row.restaurantLeadId))];
-  const leads = await prisma.restaurantLead.findMany({ where: { id: { in: leadIds } } });
   return {
     batchId,
-    counters: countPostSendState(leads, sends.length),
+    counters: countPostSendState(
+      sends.map((row) => ({ ...row.restaurantLead, sentAt: row.sentAt })),
+      sends.length,
+    ),
     inboxIntegration: "NONE" as const,
     inboxNote: "Resend V1 outbound only. Replies are marked manually until an inbox provider is connected.",
   };
@@ -323,8 +354,12 @@ export async function getRestaurantLeadOutreachWorkspace(input: {
         return send.status === "SENT";
       case "DELIVERED":
         return lead.deliveryStatus === "DELIVERED";
+      case "PENDING":
+        return lead.deliveryStatus === "PENDING";
       case "BOUNCED":
         return lead.deliveryStatus === "BOUNCED";
+      case "COMPLAINED":
+        return lead.deliveryStatus === "COMPLAINED";
       case "REPLIED":
         return lead.replyStatus !== "NO_REPLY";
       case "POSITIVE":
@@ -347,7 +382,7 @@ export async function getRestaurantLeadOutreachWorkspace(input: {
     filter,
     inboxIntegration: "NONE" as const,
     counters: countPostSendState(
-      sends.map((row) => row.restaurantLead),
+      sends.map((row) => ({ ...row.restaurantLead, sentAt: row.sentAt })),
       sends.length,
     ),
     rows,
