@@ -143,6 +143,49 @@ enum RestaurantLeadSendStatus {
   FAILED
 }
 
+enum RestaurantLeadDeliveryStatus {
+  PENDING
+  DELIVERED
+  BOUNCED
+  COMPLAINED
+  FAILED
+}
+
+enum RestaurantLeadReplyStatus {
+  NO_REPLY
+  REPLIED
+  POSITIVE
+  NEGATIVE
+  AUTO_REPLY
+  UNKNOWN
+}
+
+enum RestaurantLeadFollowUpStatus {
+  NOT_DUE
+  DUE
+  DRAFT_READY
+  NEEDS_REVIEW
+  SENT
+  STOPPED
+}
+
+enum RestaurantLeadTimelineKind {
+  INITIAL_PREPARED
+  INITIAL_SENT
+  DELIVERED
+  BOUNCED
+  COMPLAINED
+  REPLY
+  FOLLOW_UP_DUE
+  FOLLOW_UP_DRAFT
+  FOLLOW_UP_SENT
+  MEETING
+  OFFER
+  WON
+  LOST
+  NOTE
+}
+
 enum RestaurantWebsiteStatus {
   NO_WEBSITE
   VERY_WEAK
@@ -593,9 +636,20 @@ model RestaurantLead {
   fetchStatus           String?
   fetchError            String?
   operatingStatus       RestaurantOperatingStatus @default(UNCLEAR)
+  deliveryStatus        RestaurantLeadDeliveryStatus @default(PENDING)
+  replyStatus           RestaurantLeadReplyStatus    @default(NO_REPLY)
+  followUpStatus        RestaurantLeadFollowUpStatus @default(NOT_DUE)
+  deliveredAt           DateTime?
+  bouncedAt             DateTime?
+  complainedAt          DateTime?
+  repliedAt             DateTime?
+  lastInboundAt         DateTime?
+  followUpCount         Int                          @default(0)
   createdAt         DateTime                  @default(now())
   updatedAt         DateTime                  @updatedAt
   sendHistory           RestaurantLeadSendHistory[]
+  followUpDrafts        RestaurantLeadFollowUpDraft[]
+  timelineEvents        RestaurantLeadTimelineEvent[]
 
   @@unique([nameNorm, districtNorm])
   @@unique([finalRank])
@@ -609,6 +663,9 @@ model RestaurantLead {
   @@index([isFinalTop20])
   @@index([updatedAt])
   @@index([publicEmail])
+  @@index([deliveryStatus])
+  @@index([replyStatus])
+  @@index([followUpStatus])
 }
 
 model RestaurantLeadOutreachBatch {
@@ -630,7 +687,7 @@ model RestaurantLeadOutreachBatch {
 }
 
 model RestaurantLeadSendHistory {
-  id                String                   @id @default(cuid())
+  id                String                       @id @default(cuid())
   restaurantLeadId  String
   batchId           String?
   toAddress         String
@@ -638,13 +695,72 @@ model RestaurantLeadSendHistory {
   bodyText          String
   provider          String?
   providerMessageId String?
-  status            RestaurantLeadSendStatus @default(PREPARED)
+  status            RestaurantLeadSendStatus     @default(PREPARED)
+  deliveryStatus    RestaurantLeadDeliveryStatus @default(PENDING)
   sentAt            DateTime?
+  deliveredAt       DateTime?
+  bouncedAt         DateTime?
+  complainedAt      DateTime?
   errorMessage      String?
-  createdAt         DateTime                 @default(now())
-  restaurantLead    RestaurantLead           @relation(fields: [restaurantLeadId], references: [id], onDelete: Cascade)
+  createdAt         DateTime                     @default(now())
+  restaurantLead    RestaurantLead               @relation(fields: [restaurantLeadId], references: [id], onDelete: Cascade)
   batch             RestaurantLeadOutreachBatch? @relation(fields: [batchId], references: [id], onDelete: SetNull)
 
   @@index([restaurantLeadId, status])
   @@index([status])
+  @@index([providerMessageId])
+  @@index([deliveryStatus])
+}
+
+model RestaurantLeadFollowUpDraft {
+  id               String       @id @default(cuid())
+  restaurantLeadId String
+  sourceSendId     String
+  subject          String
+  bodyText         String
+  opportunityUsed  String?
+  excludeReason    String?
+  createdAt        DateTime     @default(now())
+  restaurantLead   RestaurantLead @relation(fields: [restaurantLeadId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantLeadId, createdAt])
+}
+
+model RestaurantLeadTimelineEvent {
+  id               String                     @id @default(cuid())
+  restaurantLeadId String
+  kind             RestaurantLeadTimelineKind
+  at               DateTime
+  source           String
+  label            String
+  metadata         String?
+  sendHistoryId    String?
+  createdAt        DateTime                   @default(now())
+  restaurantLead   RestaurantLead             @relation(fields: [restaurantLeadId], references: [id], onDelete: Cascade)
+
+  @@index([restaurantLeadId, at])
+  @@index([kind])
+}
+
+model RestaurantLeadWebhookEvent {
+  id                String   @id @default(cuid())
+  providerEventId   String   @unique
+  eventType         String
+  providerMessageId String?
+  payloadJson       String
+  processedAt       DateTime @default(now())
+
+  @@index([providerMessageId])
+  @@index([eventType])
+}
+
+model RestaurantLeadWebhookConfig {
+  id              String   @id @default("resend-production")
+  endpoint        String
+  resendWebhookId String?
+  signingSecret   String
+  eventsJson      String
+  activationToken String?
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
 }
