@@ -1,5 +1,6 @@
 import assert from "node:assert/strict";
 import { test } from "node:test";
+import type { EmailDraftStatus } from "@prisma/client";
 import {
   classifyRestaurantLeadPitch,
   chunkRestaurantLeadItems,
@@ -48,7 +49,7 @@ test("pitch classifier uses the lead draft, not a generic template", () => {
 test("fact safety and draft quality keep personalized restaurant drafts", () => {
   const lead = {
     restaurantName: "Palukçu Restaurant",
-    emailStatus: "READY_FOR_REVIEW",
+    emailStatus: "READY_FOR_REVIEW" as EmailDraftStatus,
     emailSubject: "Palukçu için premium website",
     emailBody:
       "Merhaba Palukçu ekibi,\n\nSALKAY olarak Palukçu için mevcut siteyi premium bir web katmanına taşıyabiliriz. Mobil kullanım, rezervasyon yolu ve SEO aynı paketin parçası.\n\nSalih Kaya\nSALKAY",
