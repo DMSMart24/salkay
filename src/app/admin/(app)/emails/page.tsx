@@ -15,6 +15,7 @@ import {
 import { getPrisma } from "@/lib/admin/prisma";
 
 export const dynamic = "force-dynamic";
+export const maxDuration = 300;
 
 type Search = {
   tab?: string;
