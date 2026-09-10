@@ -172,6 +172,41 @@ enum RestaurantSalesStatus {
   DO_NOT_CONTACT
 }
 
+enum RestaurantAnalysisStatus {
+  NOT_STARTED
+  RESEARCHING
+  ANALYZED
+  EMAIL_DRAFTED
+  NEEDS_REVIEW
+  COMPLETE
+  ERROR
+}
+
+enum EmailDraftConfidence {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum EmailDraftStatus {
+  NONE
+  DRAFT
+  NEEDS_REVIEW
+  READY_FOR_REVIEW
+}
+
+enum SalesPitchConfidence {
+  HIGH
+  MEDIUM
+  LOW
+}
+
+enum RestaurantOperatingStatus {
+  ACTIVE
+  CLOSED
+  UNCLEAR
+}
+
 model User {
   id           String     @id @default(cuid())
   email        String     @unique
@@ -508,6 +543,37 @@ model RestaurantLead {
   outreachNotes     String?
   isFinalTop20      Boolean                   @default(false)
   finalRank         Int?
+  analysisStatus        RestaurantAnalysisStatus @default(NOT_STARTED)
+  analysisDate          DateTime?
+  overallWebsiteScore   Int?
+  designScore           Int?
+  mobileScore           Int?
+  seoScore              Int?
+  performanceScore      Int?
+  conversionScore       Int?
+  contentScore          Int?
+  trustScore            Int?
+  websiteProblems       String[]                 @default([])
+  websiteStrengths      String[]                 @default([])
+  salesOpportunityScore Int?
+  salesPriority         RestaurantLeadPriority?
+  primaryOpportunity    String?
+  secondaryOpportunity  String?
+  servicesToPitch       String[]                 @default([])
+  pitchConfidence       SalesPitchConfidence?
+  emailConfidence       EmailDraftConfidence?
+  emailSource           String?
+  emailVerified         Boolean                  @default(false)
+  emailSubject          String?
+  emailBody             String?
+  emailStatus           EmailDraftStatus         @default(NONE)
+  emailGeneratedAt      DateTime?
+  researchSources       String[]                 @default([])
+  possibleDuplicate     Boolean                  @default(false)
+  duplicateOfId         String?
+  fetchStatus           String?
+  fetchError            String?
+  operatingStatus       RestaurantOperatingStatus @default(UNCLEAR)
   createdAt         DateTime                  @default(now())
   updatedAt         DateTime                  @updatedAt
 
